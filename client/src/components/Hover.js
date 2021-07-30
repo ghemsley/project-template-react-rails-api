@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react'
-import uuid from 'uuid'
+import {v4 as uuid} from 'uuid'
 
 const Hover = props => {
   const [hidden, setHidden] = useState(true)

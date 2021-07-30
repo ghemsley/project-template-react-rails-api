@@ -1,4 +1,4 @@
-import uuid from 'uuid'
+import {v4 as uuid} from 'uuid'
 
 const projects = (state = [], action) => {
   switch (action.type) {
