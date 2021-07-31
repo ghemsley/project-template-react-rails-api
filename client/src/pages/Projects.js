@@ -7,13 +7,13 @@ const Projects = () => {
   const projects = useSelector(state => state.projects)
 
   return (
-    <div className='center center-text'>
+    <div className='center center-text project-page'>
       <div>
         <p>Create Project</p>
         <ProjectForm />
         <p>Projects</p>
       </div>
-      <div className='flex parent'>
+      <div className='flex project-container'>
         {projects.map(project => (
           <Project
             project={project}

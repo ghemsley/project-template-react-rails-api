@@ -13,7 +13,7 @@ const Categories = () => {
         <CategoryForm />
         <p>Categories</p>
       </div>
-      <div className='flex'>
+      <div className='flex category-container'>
         {categories.map(category => (
           <Category
             category={category}

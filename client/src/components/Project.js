@@ -27,14 +27,14 @@ const Project = props => {
   return (
     <div
       id={props.project.id}
-      className='hoverable flex-child radius-4 project'
+      className='hoverable flex-child flex radius-4 project'
       style={{
         background: '#10a090',
         color: 'whitesmoke',
         ...style
       }}
     >
-      <div ref={coordinatesRef}>
+      <div ref={coordinatesRef} style={{width: '100%'}}>
         <Dropzone handleDrop={handleDrop} acceptType='CATEGORY'>
           <h2>{props.project.name}</h2>
           <p>{props.project.description}</p>
@@ -47,12 +47,12 @@ const Project = props => {
             </button>
           )}
           {props.showCategories && (
-            <div>
+            <>
               <h3>Categories</h3>
               {categories.length < 1 && (
                 <p style={{ fontSize: '14px' }}>Place categories here!</p>
               )}
-              <div className='flex parent'>
+              <div className='flex category-container'>
                 {categories.map(category => (
                   <Category
                     category={category}
@@ -64,7 +64,7 @@ const Project = props => {
                   />
                 ))}
               </div>
-            </div>
+            </>
           )}
         </Dropzone>
         {props.hoverable && categories.length > 0 && (

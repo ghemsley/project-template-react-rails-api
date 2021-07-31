@@ -1667,20 +1667,46 @@ select {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-evenly;
+  justify-content: center;
   gap: 1em;
-  margin: 1em;
 }
 
 .flex-child {
   flex-basis: auto;
   flex-grow: 1;
   flex-shrink: 1;
-  padding: 1vw;
-  min-width: 20em;
+  padding: 1em;
 }
 
 .radius-4 {
   border-radius: 4px;
+}
+
+.category-page, .project-page, .todo-page {
+  margin: 1em;
+}
+
+.project-container {
+  height: 100%;
+}
+
+.category-container {
+
+}
+
+.column {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.project {
+ flex-basis: 720px;
+}
+
+.category {
+  flex-basis: 320px;
+}
+
+.height-100 {
+  height: 100%;
 }

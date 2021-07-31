@@ -68,7 +68,7 @@ const Category = props => {
       }}
       ref={drag}
     >
-      <div ref={coordinatesRef}>
+      <div ref={coordinatesRef} className='height-100'>
         <Dropzone handleDrop={handleDrop} acceptType='TODO'>
           <h2>{props.category.name}</h2>
           <p>{props.category.description}</p>
@@ -90,7 +90,7 @@ const Category = props => {
               ) : (
                 <>
                   <h3>Todos</h3>
-                  <div className='flex parent'>
+                  <div className='flex column todo-container'>
                     {todos.map(todo => (
                       <Todo
                         todo={todo}

@@ -13,7 +13,7 @@ const Todos = () => {
         <TodoForm />
         <p>Todos</p>
       </div>
-      <div className='flex'>
+      <div className='flex todo-container'>
         {todos.map(todo => (
           <Todo todo={todo} showDelete={true} key={todo.id} />
         ))}
