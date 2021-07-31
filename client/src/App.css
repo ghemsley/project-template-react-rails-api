@@ -1680,3 +1680,7 @@ select {
   padding: 1vw;
   min-width: 20em;
 }
+
+.radius-4 {
+  border-radius: 4px;
+}
