@@ -5,6 +5,7 @@ import Todo from '../components/Todo'
 
 const Todos = () => {
   const todos = useSelector(state => state.todos)
+
   return (
     <div className='center center-text todo-page'>
       <div>
@@ -13,8 +14,8 @@ const Todos = () => {
         <p>Todos</p>
       </div>
       <div className='flex'>
-        {todos.map((todo, i) => (
-          <Todo todo={todo} showDelete={true} key={i} />
+        {todos.map(todo => (
+          <Todo todo={todo} showDelete={true} key={todo.id} />
         ))}
       </div>
     </div>

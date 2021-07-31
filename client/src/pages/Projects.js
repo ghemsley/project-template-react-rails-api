@@ -5,6 +5,7 @@ import Project from '../components/Project'
 
 const Projects = () => {
   const projects = useSelector(state => state.projects)
+
   return (
     <div className='center center-text'>
       <div>
@@ -12,13 +13,13 @@ const Projects = () => {
         <ProjectForm />
         <p>Projects</p>
       </div>
-      <div className='flex'>
-        {projects.map((project, i) => (
+      <div className='flex parent'>
+        {projects.map(project => (
           <Project
             project={project}
             showDelete={true}
             showCategories={true}
-            key={i}
+            key={project.id}
           />
         ))}
       </div>

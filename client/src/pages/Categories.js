@@ -1,10 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import CategoryForm from '../components/CategoryForm'
-import Category from '../components/Category'
+import { Category } from '../components/index'
 
 const Categories = () => {
   const categories = useSelector(state => state.categories)
+
   return (
     <div className='center center-text category-page'>
       <div>
@@ -13,12 +14,12 @@ const Categories = () => {
         <p>Categories</p>
       </div>
       <div className='flex'>
-        {categories.map((category, i) => (
+        {categories.map(category => (
           <Category
             category={category}
             showDelete={true}
             showTodos={true}
-            key={i}
+            key={category.id}
           />
         ))}
       </div>
