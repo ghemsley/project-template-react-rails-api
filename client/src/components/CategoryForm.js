@@ -17,7 +17,8 @@ const CategoryForm = () => {
       actions.createCategory({
         name: name,
         description: description,
-        projectID: projectID
+        projectID: projectID,
+        coordinates: { left: 0, top: 0, right: 0, bottom: 0 }
       })
     )
     setName('')
