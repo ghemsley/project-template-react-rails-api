@@ -9,7 +9,6 @@ const todos = (state = [], action) => {
       console.log('updating todo')
       const newState = [...state]
       const currentTodo = newState.find((todo) => todo.id === action.payload.id)
-      console.log(currentTodo)
       if (currentTodo) {
         for (const key in action.payload) {
           if (key !== 'id') {
