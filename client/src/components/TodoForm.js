@@ -74,6 +74,16 @@ const TodoForm = () => {
                 onChange={handleChange}
               />
               <label htmlFor='categoryID' className='hoverable'>
+                {categories.length > 0 && (
+                  <Hover>
+                    <Category
+                      category={categories.find(
+                        category => category.id === categoryID
+                      )}
+                      showTodos={true}
+                    />
+                  </Hover>
+                )}
                 Category
                 <select
                   name='categoryID'
@@ -86,16 +96,6 @@ const TodoForm = () => {
                     </option>
                   ))}
                 </select>
-                {categories.length > 0 && (
-                  <Hover>
-                    <Category
-                      category={categories.find(
-                        category => category.id === categoryID
-                      )}
-                      showTodos={true}
-                    />
-                  </Hover>
-                )}
               </label>
               <button className='pure-button pure-button-primary' type='submit'>
                 Submit
