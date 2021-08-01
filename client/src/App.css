@@ -1691,7 +1691,6 @@ select {
 }
 
 .category-container {
-
 }
 
 .column {
@@ -1700,11 +1699,11 @@ select {
 }
 
 .project {
- flex-basis: 720px;
+ flex-basis: 480px;
 }
 
 .category {
-  flex-basis: 320px;
+  flex-basis: 480px;
 }
 
 .height-100 {
