@@ -8,6 +8,7 @@ const CategoryForm = () => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [projectID, setProjectID] = useState(projects[0] ? projects[0].id : '')
+  const project = projects.find(project => project.id === projectID)
   const dispatch = useDispatch()
 
   const handleSubmit = event => {
@@ -44,7 +45,9 @@ const CategoryForm = () => {
   return (
     <Modal>
       {projects.length < 1 ? (
-        <p className='fit margin-auto'>Please create a project first before trying to create a category!</p>
+        <p className='fit margin-auto'>
+          Please create a project first before trying to create a category!
+        </p>
       ) : (
         <>
           <h1 className='fit margin-auto'>New Category</h1>
@@ -68,6 +71,11 @@ const CategoryForm = () => {
                 onChange={handleChange}
               />
               <label htmlFor='projectID' className='hoverable'>
+                {projects.length > 0 && (
+                  <Hover>
+                    <Project project={project} showCategories={true} />
+                  </Hover>
+                )}
                 Project
                 <select
                   name='projectID'
@@ -80,16 +88,6 @@ const CategoryForm = () => {
                     </option>
                   ))}
                 </select>
-                {projects.length > 0 && (
-                  <Hover>
-                    <Project
-                      project={projects.find(
-                        project => project.id === projectID
-                      )}
-                      showCategories={true}
-                    />
-                  </Hover>
-                )}
               </label>
               <button className='pure-button pure-button-primary' type='submit'>
                 Submit
