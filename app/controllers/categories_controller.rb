@@ -11,13 +11,14 @@ class CategoriesController < ApplicationController
   end
 
   def create
+    category = Category.create({ name: params[:name], description: params[:description],
+                                 project_id: params[:projectID] })
+    render jsonapi: category
   end
 
-  def update
-  end
+  def update; end
 
-  def destroy
-  end
+  def destroy; end
 
   private
 
