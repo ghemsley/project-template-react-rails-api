@@ -3,11 +3,19 @@ class ProjectsController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    render jsonapi: Project.all
+    allowed = %i[name description id]
+
+    jsonapi_filter(Project.all, allowed) do |filtered|
+      render jsonapi: filtered.result
+    end
   end
 
   def show
-    render jsonapi: Project.find(params[:id])
+    allowed = %i[name description id]
+
+    jsonapi_filter(Project.find(params[:id]), allowed) do |filtered|
+      render jsonapi: filtered.result
+    end
   end
 
   def create
@@ -19,6 +27,9 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
+    project = Project.find(params[:id])
+    project.destroy!
+    render jsonapi: project
   end
 
   private

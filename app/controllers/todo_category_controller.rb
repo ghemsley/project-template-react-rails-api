@@ -3,7 +3,11 @@ class TodoCategoryController < ApplicationController
   include JSONAPI::Filtering
 
   def show
-    render jsonapi: Todo.find(params[:id]).category
+    allowed = %i[name description id project_id]
+
+    jsonapi_filter(Todo.find(params[:id]).category, allowed) do |filtered|
+      render jsonapi: filtered.result
+    end
   end
 
   private

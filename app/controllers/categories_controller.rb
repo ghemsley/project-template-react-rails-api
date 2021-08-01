@@ -3,11 +3,19 @@ class CategoriesController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    render jsonapi: Category.all
+    allowed = %i[name description id project_id]
+
+    jsonapi_filter(Category.all, allowed) do |filtered|
+      render jsonapi: filtered.result
+    end
   end
 
   def show
-    render jsonapi: Category.find(params[:id])
+    allowed = %i[name description id project_id]
+
+    jsonapi_filter(Category.find(params[:id]), allowed) do |filtered|
+      render jsonapi: filtered.result
+    end
   end
 
   def create
@@ -18,7 +26,11 @@ class CategoriesController < ApplicationController
 
   def update; end
 
-  def destroy; end
+  def destroy
+    category = Category.find(params[:id])
+    category.destroy!
+    render jsonapi: category
+  end
 
   private
 
