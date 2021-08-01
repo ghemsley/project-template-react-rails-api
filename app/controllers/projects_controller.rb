@@ -11,6 +11,8 @@ class ProjectsController < ApplicationController
   end
 
   def create
+    project = Project.create({ name: params[:name], description: params[:description] })
+    render jsonapi: project
   end
 
   def update
