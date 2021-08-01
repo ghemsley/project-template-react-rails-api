@@ -18,7 +18,11 @@ const Dropzone = props => {
       coordinates: monitor.getSourceClientOffset()
     })
   })
-  return <div ref={drop} className='height-100' >{props.children}</div>
+  return (
+    <div ref={drop} className='height-100 width-100'>
+      {props.children}
+    </div>
+  )
 }
 
 export default Dropzone
