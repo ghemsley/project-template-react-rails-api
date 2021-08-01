@@ -13,6 +13,14 @@ const fetchCategories = () => () => {
   }).then(response => response.json())
 }
 
+const sendCategory = payload => () => {
+  return fetch(`${constants.urls.BASE_URL}/categories`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(response => response.json())
+}
+
 const createCategory = payload => ({
   type: 'CREATE_CATEGORY',
   payload
@@ -47,6 +55,7 @@ const deleteCategoriesByProject = payload => (dispatch, getState) => {
 const categoryActions = {
   fetchCategory,
   fetchCategories,
+  sendCategory,
   createCategory,
   deleteCategory,
   deeplyDeleteCategory,
