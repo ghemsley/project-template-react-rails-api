@@ -19,12 +19,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.create({ username: params[:username], password: params[:password] })
+    user = User.create({ username: params[:username], password: params[:password],
+                         password_confirmation: params[:passwordConfirmation] })
     render jsonapi: user
   end
 
-  def update
-  end
+  def update; end
 
   def destroy
     user = User.find(params[:id])

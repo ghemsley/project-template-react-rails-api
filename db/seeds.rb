@@ -19,4 +19,9 @@ projects.each do |project|
                    description: 'Test Todo: The Motion Picture: The Sequel: The Game: The Broadway Musical: The JSON Response',
                    category: category }])
   end
+  users = User.create([{ username: 'test', password: 'test', password_confirmation: 'test' },
+                       { username: 'test2', password: 'test2', password_confirmation: 'test2' }])
+  users.each do |user|
+    UserProject.create([{ user_id: user.id, project_id: project.id }])
+  end
 end
