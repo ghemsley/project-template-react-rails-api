@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import TodoForm from '../components/TodoForm'
 import Todo from '../components/Todo'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -21,7 +20,7 @@ const Todos = () => {
       </div>
       <div className='flex todo-container'>
         {todos.map(todo => (
-          <Todo todo={todo} showDelete={true} key={todo.id} />
+          <Todo todo={todo} showDelete showCategory key={todo.id} />
         ))}
       </div>
     </div>

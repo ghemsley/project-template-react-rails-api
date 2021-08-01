@@ -1721,7 +1721,7 @@ select {
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1em;
   margin: 0px;
   padding: 0px;
@@ -1743,6 +1743,7 @@ select {
   background: #10a090;
   color: whitesmoke;
   margin: 2em;
+  margin-top: 10vh;
   padding: 4em;
   gap: 1em;
   width: auto;
@@ -1783,4 +1784,6 @@ select {
   position: fixed;
   color: whitesmoke;
   transition: opacity 0.333s ease 0ms;
+  max-width: min-content;
+  max-height: min-content;
 }
