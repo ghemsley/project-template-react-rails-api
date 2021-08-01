@@ -60,7 +60,7 @@ const Category = props => {
   return (
     <div
       id={props.category.id}
-      className='hoverable flex-child radius-4 category'
+      className='hoverable flex-child rounded category'
       style={{
         color: 'whitesmoke',
         transition: 'background-color 50ms ease',
@@ -72,9 +72,9 @@ const Category = props => {
         <Dropzone handleDrop={handleDrop} acceptType='TODO'>
           <h2>{props.category.name}</h2>
           <p>{props.category.description}</p>
-          {props.showDelete && !dragging && (
+          {props.showDelete && (
             <button
-              className='pure-button pure-button-primary animate-height'
+              className='pure-button pure-button-primary delete-button'
               onClick={handleButtonPointerDown}
             >
               Delete
@@ -95,7 +95,7 @@ const Category = props => {
                       <Todo
                         todo={todo}
                         draggable={true}
-                        showDelete={props.showDelete && !dragging}
+                        showDelete={props.showDelete}
                         key={todo.id}
                       />
                     ))}

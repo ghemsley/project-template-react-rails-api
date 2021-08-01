@@ -27,7 +27,7 @@ const Project = props => {
   return (
     <div
       id={props.project.id}
-      className='hoverable flex-child flex radius-4 project'
+      className='hoverable flex-child flex rounded project'
       style={{
         background: '#10a090',
         color: 'whitesmoke',

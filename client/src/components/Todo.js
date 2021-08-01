@@ -36,7 +36,7 @@ const Todo = props => {
   return (
     <div
       id={props.todo.id}
-      className='hoverable flex-child radius-4 todo'
+      className='hoverable flex-child rounded todo'
       style={{
         color: 'whitesmoke',
         transition: 'background-color 50ms ease',
@@ -47,7 +47,7 @@ const Todo = props => {
       <div ref={coordinatesRef}>
         <h2>{props.todo.name}</h2>
         <p>{props.todo.description}</p>
-        {props.showDelete && !dragging && (
+        {props.showDelete && (
           <button
             className='pure-button pure-button-primary'
             onClick={handleButtonPointerDown}
