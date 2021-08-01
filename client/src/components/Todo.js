@@ -25,7 +25,7 @@ const Todo = props => {
   )
 
   const handleButtonPointerDown = () => {
-    dispatch(actions.deleteTodo({ id: props.todo.id }))
+    dispatch(actions.removeTodo(props.todo))
   }
 
   return (

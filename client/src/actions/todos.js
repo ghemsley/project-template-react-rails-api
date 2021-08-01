@@ -46,9 +46,26 @@ const instantiateTodo = payload => dispatch => {
       id: json.data.id,
       name: json.data.attributes.name,
       description: json.data.attributes.description,
-      projectID: json.data.relationships.category.data.id
+      categoryID: json.data.relationships.category.data.id
     }
     dispatch(createTodo(todoObject))
+  })
+}
+
+const destroyTodo = payload => () => {
+  console.log('destroying todo')
+  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json' }
+  }).then(response => response.json())
+}
+
+const removeTodo = payload => dispatch => {
+  console.log('removing todo')
+  dispatch(destroyTodo(payload)).then((json) => {
+    if (json.data.id === payload.id) {
+      dispatch(deleteTodo(payload))
+    }
   })
 }
 
@@ -60,7 +77,9 @@ const todoActions = {
   updateTodo,
   deleteTodo,
   deleteTodosByCategory,
-  instantiateTodo
+  instantiateTodo,
+  destroyTodo,
+  removeTodo
 }
 
 export default todoActions
