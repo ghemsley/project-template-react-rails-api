@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import actions from '../actions/index'
 import Modal from './Modal'
 
-const ProjectForm = (props) => {
+const ProjectForm = props => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const dispatch = useDispatch()
@@ -11,10 +11,9 @@ const ProjectForm = (props) => {
   const handleSubmit = event => {
     event.preventDefault()
     dispatch(
-      actions.createProject({
+      actions.instantiateProject({
         name: name,
-        description: description,
-        coordinates: { left: 0, top: 0, right: 0, bottom: 0 }
+        description: description
       })
     )
     setName('')
