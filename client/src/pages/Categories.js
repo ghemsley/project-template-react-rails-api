@@ -1,17 +1,22 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import CategoryForm from '../components/CategoryForm'
 import { Category } from '../components/index'
+import { Link, useLocation } from 'react-router-dom'
 
 const Categories = () => {
   const categories = useSelector(state => state.categories)
+  const location = useLocation()
 
   return (
     <div className='center center-text category-page'>
       <div>
-        <p>Create Category</p>
-        <CategoryForm />
-        <p>Categories</p>
+        <Link
+          className='pure-button pure-button-primary'
+          to={{ pathname: 'categories/new', state: { background: location } }}
+        >
+          Create Category
+        </Link>
+        {categories.length > 0 && <h1>Categories</h1>}
       </div>
       <div className='flex category-container'>
         {categories.map(category => (
