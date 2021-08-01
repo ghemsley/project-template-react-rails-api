@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :user_projects, only: %i[index show]
+  resources :users, only: %i[index show create update destroy]
   resources :todos, only: %i[index show create update destroy]
   resources :categories, only: %i[index show create update destroy]
   resources :projects, only: %i[index show create update destroy]

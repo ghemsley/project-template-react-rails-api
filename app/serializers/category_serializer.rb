@@ -2,7 +2,7 @@ class CategorySerializer
   include JSONAPI::Serializer
   set_key_transform :camel_lower
 
-  attributes :name, :description
+  attributes :name, :description, :created_at, :updated_at
 
   belongs_to :project, links: {
     self: :url,
