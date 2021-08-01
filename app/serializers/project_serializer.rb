@@ -2,7 +2,7 @@ class ProjectSerializer
   include JSONAPI::Serializer
   set_key_transform :camel_lower
 
-  attributes :name, :description, :created_at, :updated_at
+  attributes :id, :name, :description, :created_at, :updated_at
 
   has_many :categories, links: {
     self: :url,

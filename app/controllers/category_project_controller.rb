@@ -3,7 +3,7 @@ class CategoryProjectController < ApplicationController
   include JSONAPI::Filtering
 
   def show
-    allowed = %i[name description id]
+    allowed = %i[id name description created_at updated_at]
     jsonapi_filter(Category.find(params[:category_id]).project, allowed) do |filtered|
       render jsonapi: filtered.result
     end

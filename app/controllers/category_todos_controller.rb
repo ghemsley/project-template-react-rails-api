@@ -3,14 +3,14 @@ class CategoryTodosController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[name description id category_id]
+    allowed = %i[id name description category_id created_at updated_at]
     jsonapi_filter(Category.find(params[:id]).todos, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    allowed = %i[name description id category_id]
+    allowed = %i[id name description category_id created_at updated_at]
     jsonapi_filter(Category.find(params[:category_id]).todos.find(params[:todo_id]), allowed) do |filtered|
       render jsonapi: filtered.result
     end

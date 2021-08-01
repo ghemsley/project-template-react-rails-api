@@ -3,7 +3,7 @@ class UserProjectsController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[user_id project_id id]
+    allowed = %i[id user_id project_id created_at updated_at]
 
     jsonapi_filter(UserProject.all, allowed) do |filtered|
       render jsonapi: filtered.result
@@ -11,7 +11,7 @@ class UserProjectsController < ApplicationController
   end
 
   def show
-    allowed = %i[user_id project_id id]
+    allowed = %i[id user_id project_id created_at updated_at]
 
     jsonapi_filter(UserProject.find(params[:id]), allowed) do |filtered|
       render jsonapi: filtered.result
