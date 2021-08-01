@@ -4,19 +4,35 @@ import constants from '../constants'
 const fetchProject = payload => () => {
   return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const fetchProjects = () => () => {
   return fetch(`${constants.urls.BASE_URL}/projects`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const fetchEverything = () => () => {
   return fetch(`${constants.urls.BASE_URL}/projects?include=categories,todos`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const sendProject = payload => () => {
+  return fetch(`${constants.urls.BASE_URL}/projects`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const createProject = payload => ({
@@ -38,6 +54,17 @@ const deeplyDeleteProject = payload => dispatch => {
   console.log('deeply deleting project')
   dispatch(deleteProject(payload))
   dispatch(actions.deleteCategoriesByProject(payload))
+}
+
+const instantiateProject = payload => dispatch => {
+  return dispatch(sendProject(payload)).then(json => {
+    const projectObject = {
+      id: json.data.id,
+      name: json.data.attributes.name,
+      description: json.data.attributes.description
+    }
+    dispatch(createProject(projectObject))
+  })
 }
 
 const instantiateEverything = () => dispatch => {
@@ -87,10 +114,12 @@ const projectActions = {
   fetchProject,
   fetchProjects,
   fetchEverything,
+  sendProject,
   createProject,
   updateProject,
   deleteProject,
   deeplyDeleteProject,
+  instantiateProject,
   instantiateEverything
 }
 
