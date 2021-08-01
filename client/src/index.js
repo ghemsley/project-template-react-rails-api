@@ -8,6 +8,9 @@ import App from './App'
 import './index.css'
 import rootReducer from './reducers/index'
 import reportWebVitals from './reportWebVitals'
+import { BrowserRouter as Router } from 'react-router-dom/'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const composedEnhancer = composeWithDevTools(applyMiddleware(ReduxThunk))
 const store = createStore(rootReducer, composedEnhancer)
@@ -15,7 +18,11 @@ const store = createStore(rootReducer, composedEnhancer)
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <DndProvider backend={HTML5Backend}>
+          <App />
+        </DndProvider>
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
