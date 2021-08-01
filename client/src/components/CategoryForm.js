@@ -72,7 +72,7 @@ const CategoryForm = () => {
               <label htmlFor='projectID' className='hoverable'>
                 {projects.length > 0 && (
                   <Hover>
-                    <Project project={project} showCategories={true} />
+                    <Project project={project} showCategories />
                   </Hover>
                 )}
                 Project

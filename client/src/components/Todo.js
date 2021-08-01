@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useDrag } from 'react-dnd'
 import actions from '../actions/index'
 
 const Todo = props => {
   const dispatch = useDispatch()
+  const category = useSelector(state =>
+    state.categories.find(category => category.id === props.todo.categoryID)
+  )
 
   const [{ dragging, coordinates }, drag, dragPreview] = useDrag(() => ({
     type: 'TODO',
@@ -38,6 +41,11 @@ const Todo = props => {
     >
       <h2>{props.todo.name}</h2>
       <p>{props.todo.description}</p>
+      {props.showCategory && (
+        <p>
+          <strong>Category:</strong> {category.name}
+        </p>
+      )}
       {props.showDelete && (
         <button
           className='pure-button pure-button-primary'

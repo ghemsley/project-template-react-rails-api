@@ -12,6 +12,7 @@ const TodoForm = () => {
   const [categoryID, setCategoryID] = useState(
     categories[0] ? categories[0].id : ''
   )
+  const category = categories.find(category => category.id === categoryID)
   const dispatch = useDispatch()
 
   const handleSubmit = event => {
@@ -75,12 +76,7 @@ const TodoForm = () => {
               <label htmlFor='categoryID' className='hoverable'>
                 {categories.length > 0 && (
                   <Hover>
-                    <Category
-                      category={categories.find(
-                        category => category.id === categoryID
-                      )}
-                      showTodos={true}
-                    />
+                    <Category category={category} showTodos showProject />
                   </Hover>
                 )}
                 Category

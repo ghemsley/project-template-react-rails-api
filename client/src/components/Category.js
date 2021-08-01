@@ -9,6 +9,9 @@ const Category = props => {
   const todos = useSelector(state =>
     state.todos.filter(todo => todo.categoryID === props.category.id)
   )
+  const project = useSelector(state =>
+    state.projects.find(project => project.id === props.category.projectID)
+  )
 
   const [{ dragging, position }, drag, dragPreview] = useDrag(() => ({
     type: 'CATEGORY',
@@ -47,6 +50,11 @@ const Category = props => {
       <Dropzone handleDrop={handleDrop} acceptType='TODO'>
         <h2>{props.category.name}</h2>
         <p>{props.category.description}</p>
+        {props.showProject && (
+          <p>
+            <strong>Project:</strong> {project.name}
+          </p>
+        )}
         {props.showDelete && (
           <button
             className='pure-button pure-button-primary delete-button'

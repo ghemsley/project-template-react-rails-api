@@ -22,8 +22,9 @@ const Categories = () => {
         {categories.map(category => (
           <Category
             category={category}
-            showDelete={true}
-            showTodos={true}
+            showDelete
+            showTodos
+            showProject
             key={category.id}
           />
         ))}
