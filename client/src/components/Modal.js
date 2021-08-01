@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 const Modal = props => {
   useEffect(() => {
@@ -10,11 +10,13 @@ const Modal = props => {
     }
   }, [])
   const history = useHistory()
+  const location = useLocation()
+  const background = location.state && location.state.background
 
   const closeModal = () => {
-    history.goBack()
+    history.push(background ? background.pathname : '/home')
   }
-  const preventClose = (event) => {
+  const preventClose = event => {
     event.stopPropagation()
   }
 
