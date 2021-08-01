@@ -7,22 +7,16 @@ const Hover = props => {
   const [top, setTop] = useState(window.innerHeight)
   const [elementLeft, setElementLeft] = useState(0)
   const [elementTop, setElementTop] = useState(0)
-  const [display, setDisplay] = useState(true)
   const id = uuid()
 
   useLayoutEffect(() => {
-    let timer = null
     const handlePointerEnter = event => {
       event.stopPropagation()
-      setDisplay(true)
       setHidden(false)
     }
     const handlePointerLeave = event => {
       event.stopPropagation()
       setHidden(true)
-      timer = setTimeout(() => {
-        setDisplay(false)
-      }, 333)
     }
     const handlePointerMove = event => {
       event.stopPropagation()
@@ -48,27 +42,21 @@ const Hover = props => {
       })
     }
     return () => {
-      clearTimeout(timer)
       parent.removeEventListener('pointerenter', handlePointerEnter)
       parent.removeEventListener('pointerleave', handlePointerLeave)
       parent.removeEventListener('pointermove', handlePointerMove)
     }
   }, [hidden, id, setHidden, setLeft, setTop])
-  const cancelHover = () => {setDisplay(false)}
+
   return (
     <div
       id={id}
       style={{
-        position: 'fixed',
-        color: 'whitesmoke',
-        transition: 'opacity 0.333s ease 0ms',
-        transform: `translate3d(${
-          left - elementLeft + 32
-        }px, ${top - elementTop + 32}px, 0px)`,
-        display: display ? 'block' : 'none'
+        transform: `translate3d(${left - elementLeft + 32}px, ${
+          top - elementTop + 32
+        }px, 0px)`
       }}
-      className={`center fit ${hidden ? 'fadeout' : 'fadein'}`}
-      onPointerEnter={cancelHover}
+      className={`hover center center-text fit ${hidden ? 'fadeout' : 'fadein'}`}
     >
       {props.children}
     </div>

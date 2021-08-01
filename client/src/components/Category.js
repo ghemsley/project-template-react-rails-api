@@ -39,7 +39,7 @@ const Category = props => {
       className='hoverable flex-child rounded category'
       style={{
         color: 'whitesmoke',
-        transition: 'background-color 50ms ease',
+        transition: 'background-color 150ms ease',
         ...style
       }}
       ref={drag}

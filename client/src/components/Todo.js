@@ -31,7 +31,7 @@ const Todo = props => {
       className='hoverable flex-child rounded todo'
       style={{
         color: 'whitesmoke',
-        transition: 'background-color 50ms ease',
+        transition: 'background-color 150ms ease',
         ...style
       }}
       ref={drag}
