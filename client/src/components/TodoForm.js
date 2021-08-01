@@ -17,7 +17,7 @@ const TodoForm = () => {
   const handleSubmit = event => {
     event.preventDefault()
     dispatch(
-      actions.createTodo({
+      actions.instantiateTodo({
         name: name,
         description: description,
         categoryID: categoryID
