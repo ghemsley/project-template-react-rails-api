@@ -1,16 +1,8 @@
-import {v4 as uuid} from 'uuid'
-
 const projects = (state = [], action) => {
   switch (action.type) {
     case 'CREATE_PROJECT':
       console.log('creating project')
-      return [
-        ...state,
-        {
-          ...action.payload,
-          id: uuid()
-        }
-      ]
+      return [...state, action.payload]
 
     case 'UPDATE_PROJECT':
       console.log('updating project')

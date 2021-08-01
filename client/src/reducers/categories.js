@@ -1,16 +1,8 @@
-import { v4 as uuid } from 'uuid'
-
 const categories = (state = [], action) => {
   switch (action.type) {
     case 'CREATE_CATEGORY':
       console.log('creating category')
-      return [
-        ...state,
-        {
-          ...action.payload,
-          id: uuid()
-        }
-      ]
+      return [...state, action.payload]
 
     case 'UPDATE_CATEGORY':
       console.log('updating category')
