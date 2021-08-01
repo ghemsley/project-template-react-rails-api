@@ -11,13 +11,14 @@ class TodosController < ApplicationController
   end
 
   def create
+    todo = Todo.create({ name: params[:name], description: params[:description],
+                         category_id: params[:categoryID] })
+    render jsonapi: todo
   end
 
-  def update
-  end
+  def update; end
 
-  def destroy
-  end
+  def destroy; end
 
   private
 

@@ -67,7 +67,8 @@ const instantiateProject = payload => dispatch => {
   })
 }
 
-const instantiateEverything = () => dispatch => {
+const instantiateEverything = () => (dispatch, getState) => {
+  const state = getState()
   return dispatch(fetchEverything())
     .then(json => {
       for (const project of json.data) {
@@ -76,7 +77,9 @@ const instantiateEverything = () => dispatch => {
           name: project.attributes.name,
           description: project.attributes.description
         }
-        dispatch(createProject(projectObject))
+        if (!state.projects.find(project => project.id === projectObject.id)) {
+          dispatch(actions.createProject(projectObject))
+        }
       }
       return json
     })
@@ -89,7 +92,13 @@ const instantiateEverything = () => dispatch => {
             description: included.attributes.description,
             projectID: included.relationships.project.data.id
           }
-          dispatch(actions.createCategory(categoryObject))
+          if (
+            !state.categories.find(
+              category => category.id === categoryObject.id
+            )
+          ) {
+            dispatch(actions.createCategory(categoryObject))
+          }
         }
       }
       return json
@@ -103,7 +112,9 @@ const instantiateEverything = () => dispatch => {
             description: included.attributes.description,
             categoryID: included.relationships.category.data.id
           }
-          dispatch(actions.createTodo(todoObject))
+          if (!state.todos.find(todo => todo.id === todoObject.id)) {
+            dispatch(actions.createTodo(todoObject))
+          }
         }
       }
       return json

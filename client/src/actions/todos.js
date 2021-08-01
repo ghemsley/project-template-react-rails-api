@@ -40,6 +40,18 @@ const deleteTodosByCategory = payload => ({
   payload
 })
 
+const instantiateTodo = payload => dispatch => {
+  return dispatch(sendTodo(payload)).then(json => {
+    const todoObject = {
+      id: json.data.id,
+      name: json.data.attributes.name,
+      description: json.data.attributes.description,
+      projectID: json.data.relationships.category.data.id
+    }
+    dispatch(createTodo(todoObject))
+  })
+}
+
 const todoActions = {
   fetchTodo,
   fetchTodos,
@@ -47,7 +59,8 @@ const todoActions = {
   createTodo,
   updateTodo,
   deleteTodo,
-  deleteTodosByCategory
+  deleteTodosByCategory,
+  instantiateTodo
 }
 
 export default todoActions
