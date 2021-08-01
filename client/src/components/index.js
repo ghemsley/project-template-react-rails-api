@@ -7,6 +7,7 @@ import TodoForm from './TodoForm'
 import Project from './Project'
 import ProjectForm from './ProjectForm'
 import Dropzone from './Dropzone'
+import Modal from './Modal'
 
 
-export { Hover, Navbar, Category, CategoryForm, Todo, TodoForm, Project, ProjectForm, Dropzone }
+export { Hover, Navbar, Category, CategoryForm, Todo, TodoForm, Project, ProjectForm, Dropzone, Modal }
