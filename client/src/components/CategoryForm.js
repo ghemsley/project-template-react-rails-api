@@ -14,7 +14,7 @@ const CategoryForm = () => {
   const handleSubmit = event => {
     event.preventDefault()
     dispatch(
-      actions.createCategory({
+      actions.instantiateCategory({
         name: name,
         description: description,
         projectID: projectID

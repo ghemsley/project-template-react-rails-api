@@ -52,15 +52,28 @@ const deleteCategoriesByProject = payload => (dispatch, getState) => {
   }
 }
 
+const instantiateCategory = payload => dispatch => {
+  return dispatch(sendCategory(payload)).then(json => {
+    const categoryObject = {
+      id: json.data.id,
+      name: json.data.attributes.name,
+      description: json.data.attributes.description,
+      projectID: json.data.relationships.project.data.id
+    }
+    dispatch(createCategory(categoryObject))
+  })
+}
+
 const categoryActions = {
   fetchCategory,
   fetchCategories,
   sendCategory,
   createCategory,
+  updateCategory,
   deleteCategory,
   deeplyDeleteCategory,
   deleteCategoriesByProject,
-  updateCategory
+  instantiateCategory
 }
 
 export default categoryActions
