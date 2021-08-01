@@ -1682,7 +1682,9 @@ select {
   border-radius: 4px;
 }
 
-.category-page, .project-page, .todo-page {
+.category-page,
+.project-page,
+.todo-page {
   margin: 1em;
 }
 
@@ -1699,11 +1701,15 @@ select {
 }
 
 .project {
- flex-basis: 480px;
+  flex-basis: 480px;
 }
 
 .category {
   flex-basis: 480px;
+}
+
+.todo {
+  min-width: 240px;
 }
 
 .height-100 {
@@ -1736,11 +1742,10 @@ select {
   flex-shrink: 1;
   background: #10a090;
   color: whitesmoke;
-  margin: 4em;
+  margin: 2em;
   padding: 4em;
   gap: 1em;
   width: auto;
-  min-width: 25vw;
 }
 
 .overflow-hidden {
@@ -1766,10 +1771,16 @@ select {
   width: 100%;
 }
 
-.category, .todo {
+.category,
+.todo {
   height: 100%;
 }
 
 .delete-button {
-  
+}
+
+.hover {
+  position: fixed;
+  color: whitesmoke;
+  transition: opacity 0.333s ease 0ms;
 }
