@@ -23,7 +23,21 @@ function App() {
           <Route exact path='/projects/new' children={<ProjectForm />} />
           <Route exact path='/categories/new' children={<CategoryForm />} />
           <Route exact path='/todos/new' children={<TodoForm />} />
-          <Route exact path='/todos/:id/edit' children={<TodoForm edit={edit} />} />
+          <Route
+            exact
+            path='/todos/:id/edit'
+            children={<TodoForm edit={edit} />}
+          />
+          <Route
+            exact
+            path='/categories/:id/edit'
+            children={<CategoryForm edit={edit} />}
+          />
+          <Route
+            exact
+            path='/projects/:id/edit'
+            children={<ProjectForm edit={edit} />}
+          />
         </>
       )}
     </div>
