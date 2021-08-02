@@ -3,21 +3,49 @@ import constants from '../constants'
 const fetchTodo = payload => () => {
   return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const fetchTodos = () => () => {
   return fetch(`${constants.urls.BASE_URL}/todos`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const sendTodo = payload => () => {
   return fetch(`${constants.urls.BASE_URL}/todos`, {
-    method: 'post',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload)
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const patchTodo = payload => () => {
+  console.log(payload)
+  console.log(JSON.stringify(payload))
+  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const destroyTodo = payload => () => {
+  console.log('destroying todo')
+  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' }
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const createTodo = payload => ({
@@ -52,19 +80,19 @@ const instantiateTodo = payload => dispatch => {
   })
 }
 
-const destroyTodo = payload => () => {
-  console.log('destroying todo')
-  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
-    method: 'delete',
-    headers: { Accept: 'application/json' }
-  }).then(response => response.json())
-}
-
 const removeTodo = payload => dispatch => {
   console.log('removing todo')
-  dispatch(destroyTodo(payload)).then((json) => {
+  dispatch(destroyTodo(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(deleteTodo(payload))
+    }
+  })
+}
+
+const amendTodo = payload => dispatch => {
+  return dispatch(patchTodo(payload)).then(json => {
+    if (json.data.id === payload.id) {
+      dispatch(updateTodo(payload))
     }
   })
 }
@@ -79,7 +107,9 @@ const todoActions = {
   deleteTodosByCategory,
   instantiateTodo,
   destroyTodo,
-  removeTodo
+  removeTodo,
+  patchTodo,
+  amendTodo
 }
 
 export default todoActions
