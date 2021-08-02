@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDrag } from 'react-dnd'
 import actions from '../actions/index'
+import { ConfirmScreen } from './index'
 
 const Todo = props => {
   const dispatch = useDispatch()
   const category = useSelector(state =>
     state.categories.find(category => category.id === props.todo.categoryID)
   )
+  const [showConfirmScreen, setShowConfirmScreen] = useState(false)
 
   const [{ dragging, coordinates }, drag, dragPreview] = useDrag(() => ({
     type: 'TODO',
@@ -24,8 +26,16 @@ const Todo = props => {
     [dragging]
   )
 
-  const handleButtonPointerDown = () => {
+  const confirmRemoveTodo = () => {
     dispatch(actions.removeTodo(props.todo))
+  }
+
+  const handleClick = () => {
+    setShowConfirmScreen(true)
+  }
+
+  const closeAction = () => {
+    setShowConfirmScreen(false)
   }
 
   return (
@@ -47,12 +57,25 @@ const Todo = props => {
         </p>
       )}
       {props.showDelete && (
-        <button
-          className='pure-button pure-button-primary'
-          onClick={handleButtonPointerDown}
-        >
-          Delete
-        </button>
+        <>
+          <button
+            className='pure-button pure-button-primary'
+            onClick={handleClick}
+          >
+            Delete
+          </button>
+          {showConfirmScreen && (
+            <ConfirmScreen closeAction={closeAction}>
+              <h1>Confirm delete?</h1>
+              <button
+                className='pure-button pure-button-primary'
+                onClick={confirmRemoveTodo}
+              >
+                Delete
+              </button>
+            </ConfirmScreen>
+          )}
+        </>
       )}
     </div>
   )
