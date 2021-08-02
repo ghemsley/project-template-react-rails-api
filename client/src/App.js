@@ -19,9 +19,9 @@ function App() {
       </Switch>
       {background && (
         <>
-          <Route exact path={`/projects/new`} children={<ProjectForm />} />
-          <Route exact path={`/categories/new`} children={<CategoryForm />} />
-          <Route exact path={`/todos/new`} children={<TodoForm />} />
+          <Route exact path='/projects/new' children={<ProjectForm />} />
+          <Route exact path='/categories/new' children={<CategoryForm />} />
+          <Route exact path='/todos/new' children={<TodoForm />} />
         </>
       )}
     </div>
