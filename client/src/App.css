@@ -264,7 +264,7 @@ html {
 .pure-button-selected,
 a.pure-button-primary,
 a.pure-button-selected {
-  background-color: #0078e7;
+  background-color: #1b73e7;
   color: #fff;
 }
 .pure-button-group .pure-button {
@@ -1747,6 +1747,7 @@ select {
   padding: 4em;
   gap: 1em;
   width: auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
 .overflow-hidden {
@@ -1783,9 +1784,10 @@ select {
   transition: opacity 0.333s ease 0ms;
   max-width: min-content;
   max-height: min-content;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
-.links-container {
+.button-container {
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1796,4 +1798,13 @@ select {
   color: white;
   border-radius: 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+}
+
+.pure-button-delete {
+  background: rgb(210, 75, 85);
+}
+
+.project, .category, .todo {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
