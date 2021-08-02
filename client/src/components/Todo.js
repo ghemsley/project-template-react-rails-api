@@ -60,7 +60,7 @@ const Todo = props => {
         <>
           <div className='button-container'>
             <Link
-              className='pure-button pure-button-primary'
+              className={`pure-button pure-button-primary invisible`}
               to={{
                 pathname: `todos/${props.todo.id}/edit`,
                 state: { background: location, edit: props.todo }
@@ -69,7 +69,7 @@ const Todo = props => {
               Edit
             </Link>
             <button
-              className='pure-button pure-button-delete'
+              className={`pure-button pure-button-delete invisible`}
               onClick={handleClick}
             >
               Delete
