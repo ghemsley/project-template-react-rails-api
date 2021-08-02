@@ -15,11 +15,15 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    project = Project.create({ name: params[:name], description: params[:description] })
+    project = Project.create!({ name: params[:name], description: params[:description] })
     render jsonapi: project
   end
 
-  def update; end
+  def update
+    project = Project.find(params[:id])
+    project.update!(name: params[:name], description: params[:description])
+    render jsonapi: project
+  end
 
   def destroy
     project = Project.find(params[:id])

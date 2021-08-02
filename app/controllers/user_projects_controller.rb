@@ -15,7 +15,7 @@ class UserProjectsController < ApplicationController
   end
 
   def create
-    user_project = UserProject.create(user_id: params[:userID], project_id: params[:projectID])
+    user_project = UserProject.create!(user_id: params[:userID], project_id: params[:projectID])
     render jsonapi: user_project
   end
 
