@@ -47,7 +47,7 @@ const Project = props => {
         {props.showDelete && (
           <>
             <button
-              className='pure-button pure-button-primary animate-height'
+              className='pure-button pure-button-primary'
               onClick={handleClick}
             >
               Delete

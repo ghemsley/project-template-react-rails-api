@@ -9,15 +9,21 @@ const Categories = () => {
 
   return (
     <div className='center center-text category-page'>
-      <div>
+      <div className='links-container'>
         <Link
           className='pure-button pure-button-primary'
           to={{ pathname: 'categories/new', state: { background: location } }}
         >
           Create Category
         </Link>
-        {categories.length > 0 && <h1>Categories</h1>}
+        <Link
+          className='pure-button pure-button-primary'
+          to={{ pathname: 'todos/new', state: { background: location } }}
+        >
+          Create Todo
+        </Link>
       </div>
+      {categories.length > 0 && <h1>Categories</h1>}
       <div className='flex category-container'>
         {categories.map(category => (
           <Category

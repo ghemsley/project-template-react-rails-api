@@ -1728,7 +1728,7 @@ select {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.75);
   left: 0px;
   top: 0px;
 }
@@ -1777,13 +1777,23 @@ select {
   height: 100%;
 }
 
-.delete-button {
-}
-
 .hover {
   position: fixed;
   color: whitesmoke;
   transition: opacity 0.333s ease 0ms;
   max-width: min-content;
   max-height: min-content;
+}
+
+.links-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1em;
+}
+
+.pure-button {
+  color: white;
+  border-radius: 4px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }

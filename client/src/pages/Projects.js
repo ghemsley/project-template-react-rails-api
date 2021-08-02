@@ -15,15 +15,27 @@ const Projects = () => {
 
   return (
     <div className='center center-text project-page'>
-      <div>
+      <div className='links-container'>
         <Link
           className='pure-button pure-button-primary'
           to={{ pathname: 'projects/new', state: { background: location } }}
         >
           Create Project
         </Link>
-        {projects.length > 0 && <h1>Projects</h1>}
+        <Link
+          className='pure-button pure-button-primary'
+          to={{ pathname: 'categories/new', state: { background: location } }}
+        >
+          Create Category
+        </Link>
+        <Link
+          className='pure-button pure-button-primary'
+          to={{ pathname: 'todos/new', state: { background: location } }}
+        >
+          Create Todo
+        </Link>
       </div>
+      {projects.length > 0 && <h1>Projects</h1>}
       <div className='flex project-container'>
         {projects.map(project => (
           <Project
