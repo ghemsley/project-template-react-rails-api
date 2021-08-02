@@ -11,16 +11,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    allowed = %i[id username created_at]
-
-    jsonapi_filter(User.find(params[:id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: User.find(params[:id])
   end
 
   def create
     user = User.create!({ username: params[:username], password: params[:password],
-                         password_confirmation: params[:passwordConfirmation] })
+                          password_confirmation: params[:passwordConfirmation] })
     render jsonapi: user
   end
 
