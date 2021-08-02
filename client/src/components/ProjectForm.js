@@ -10,28 +10,28 @@ const ProjectForm = props => {
     props.edit ? props.edit.description : ''
   )
   const dispatch = useDispatch()
-    const history = useHistory()
+  const history = useHistory()
   const handleSubmit = event => {
     event.preventDefault()
-     if (!props.edit) {
-       dispatch(
-         actions.instantiateProject({
-           name: name,
-           description: description
-         })
-       )
-       setName('')
-       setDescription('')
-     } else {
-       dispatch(
-         actions.amendProject({
-           ...props.edit,
-           name: name,
-           description: description
-         })
-       )
-       history.goBack()
-     }
+    if (!props.edit) {
+      dispatch(
+        actions.instantiateProject({
+          name: name,
+          description: description
+        })
+      )
+      setName('')
+      setDescription('')
+    } else {
+      dispatch(
+        actions.amendProject({
+          ...props.edit,
+          name: name,
+          description: description
+        })
+      )
+      history.goBack()
+    }
   }
   const handleChange = event => {
     switch (event.target.name) {
