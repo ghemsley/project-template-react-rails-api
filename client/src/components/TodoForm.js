@@ -4,28 +4,44 @@ import actions from '../actions/index'
 import Hover from './Hover'
 import Category from './Category'
 import { Modal } from './index'
+import { useHistory } from 'react-router-dom'
 
-const TodoForm = () => {
+const TodoForm = props => {
   const categories = useSelector(state => state.categories)
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState(props.edit ? props.edit.name : '')
+  const [description, setDescription] = useState(
+    props.edit ? props.edit.description : ''
+  )
   const [categoryID, setCategoryID] = useState(
-    categories[0] ? categories[0].id : ''
+    props.edit ? props.edit.categoryID : categories[0] ? categories[0].id : ''
   )
   const category = categories.find(category => category.id === categoryID)
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleSubmit = event => {
     event.preventDefault()
-    dispatch(
-      actions.instantiateTodo({
-        name: name,
-        description: description,
-        categoryID: categoryID
-      })
-    )
-    setName('')
-    setDescription('')
+    if (!props.edit) {
+      dispatch(
+        actions.instantiateTodo({
+          name: name,
+          description: description,
+          categoryID: categoryID
+        })
+      )
+      setName('')
+      setDescription('')
+    } else {
+      dispatch(
+        actions.amendTodo({
+          ...props.edit,
+          name: name,
+          description: description,
+          categoryID: categoryID
+        })
+      )
+      history.goBack()
+    }
   }
   const handleChange = event => {
     switch (event.target.name) {
@@ -53,7 +69,9 @@ const TodoForm = () => {
         </p>
       ) : (
         <>
-          <h1 className='fit margin-auto'>New Todo</h1>
+          <h1 className='fit margin-auto'>
+            {props.edit ? 'Edit' : 'New'} Todo
+          </h1>
           <form
             onSubmit={handleSubmit}
             className='pure-form pure-form-stacked fit margin-auto'
