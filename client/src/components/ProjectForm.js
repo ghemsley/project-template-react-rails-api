@@ -1,23 +1,37 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import Modal from './Modal'
 
 const ProjectForm = props => {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState(props.edit ? props.edit.name : '')
+  const [description, setDescription] = useState(
+    props.edit ? props.edit.description : ''
+  )
   const dispatch = useDispatch()
-
+    const history = useHistory()
   const handleSubmit = event => {
     event.preventDefault()
-    dispatch(
-      actions.instantiateProject({
-        name: name,
-        description: description
-      })
-    )
-    setName('')
-    setDescription('')
+     if (!props.edit) {
+       dispatch(
+         actions.instantiateProject({
+           name: name,
+           description: description
+         })
+       )
+       setName('')
+       setDescription('')
+     } else {
+       dispatch(
+         actions.amendProject({
+           ...props.edit,
+           name: name,
+           description: description
+         })
+       )
+       history.goBack()
+     }
   }
   const handleChange = event => {
     switch (event.target.name) {
@@ -34,7 +48,7 @@ const ProjectForm = props => {
 
   return (
     <Modal>
-      <h1 className='fit margin-auto'>New Project</h1>
+      <h1 className='fit margin-auto'>{props.edit ? 'Edit' : 'New'} Project</h1>
       <form
         onSubmit={handleSubmit}
         className='pure-form pure-form-stacked fit margin-auto'
