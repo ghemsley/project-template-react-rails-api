@@ -121,6 +121,23 @@ const instantiateEverything = () => (dispatch, getState) => {
     })
 }
 
+const destroyProject = payload => () => {
+  console.log('destroying project')
+  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json' }
+  }).then(response => response.json())
+}
+
+const removeProject = payload => dispatch => {
+  console.log('removing project')
+  dispatch(destroyProject(payload)).then(json => {
+    if (json.data.id === payload.id) {
+      dispatch(deeplyDeleteProject(payload))
+    }
+  })
+}
+
 const projectActions = {
   fetchProject,
   fetchProjects,
@@ -131,7 +148,9 @@ const projectActions = {
   deleteProject,
   deeplyDeleteProject,
   instantiateProject,
-  instantiateEverything
+  instantiateEverything,
+  destroyProject,
+  removeProject
 }
 
 export default projectActions
