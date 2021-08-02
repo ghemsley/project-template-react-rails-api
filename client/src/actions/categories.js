@@ -4,13 +4,17 @@ import constants from '../constants'
 const fetchCategory = payload => () => {
   return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const fetchCategories = () => () => {
   return fetch(`${constants.urls.BASE_URL}/categories`, {
     headers: { Accept: 'application/json' }
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const sendCategory = payload => () => {
@@ -18,7 +22,31 @@ const sendCategory = payload => () => {
     method: 'post',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload)
-  }).then(response => response.json())
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const patchCategory = payload => () => {
+  console.log(payload)
+  console.log(JSON.stringify(payload))
+  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const destroyCategory = payload => () => {
+  console.log('destroying category')
+  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json' }
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const createCategory = payload => ({
@@ -64,19 +92,19 @@ const instantiateCategory = payload => dispatch => {
   })
 }
 
-const destroyCategory = payload => () => {
-  console.log('destroying category')
-  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
-    method: 'delete',
-    headers: { Accept: 'application/json' }
-  }).then(response => response.json())
-}
-
 const removeCategory = payload => (dispatch) => {
   console.log('removing category')
   dispatch(destroyCategory(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(deeplyDeleteCategory(payload))
+    }
+  })
+}
+
+const amendCategory = payload => dispatch => {
+  return dispatch(patchCategory(payload)).then(json => {
+    if (json.data.id === payload.id) {
+      dispatch(updateCategory(payload))
     }
   })
 }
@@ -92,7 +120,9 @@ const categoryActions = {
   deleteCategoriesByProject,
   instantiateCategory,
   destroyCategory,
-  removeCategory
+  removeCategory,
+  patchCategory,
+  amendCategory
 }
 
 export default categoryActions
