@@ -10,10 +10,7 @@ class CategoryTodosController < ApplicationController
   end
 
   def show
-    allowed = %i[id name description category_id created_at updated_at]
-    jsonapi_filter(Category.find(params[:category_id]).todos.find(params[:todo_id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: Category.find(params[:category_id]).todos.find(params[:todo_id])
   end
 
   private

@@ -11,11 +11,7 @@ class TodosController < ApplicationController
   end
 
   def show
-    allowed = %i[id name description category_id created_at updated_at] 
-
-    jsonapi_filter(Todo.find(params[:id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: Todo.find(params[:id])
   end
 
   def create

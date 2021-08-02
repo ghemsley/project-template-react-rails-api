@@ -11,11 +11,7 @@ class UserProjectsController < ApplicationController
   end
 
   def show
-    allowed = %i[id user_id project_id created_at updated_at]
-
-    jsonapi_filter(UserProject.find(params[:id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: UserProject.find(params[:id])
   end
 
   def create
@@ -23,8 +19,7 @@ class UserProjectsController < ApplicationController
     render jsonapi: user_project
   end
 
-  def update
-  end
+  def update; end
 
   def destroy
     user_project = UserProject.find_by!(user_id: params[:userID], project_id: params[:project_id])

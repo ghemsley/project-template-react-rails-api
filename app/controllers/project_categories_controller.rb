@@ -10,10 +10,7 @@ class ProjectCategoriesController < ApplicationController
   end
 
   def show
-    allowed = %i[id name description project_id created_at updated_at]
-    jsonapi_filter(Project.find(params[:project_id]).categories.find(params[:category_id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: Project.find(params[:project_id]).categories.find(params[:category_id])
   end
 
   private

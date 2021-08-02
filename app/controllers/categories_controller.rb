@@ -11,11 +11,7 @@ class CategoriesController < ApplicationController
   end
 
   def show
-    allowed = %i[id name description project_id created_at updated_at]
-
-    jsonapi_filter(Category.find(params[:id]), allowed) do |filtered|
-      render jsonapi: filtered.result
-    end
+    render jsonapi: Category.find(params[:id])
   end
 
   def create
