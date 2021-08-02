@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../actions/index'
-import { Todo, Dropzone } from './index'
+import { Todo, Dropzone, ConfirmScreen } from './index'
 
 const Category = props => {
   const dispatch = useDispatch()
@@ -12,6 +12,7 @@ const Category = props => {
   const project = useSelector(state =>
     state.projects.find(project => project.id === props.category.projectID)
   )
+  const [showConfirmScreen, setShowConfirmScreen] = useState(false)
 
   const [{ dragging, position }, drag, dragPreview] = useDrag(() => ({
     type: 'CATEGORY',
@@ -32,8 +33,14 @@ const Category = props => {
     dispatch(actions.updateTodo({ ...item, categoryID: props.category.id }))
   }
 
-  const handleButtonPointerDown = () => {
-    dispatch(actions.deeplyDeleteCategory({ id: props.category.id }))
+  const handleClick = () => {
+    setShowConfirmScreen(true)
+  }
+  const closeAction = () => {
+    setShowConfirmScreen(false)
+  }
+  const confirmRemove = () => {
+    dispatch(actions.removeCategory(props.category))
   }
 
   return (
@@ -56,12 +63,25 @@ const Category = props => {
           </p>
         )}
         {props.showDelete && (
-          <button
-            className='pure-button pure-button-primary delete-button'
-            onClick={handleButtonPointerDown}
-          >
-            Delete
-          </button>
+          <>
+            <button
+              className='pure-button pure-button-primary delete-button'
+              onClick={handleClick}
+            >
+              Delete
+            </button>
+            {showConfirmScreen && (
+              <ConfirmScreen closeAction={closeAction}>
+                <h1>Confirm delete?</h1>
+                <button
+                  className='pure-button pure-button-primary'
+                  onClick={confirmRemove}
+                >
+                  Delete
+                </button>
+              </ConfirmScreen>
+            )}
+          </>
         )}
         {props.showTodos && (
           <>

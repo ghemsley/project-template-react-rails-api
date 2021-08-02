@@ -26,16 +26,14 @@ const Todo = props => {
     [dragging]
   )
 
-  const confirmRemoveTodo = () => {
-    dispatch(actions.removeTodo(props.todo))
-  }
-
   const handleClick = () => {
     setShowConfirmScreen(true)
   }
-
   const closeAction = () => {
     setShowConfirmScreen(false)
+  }
+  const confirmRemove = () => {
+    dispatch(actions.removeTodo(props.todo))
   }
 
   return (
@@ -69,7 +67,7 @@ const Todo = props => {
               <h1>Confirm delete?</h1>
               <button
                 className='pure-button pure-button-primary'
-                onClick={confirmRemoveTodo}
+                onClick={confirmRemove}
               >
                 Delete
               </button>
