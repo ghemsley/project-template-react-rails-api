@@ -6,6 +6,7 @@ import './App.css'
 function App() {
   const location = useLocation()
   const background = location.state && location.state.background
+  const edit = location.state && location.state.edit
 
   return (
     <div className='pure-u-1'>
@@ -22,6 +23,7 @@ function App() {
           <Route exact path='/projects/new' children={<ProjectForm />} />
           <Route exact path='/categories/new' children={<CategoryForm />} />
           <Route exact path='/todos/new' children={<TodoForm />} />
+          <Route exact path='/todos/:id/edit' children={<TodoForm edit={edit} />} />
         </>
       )}
     </div>

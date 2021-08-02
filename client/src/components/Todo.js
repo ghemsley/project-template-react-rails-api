@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useDrag } from 'react-dnd'
 import actions from '../actions/index'
 import { ConfirmScreen } from './index'
+import { Link, useLocation } from 'react-router-dom'
 
 const Todo = props => {
   const dispatch = useDispatch()
@@ -10,6 +11,7 @@ const Todo = props => {
     state.categories.find(category => category.id === props.todo.categoryID)
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
+  const location = useLocation()
 
   const [{ dragging, coordinates }, drag, dragPreview] = useDrag(() => ({
     type: 'TODO',
@@ -54,19 +56,30 @@ const Todo = props => {
           <strong>Category:</strong> {category.name}
         </p>
       )}
-      {props.showDelete && (
+      {props.showButtons && (
         <>
-          <button
-            className='pure-button pure-button-primary'
-            onClick={handleClick}
-          >
-            Delete
-          </button>
+          <div className='button-container'>
+            <Link
+              className='pure-button pure-button-primary'
+              to={{
+                pathname: `todos/${props.todo.id}/edit`,
+                state: { background: location, edit: props.todo }
+              }}
+            >
+              Edit
+            </Link>
+            <button
+              className='pure-button pure-button-delete'
+              onClick={handleClick}
+            >
+              Delete
+            </button>
+          </div>
           {showConfirmScreen && (
             <ConfirmScreen closeAction={closeAction}>
               <h1>Confirm delete?</h1>
               <button
-                className='pure-button pure-button-primary'
+                className='pure-button pure-button-delete'
                 onClick={confirmRemove}
               >
                 Delete
