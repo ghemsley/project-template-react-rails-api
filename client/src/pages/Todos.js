@@ -9,7 +9,7 @@ const Todos = () => {
 
   return (
     <div className='center center-text todo-page'>
-      <div className='links-container'>
+      <div className='button-container'>
         <Link
           className='pure-button pure-button-primary'
           to={{ pathname: 'todos/new', state: { background: location } }}
@@ -20,7 +20,7 @@ const Todos = () => {
       {todos.length > 0 && <h1>Todos</h1>}
       <div className='flex todo-container'>
         {todos.map(todo => (
-          <Todo todo={todo} showDelete showCategory key={todo.id} />
+          <Todo todo={todo} showButtons showCategory key={todo.id} />
         ))}
       </div>
     </div>

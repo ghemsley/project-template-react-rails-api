@@ -62,10 +62,10 @@ const Category = props => {
             <strong>Project:</strong> {project.name}
           </p>
         )}
-        {props.showDelete && (
+        {props.showButtons && (
           <>
             <button
-              className='pure-button pure-button-primary delete-button'
+              className='pure-button pure-button-delete'
               onClick={handleClick}
             >
               Delete
@@ -74,7 +74,7 @@ const Category = props => {
               <ConfirmScreen closeAction={closeAction}>
                 <h1>Confirm delete?</h1>
                 <button
-                  className='pure-button pure-button-primary'
+                  className='pure-button pure-button-delete'
                   onClick={confirmRemove}
                 >
                   Delete
@@ -98,7 +98,7 @@ const Category = props => {
                     <Todo
                       draggable
                       todo={todo}
-                      showDelete={props.showDelete}
+                      showButtons={props.showButtons}
                       key={todo.id}
                     />
                   ))}

@@ -9,7 +9,7 @@ const Categories = () => {
 
   return (
     <div className='center center-text category-page'>
-      <div className='links-container'>
+      <div className='button-container'>
         <Link
           className='pure-button pure-button-primary'
           to={{ pathname: 'categories/new', state: { background: location } }}
@@ -28,7 +28,7 @@ const Categories = () => {
         {categories.map(category => (
           <Category
             category={category}
-            showDelete
+            showButtons
             showTodos
             showProject
             key={category.id}

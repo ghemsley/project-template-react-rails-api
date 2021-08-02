@@ -44,10 +44,10 @@ const Project = props => {
       <Dropzone handleDrop={handleDrop} acceptType='CATEGORY'>
         <h2>{props.project.name}</h2>
         <p>{props.project.description}</p>
-        {props.showDelete && (
+        {props.showButtons && (
           <>
             <button
-              className='pure-button pure-button-primary'
+              className='pure-button pure-button-delete'
               onClick={handleClick}
             >
               Delete
@@ -56,7 +56,7 @@ const Project = props => {
               <ConfirmScreen closeAction={closeAction}>
                 <h1>Confirm delete?</h1>
                 <button
-                  className='pure-button pure-button-primary'
+                  className='pure-button pure-button-delete'
                   onClick={confirmRemove}
                 >
                   Delete
@@ -76,7 +76,7 @@ const Project = props => {
                 <Category
                   category={category}
                   showTodos={true}
-                  showDelete={props.showDelete}
+                  showButtons={props.showButtons}
                   draggable={true}
                   items={props.items}
                   key={category.id}

@@ -15,7 +15,7 @@ const Projects = () => {
 
   return (
     <div className='center center-text project-page'>
-      <div className='links-container'>
+      <div className='button-container'>
         <Link
           className='pure-button pure-button-primary'
           to={{ pathname: 'projects/new', state: { background: location } }}
@@ -40,7 +40,7 @@ const Projects = () => {
         {projects.map(project => (
           <Project
             project={project}
-            showDelete={true}
+            showButtons={true}
             showCategories={true}
             key={project.id}
           />
