@@ -30,7 +30,7 @@ const Category = props => {
   )
 
   const handleDrop = (item, position) => {
-    dispatch(actions.updateTodo({ ...item, categoryID: props.category.id }))
+    dispatch(actions.amendTodo({ ...item, categoryID: props.category.id }))
   }
 
   const handleClick = () => {

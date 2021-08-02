@@ -14,7 +14,7 @@ const Project = props => {
   const handleDrop = (item, cursor, coordinates) => {
     if (item.projectID !== props.project.id) {
       dispatch(
-        actions.updateCategory({
+        actions.amendCategory({
           ...item,
           projectID: props.project.id
         })
