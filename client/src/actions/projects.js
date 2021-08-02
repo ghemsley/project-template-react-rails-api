@@ -35,6 +35,26 @@ const sendProject = payload => () => {
     .catch(error => console.log(error))
 }
 
+const patchProject = payload => () => {
+  console.log(payload)
+  console.log(JSON.stringify(payload))
+  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+const destroyProject = payload => () => {
+  console.log('destroying project')
+  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json' }
+  }).then(response => response.json())
+}
+
 const createProject = payload => ({
   type: 'CREATE_PROJECT',
   payload
@@ -121,19 +141,20 @@ const instantiateEverything = () => (dispatch, getState) => {
     })
 }
 
-const destroyProject = payload => () => {
-  console.log('destroying project')
-  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
-    method: 'delete',
-    headers: { Accept: 'application/json' }
-  }).then(response => response.json())
-}
 
 const removeProject = payload => dispatch => {
   console.log('removing project')
   dispatch(destroyProject(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(deeplyDeleteProject(payload))
+    }
+  })
+}
+
+const amendProject = payload => dispatch => {
+  return dispatch(patchProject(payload)).then(json => {
+    if (json.data.id === payload.id) {
+      dispatch(updateProject(payload))
     }
   })
 }
@@ -150,7 +171,9 @@ const projectActions = {
   instantiateProject,
   instantiateEverything,
   destroyProject,
-  removeProject
+  removeProject,
+  patchProject,
+  amendProject
 }
 
 export default projectActions
