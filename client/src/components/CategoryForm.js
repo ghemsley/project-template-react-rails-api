@@ -1,27 +1,45 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
 
-const CategoryForm = () => {
+const CategoryForm = props => {
   const projects = useSelector(state => state.projects)
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [projectID, setProjectID] = useState(projects[0] ? projects[0].id : '')
+  const [name, setName] = useState(props.edit ? props.edit.name : '')
+  const [description, setDescription] = useState(
+    props.edit ? props.edit.description : ''
+  )
+  const [projectID, setProjectID] = useState(
+    props.edit ? props.edit.projectID : projects[0] ? projects[0].id : ''
+  )
   const project = projects.find(project => project.id === projectID)
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleSubmit = event => {
     event.preventDefault()
-    dispatch(
-      actions.instantiateCategory({
-        name: name,
-        description: description,
-        projectID: projectID
-      })
-    )
-    setName('')
-    setDescription('')
+    if (!props.edit) {
+      dispatch(
+        actions.instantiateCategory({
+          name: name,
+          description: description,
+          projectID: projectID
+        })
+      )
+      setName('')
+      setDescription('')
+    } else {
+      dispatch(
+        actions.amendCategory({
+          ...props.edit,
+          name: name,
+          description: description,
+          projectID: projectID
+        })
+      )
+      history.goBack()
+    }
   }
   const handleChange = event => {
     switch (event.target.name) {
@@ -49,7 +67,9 @@ const CategoryForm = () => {
         </p>
       ) : (
         <>
-          <h1 className='fit margin-auto'>New Category</h1>
+          <h1 className='fit margin-auto'>
+            {props.edit ? 'Edit' : 'New'} Category
+          </h1>
           <form
             onSubmit={handleSubmit}
             className='pure-form pure-form-stacked fit margin-auto'

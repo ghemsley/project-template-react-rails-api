@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions/index'
 import { Todo, Dropzone, ConfirmScreen } from './index'
 
@@ -13,6 +14,7 @@ const Category = props => {
     state.projects.find(project => project.id === props.category.projectID)
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
+  const location = useLocation()
 
   const [{ dragging, position }, drag, dragPreview] = useDrag(() => ({
     type: 'CATEGORY',
@@ -32,7 +34,6 @@ const Category = props => {
   const handleDrop = (item, position) => {
     dispatch(actions.amendTodo({ ...item, categoryID: props.category.id }))
   }
-
   const handleClick = () => {
     setShowConfirmScreen(true)
   }
@@ -64,12 +65,23 @@ const Category = props => {
         )}
         {props.showButtons && (
           <>
-            <button
-              className='pure-button pure-button-delete'
-              onClick={handleClick}
-            >
-              Delete
-            </button>
+            <div className='button-container'>
+              <Link
+                className={`pure-button pure-button-primary invisible`}
+                to={{
+                  pathname: `categories/${props.category.id}/edit`,
+                  state: { background: location, edit: props.category }
+                }}
+              >
+                Edit
+              </Link>
+              <button
+                className={`pure-button pure-button-delete invisible`}
+                onClick={handleClick}
+              >
+                Delete
+              </button>
+            </div>
             {showConfirmScreen && (
               <ConfirmScreen closeAction={closeAction}>
                 <h1>Confirm delete?</h1>
