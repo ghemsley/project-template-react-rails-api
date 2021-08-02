@@ -1,6 +1,5 @@
 class ProjectSerializer
   include JSONAPI::Serializer
-  set_key_transform :camel_lower
 
   attributes :id, :name, :description, :created_at, :updated_at
 
@@ -15,6 +14,13 @@ class ProjectSerializer
     self: :url,
     related: lambda { |object|
       "http://localhost:3000/projects/#{object.id}/todos"
+    }
+  }
+
+  has_many :users, through: :user_projects, links: {
+    self: :url,
+    related: lambda { |object|
+      "http://localhost:3000/projects/#{object.id}/users"
     }
   }
 

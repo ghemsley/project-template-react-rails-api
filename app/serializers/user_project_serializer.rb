@@ -1,4 +1,6 @@
 class UserProjectSerializer < ActiveModel::Serializer
+  include JSONAPI::Serializer
+  
   attributes :id, :user_id, :project_id
 
   belongs_to :user, links: {

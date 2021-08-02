@@ -1,6 +1,5 @@
 class TodoSerializer
   include JSONAPI::Serializer
-  set_key_transform :camel_lower
 
   attributes :id, :name, :description, :category_id, :created_at, :updated_at
 
