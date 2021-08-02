@@ -1690,6 +1690,7 @@ select {
 
 .project-container {
   height: 100%;
+  align-items: flex-start;
 }
 
 .category-container {
@@ -1807,4 +1808,32 @@ select {
 
 .project, .category, .todo {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+.project:hover > div > .button-container > .invisible, .category:hover > div > .button-container > .invisible, .todo:hover > .button-container > .invisible {
+  opacity: 1;
+}
+
+.invisible, .invisible * {
+  transition: opacity .1s ease;
+  opacity: 0;
+}
+
+.button-container {
+  /* transition: max-height 500ms ease; */
+  overflow: hidden;
+  /* max-height: 0; */
+  transition: opacity .25s ease,
+                font-size .1s ease,
+                margin .1s ease,
+                padding .1s ease;
+  /* transform: scaleY(0); */
+}
+
+.project:not(:hover) > div > .button-container, .category:not(:hover) > div > .button-container, .todo:not(:hover) .button-container {
+  /* max-height: 480px; */
+  /* transform: scaleY(1) */
+  font-size: 0;
+  margin: 0;
+  padding: 0;
 }
