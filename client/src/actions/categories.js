@@ -64,6 +64,23 @@ const instantiateCategory = payload => dispatch => {
   })
 }
 
+const destroyCategory = payload => () => {
+  console.log('destroying category')
+  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json' }
+  }).then(response => response.json())
+}
+
+const removeCategory = payload => (dispatch) => {
+  console.log('removing category')
+  dispatch(destroyCategory(payload)).then(json => {
+    if (json.data.id === payload.id) {
+      dispatch(deeplyDeleteCategory(payload))
+    }
+  })
+}
+
 const categoryActions = {
   fetchCategory,
   fetchCategories,
@@ -73,7 +90,9 @@ const categoryActions = {
   deleteCategory,
   deeplyDeleteCategory,
   deleteCategoriesByProject,
-  instantiateCategory
+  instantiateCategory,
+  destroyCategory,
+  removeCategory
 }
 
 export default categoryActions
