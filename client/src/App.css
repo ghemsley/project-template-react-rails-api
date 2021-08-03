@@ -1597,7 +1597,14 @@ a.pure-button-selected {
 .pure-table-horizontal tbody > tr:last-child > td {
   border-bottom-width: 0;
 }
+
+
+/****************/
 /* end pure css */
+/****************/
+
+
+
 
 .fadein {
   opacity: 1;

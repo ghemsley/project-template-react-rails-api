@@ -27,8 +27,6 @@ const sendTodo = payload => () => {
 }
 
 const patchTodo = payload => () => {
-  console.log(payload)
-  console.log(JSON.stringify(payload))
   return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -69,6 +67,7 @@ const deleteTodosByCategory = payload => ({
 })
 
 const instantiateTodo = payload => dispatch => {
+  console.log('instantiating todo')
   return dispatch(sendTodo(payload)).then(json => {
     const todoObject = {
       id: json.data.id,
@@ -90,6 +89,7 @@ const removeTodo = payload => dispatch => {
 }
 
 const amendTodo = payload => dispatch => {
+  console.log('amending todo')
   return dispatch(patchTodo(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(updateTodo(payload))

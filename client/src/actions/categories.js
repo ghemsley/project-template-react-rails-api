@@ -28,8 +28,6 @@ const sendCategory = payload => () => {
 }
 
 const patchCategory = payload => () => {
-  console.log(payload)
-  console.log(JSON.stringify(payload))
   return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -81,6 +79,7 @@ const deleteCategoriesByProject = payload => (dispatch, getState) => {
 }
 
 const instantiateCategory = payload => dispatch => {
+  console.log('instantiating category')
   return dispatch(sendCategory(payload)).then(json => {
     const categoryObject = {
       id: json.data.id,
@@ -102,6 +101,7 @@ const removeCategory = payload => (dispatch) => {
 }
 
 const amendCategory = payload => dispatch => {
+  console.log('amending category')
   return dispatch(patchCategory(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(updateCategory(payload))

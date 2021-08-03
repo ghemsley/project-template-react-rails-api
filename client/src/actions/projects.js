@@ -77,6 +77,7 @@ const deeplyDeleteProject = payload => dispatch => {
 }
 
 const instantiateProject = payload => dispatch => {
+  console.log('instantiating project')
   return dispatch(sendProject(payload)).then(json => {
     const projectObject = {
       id: json.data.id,
@@ -88,6 +89,7 @@ const instantiateProject = payload => dispatch => {
 }
 
 const instantiateEverything = () => (dispatch, getState) => {
+  console.log('instantiating everything')
   const state = getState()
   return dispatch(fetchEverything())
     .then(json => {
@@ -152,6 +154,7 @@ const removeProject = payload => dispatch => {
 }
 
 const amendProject = payload => dispatch => {
+  console.log('amending project')
   return dispatch(patchProject(payload)).then(json => {
     if (json.data.id === payload.id) {
       dispatch(updateProject(payload))
