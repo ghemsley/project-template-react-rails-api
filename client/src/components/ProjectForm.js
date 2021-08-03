@@ -57,8 +57,7 @@ const ProjectForm = props => {
           <label htmlFor='name'>Name</label>
           <input type='text' name='name' value={name} onChange={handleChange} />
           <label htmlFor='description'>Description</label>
-          <input
-            type='text'
+          <textarea
             name='description'
             value={description}
             onChange={handleChange}

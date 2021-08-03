@@ -83,8 +83,7 @@ const CategoryForm = props => {
                 onChange={handleChange}
               />
               <label htmlFor='description'>Description</label>
-              <input
-                type='text'
+              <textarea
                 name='description'
                 value={description}
                 onChange={handleChange}
