@@ -151,7 +151,7 @@ const Category = props => {
         transition: 'background-color 150ms ease',
         ...style
       }}
-      ref={mergeRefs([ref, drag])}
+      ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}
     >
       <Dropzone
         handleDrop={handleDrop}
