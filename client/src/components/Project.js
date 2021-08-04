@@ -1,27 +1,109 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
+import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
 import { Category, Dropzone, ConfirmScreen } from './index'
+import { debounce } from 'lodash'
 
 const Project = props => {
   const categories = useSelector(state =>
     state.categories.filter(category => category.projectID === props.project.id)
   )
+  const coordinates = useSelector(state => state.coordinates)
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
+  const projectCoordinates = useSelector(state =>
+    state.coordinates.find(
+      coords => coords.type === 'project' && coords.item.id === props.project.id
+    )
+  )
   const location = useLocation()
   const dispatch = useDispatch()
+  const ref = useRef(null)
 
-  const style = useMemo(() => ({}), [])
-  const handleDrop = (item, cursor, coordinates) => {
-    if (item.projectID !== props.project.id) {
-      dispatch(
-        actions.amendCategory({
-          ...item,
-          projectID: props.project.id
-        })
+  const getCoordinates = useCallback(
+    size => {
+      if (ref.current) {
+        console.log('resize project')
+        const rect = ref.current.getBoundingClientRect()
+        const coordinates = {
+          type: 'project',
+          item: props.project,
+          position: {
+            left: rect.left,
+            right: rect.right,
+            top: rect.top,
+            bottom: rect.bottom,
+            width: size.width,
+            height: size.height,
+            rectWidth: rect.width,
+            rectHeight: rect.height
+          }
+        }
+        dispatch(actions.refreshCoordinates(coordinates))
+      }
+    },
+    [props.project, dispatch]
+  )
+
+  const onResize = debounce(
+    size => {
+      getCoordinates(size)
+    },
+    100,
+    { trailing: true, maxWait: 250 }
+  )
+
+  const onSroll = debounce(size => getCoordinates(size), 250, {
+    trailing: true,
+    maxWait: 500
+  })
+
+  const observer = useResizeObserver({ ref, onResize })
+
+  useEffect(() => {
+    document.addEventListener('scroll', () =>
+      onSroll({ width: observer.width, height: observer.height })
+    )
+    return () => {
+      document.removeEventListener('scroll', () =>
+        onSroll({ width: observer.width, height: observer.height })
       )
     }
+  }, [])
+
+  const style = useMemo(() => ({}), [])
+  const handleDrop = (item, result) => {
+    const categoryCoordsArray = coordinates.filter(
+      coords =>
+        coords.type === 'category' && coords.item.projectID === props.project.id
+    )
+    for (const coords of categoryCoordsArray) {
+      if (coords.item.id !== item.id) {
+        if (result.cursor.y > coords.position.top) {
+          console.log('cursor is below', {
+            element: coords.position.top,
+            cursor: result.cursor.y
+          })
+        } else {
+          console.log('cursor is above', {
+            element: coords.position.top,
+            cursor: result.cursor.y
+          })
+        }
+      }
+    }
+    const category = { ...item, projectID: props.project.id }
+    if (item.projectID !== props.project.id) {
+      dispatch(actions.amendCategory(category))
+    }
+    // categoryCoordsArray.sort((coord1, coord2) => {
+    //   if (coord1.order > coord2.order) {
+    //     return 1
+    //   } else if (coord1.order < coord2.order) {
+    //     return -1
+    //   } else return 0
+    // })
   }
 
   const handleClick = () => {
@@ -36,15 +118,20 @@ const Project = props => {
 
   return (
     <div
-      id={props.project.id}
+      id={`project-${props.project.id}`}
       className='hoverable flex-child flex rounded project'
       style={{
         background: '#10a090',
         color: 'whitesmoke',
         ...style
       }}
+      ref={ref}
     >
-      <Dropzone handleDrop={handleDrop} acceptType='CATEGORY'>
+      <Dropzone
+        handleDrop={handleDrop}
+        acceptType='category'
+        parentCoordinates={projectCoordinates}
+      >
         <h2>{props.project.name}</h2>
         <p>{props.project.description}</p>
         {props.showButtons && (
@@ -91,7 +178,6 @@ const Project = props => {
                   category={category}
                   showTodos={true}
                   showButtons={props.showButtons}
-                  draggable={true}
                   items={props.items}
                   key={category.id}
                 />
