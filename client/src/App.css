@@ -1852,3 +1852,8 @@ select {
 .pure-form textarea {
   min-width: 12em;
 }
+
+.dropzone {
+  height: 100%;
+  width: 100%;
+}
