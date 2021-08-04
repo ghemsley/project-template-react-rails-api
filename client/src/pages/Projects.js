@@ -36,7 +36,7 @@ const Projects = () => {
             project={project}
             showButtons={true}
             showCategories={true}
-            key={project.id}
+            key={`project-${project.id}`}
           />
         ))}
       </div>

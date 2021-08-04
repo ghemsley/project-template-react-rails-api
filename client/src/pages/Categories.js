@@ -31,7 +31,7 @@ const Categories = () => {
             showButtons
             showTodos
             showProject
-            key={category.id}
+            key={`category-${category.id}`}
           />
         ))}
       </div>

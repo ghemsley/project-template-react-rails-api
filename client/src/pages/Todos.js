@@ -20,7 +20,12 @@ const Todos = () => {
       {todos.length > 0 && <h1>Todos</h1>}
       <div className='flex todo-container'>
         {todos.map(todo => (
-          <Todo todo={todo} showButtons showCategory key={todo.id} />
+          <Todo
+            todo={todo}
+            showButtons
+            showCategory
+            key={`todo-${todo.id}`}
+          />
         ))}
       </div>
     </div>
