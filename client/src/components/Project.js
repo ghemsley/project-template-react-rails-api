@@ -72,38 +72,97 @@ const Project = props => {
   }, [])
 
   const style = useMemo(() => ({}), [])
+
   const handleDrop = (item, result) => {
     const categoryCoordsArray = coordinates.filter(
       coords =>
         coords.type === 'category' && coords.item.projectID === props.project.id
     )
-    for (const coords of categoryCoordsArray) {
-      if (coords.item.id !== item.id) {
-        if (result.cursor.y > coords.position.top) {
-          console.log('cursor is below', {
-            element: coords.position.top,
-            cursor: result.cursor.y
-          })
+    categoryCoordsArray.sort(
+      (categoryCoords1, categoryCoords2) =>
+        categoryCoords1.item.order - categoryCoords2.item.order
+    )
+    for (let i = 1; i < categoryCoordsArray.length; i++) {
+      categoryCoordsArray[i].order = i
+    }
+    let order = 0
+    let i = 0
+    while (i < categoryCoordsArray.length) {
+      if (categoryCoordsArray[i].item.id !== item.id) {
+        if (result.element.y < categoryCoordsArray[i].position.top) {
+          order = i
+          for (let j = i; j < categoryCoordsArray.length; j++) {
+            if (categoryCoordsArray[j].item.id !== item.id) {
+              categoryCoordsArray[j].item.order += 1
+            }
+          }
+          if (i === 0) {
+            break
+          }
+          for (let j = i - 1; j >= 0; j--) {
+            if (categoryCoordsArray[j].item.id !== item.id) {
+              categoryCoordsArray[j].item.order -= 1
+            }
+          }
+          break
         } else {
-          console.log('cursor is above', {
-            element: coords.position.top,
-            cursor: result.cursor.y
-          })
+          order = i + 1
         }
       }
+      i++
     }
-    const category = { ...item, projectID: props.project.id }
-    if (item.projectID !== props.project.id) {
-      dispatch(actions.amendCategory(category))
+    const categoriesToUpdate = categoryCoordsArray.map(coords => coords.item)
+    const existingCategory = categoriesToUpdate.find(
+      existing => existing.id === item.id
+    )
+    if (!existingCategory) {
+      const category = { ...item, order: order, projectID: props.project.id }
+      categoriesToUpdate.push(category)
+    } else {
+      categoriesToUpdate[categoriesToUpdate.indexOf(existingCategory)].order =
+        order
     }
-    // categoryCoordsArray.sort((coord1, coord2) => {
-    //   if (coord1.order > coord2.order) {
-    //     return 1
-    //   } else if (coord1.order < coord2.order) {
-    //     return -1
-    //   } else return 0
-    // })
+    categoriesToUpdate.sort(
+      (category1, category2) => category1.order - category2.order
+    )
+    for (let i = 0; i < categoriesToUpdate.length; i++) {
+      categoriesToUpdate[i].order = i
+    }
+    // dispatch(actions.batchAmendCategories(categoriesToUpdate))
   }
+
+  // const handleDrop = (item, result) => {
+  //   const categoryCoordsArray = coordinates.filter(
+  //     coords =>
+  //       coords.type === 'category' && coords.item.projectID === props.project.id
+  //   )
+  //   for (const coords of categoryCoordsArray) {
+  //     if (coords.item.id !== item.id) {
+  //       if (result.cursor.y > coords.position.top) {
+  //         console.log('cursor is below', {
+  //           element: coords.position.top,
+  //           cursor: result.cursor.y
+  //         })
+  //       } else {
+  //         console.log('cursor is above', {
+  //           element: coords.position.top,
+  //           cursor: result.cursor.y
+  //         })
+  //       }
+  //     }
+  //   }
+  //   const category = { ...item, projectID: props.project.id }
+  //   if (item.projectID !== props.project.id) {
+  //     dispatch(actions.amendCategory(category))
+  //   }
+  //   // categoryCoordsArray.sort((coord1, coord2) => {
+  //   //   if (coord1.order > coord2.order) {
+  //   //     return 1
+  //   //   } else if (coord1.order < coord2.order) {
+  //   //     return -1
+  //   //   } else return 0
+  //   // })
+  // }
 
   const handleClick = () => {
     setShowConfirmScreen(true)
@@ -114,6 +173,8 @@ const Project = props => {
   const confirmRemove = () => {
     dispatch(actions.removeProject(props.project))
   }
+  const compareOrder = (category1, category2) =>
+    category1.order - category2.order
 
   return (
     <div
@@ -124,13 +185,11 @@ const Project = props => {
         color: 'whitesmoke',
         ...style
       }}
-      ref={ref}
-    >
+      ref={ref}>
       <Dropzone
         handleDrop={handleDrop}
         acceptType='category'
-        parentCoordinates={projectCoordinates}
-      >
+        parentCoordinates={projectCoordinates}>
         <h2>{props.project.name}</h2>
         <p>{props.project.description}</p>
         {props.showButtons && (
@@ -141,14 +200,12 @@ const Project = props => {
                 to={{
                   pathname: `projects/${props.project.id}/edit`,
                   state: { background: location, edit: props.project }
-                }}
-              >
+                }}>
                 Edit
               </Link>
               <button
                 className={`pure-button pure-button-delete invisible`}
-                onClick={handleClick}
-              >
+                onClick={handleClick}>
                 Delete
               </button>
             </div>
@@ -157,8 +214,7 @@ const Project = props => {
                 <h1>Confirm delete?</h1>
                 <button
                   className='pure-button pure-button-delete'
-                  onClick={confirmRemove}
-                >
+                  onClick={confirmRemove}>
                   Delete
                 </button>
               </ConfirmScreen>
@@ -172,7 +228,7 @@ const Project = props => {
               <p style={{ fontSize: '14px' }}>Drop categories here!</p>
             )}
             <div className='flex category-container'>
-              {categories.map(category => (
+              {categories.sort(compareOrder).map(category => (
                 <Category
                   category={category}
                   showTodos={true}

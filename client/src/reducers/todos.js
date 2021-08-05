@@ -24,7 +24,17 @@ const todos = (state = [], action) => {
 
     case 'UPDATE_TODOS':
       console.log('batch updating todos')
-      newState = [...state, ...action.payload]
+      newState = [...state]
+      for (const todo of action.payload) {
+        const currentTodo = newState.find(existing => existing.id === todo.id)
+        if (currentTodo) {
+          for (const key in todo) {
+            if (key !== 'id') {
+              currentTodo[key] = todo[key]
+            }
+          }
+        }
+      }
       newState.sort(compareOrder)
       return newState
 

@@ -83,9 +83,9 @@ const Todo = props => {
         element: monitor.getSourceClientOffset()
       }),
       end: (item, monitor) => {
-        if (monitor.didDrop()) {
-          console.log('result', monitor.getDropResult())
-        }
+        // if (monitor.didDrop()) {
+        //   console.log('result', monitor.getDropResult())
+        // }
       }
     }),
     []

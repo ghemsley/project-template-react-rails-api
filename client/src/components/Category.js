@@ -37,9 +37,9 @@ const Category = props => {
     }),
     options: { dropEffect: 'copy' },
     end: (item, monitor) => {
-      if (monitor.didDrop()) {
-        console.log('result', monitor.getDropResult())
-      }
+      // if (monitor.didDrop()) {
+      //   console.log('result', monitor.getDropResult())
+      // }
     }
   }))
 
@@ -110,15 +110,10 @@ const Category = props => {
     while (i < todoCoordsArray.length) {
       if (todoCoordsArray[i].item.id !== item.id) {
         if (result.element.y < todoCoordsArray[i].position.top) {
-          console.log('element is below droppedElement', {
-            element: todoCoordsArray[i].position.top,
-            droppedElement: result.element.y
-          })
           order = i
           for (let j = i; j < todoCoordsArray.length; j++) {
             if (todoCoordsArray[j].item.id !== item.id) {
               todoCoordsArray[j].item.order += 1
-              console.log(`id ${todoCoordsArray[j].item.id} order + 1`)
             }
           }
           if (i === 0) {
@@ -127,15 +122,10 @@ const Category = props => {
           for (let j = i - 1; j >= 0; j--) {
             if (todoCoordsArray[j].item.id !== item.id) {
               todoCoordsArray[j].item.order -= 1
-              console.log(`id ${todoCoordsArray[j].item.id} order -1`)
             }
           }
           break
         } else {
-          console.log('element is above droppedElement', {
-            element: todoCoordsArray[i].position.top,
-            droppedElement: result.element.y
-          })
           order = i + 1
         }
       }
@@ -150,11 +140,10 @@ const Category = props => {
       todosToUpdate[todosToUpdate.indexOf(existingTodo)].order = order
     }
     todosToUpdate.sort((todo1, todo2) => todo1.order - todo2.order)
-    console.log('todos to update', todosToUpdate)
     for (let i = 0; i < todosToUpdate.length; i++) {
       todosToUpdate[i].order = i
     }
-    // dispatch(actions.batchAmendTodos(todosToUpdate))
+    dispatch(actions.batchAmendTodos(todosToUpdate))
   }
 
   const handleClick = () => {
