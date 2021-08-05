@@ -24,7 +24,6 @@ const Project = props => {
   const getCoordinates = useCallback(
     size => {
       if (ref.current) {
-        console.log('resize project')
         const rect = ref.current.getBoundingClientRect()
         const coordinates = {
           type: 'project',

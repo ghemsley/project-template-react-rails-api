@@ -28,7 +28,6 @@ const Todo = props => {
   const getCoordinates = useCallback(
     size => {
       if (ref.current) {
-        console.log('resize todo')
         const rect = ref.current.getBoundingClientRect()
         const coordinates = {
           type: 'todo',

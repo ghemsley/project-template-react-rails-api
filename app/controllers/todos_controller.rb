@@ -26,6 +26,10 @@ class TodosController < ApplicationController
     render jsonapi: todo
   end
 
+  def batch_update
+    logger.info(params)
+  end
+
   def destroy
     todo = Todo.find(params[:id])
     todo.destroy!
