@@ -82,7 +82,8 @@ const instantiateProject = payload => dispatch => {
     const projectObject = {
       id: json.data.id,
       name: json.data.attributes.name,
-      description: json.data.attributes.description
+      description: json.data.attributes.description,
+      order: json.data.attributes.order
     }
     dispatch(createProject(projectObject))
   })
@@ -91,18 +92,21 @@ const instantiateProject = payload => dispatch => {
 const instantiateEverything = () => (dispatch, getState) => {
   console.log('instantiating everything')
   const state = getState()
+  
   return dispatch(fetchEverything())
     .then(json => {
       for (const project of json.data) {
         const projectObject = {
           id: project.id,
           name: project.attributes.name,
+          order: project.attributes.order,
           description: project.attributes.description
         }
         if (!state.projects.find(project => project.id === projectObject.id)) {
           dispatch(actions.createProject(projectObject))
         }
       }
+      
       return json
     })
     .then(json => {
@@ -112,7 +116,8 @@ const instantiateEverything = () => (dispatch, getState) => {
             id: included.id,
             name: included.attributes.name,
             description: included.attributes.description,
-            projectID: included.relationships.project.data.id
+            projectID: included.relationships.project.data.id,
+            order: included.attributes.order
           }
           if (
             !state.categories.find(
@@ -132,7 +137,8 @@ const instantiateEverything = () => (dispatch, getState) => {
             id: included.id,
             name: included.attributes.name,
             description: included.attributes.description,
-            categoryID: included.relationships.category.data.id
+            categoryID: included.relationships.category.data.id,
+            order: included.attributes.order
           }
           if (!state.todos.find(todo => todo.id === todoObject.id)) {
             dispatch(actions.createTodo(todoObject))

@@ -36,6 +36,16 @@ const patchTodo = payload => () => {
     .catch(error => console.log(error))
 }
 
+const patchTodos = payload => () => {
+  return fetch(`${constants.urls.BASE_URL}/todos/batch_update`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
 const destroyTodo = payload => () => {
   console.log('destroying todo')
   return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
@@ -56,6 +66,11 @@ const updateTodo = payload => ({
   payload
 })
 
+const updateTodos = payload => ({
+  type: 'UPDATE_TODOS',
+  payload
+})
+
 const deleteTodo = payload => ({
   type: 'DELETE_TODO',
   payload
@@ -73,7 +88,8 @@ const instantiateTodo = payload => dispatch => {
       id: json.data.id,
       name: json.data.attributes.name,
       description: json.data.attributes.description,
-      categoryID: json.data.relationships.category.data.id
+      categoryID: json.data.relationships.category.data.id,
+      order: json.data.attributes.order
     }
     dispatch(createTodo(todoObject))
   })
@@ -97,19 +113,29 @@ const amendTodo = payload => dispatch => {
   })
 }
 
+const batchAmendTodos = payload => dispatch => {
+  console.log('batch amend todos')
+  return dispatch(patchTodos(payload)).then(json => {
+    console.log('batch amend todo json', json)
+    dispatch(updateTodos(payload))
+  })
+}
+
 const todoActions = {
   fetchTodo,
   fetchTodos,
   sendTodo,
   createTodo,
   updateTodo,
+  updateTodos,
   deleteTodo,
   deleteTodosByCategory,
   instantiateTodo,
   destroyTodo,
   removeTodo,
   patchTodo,
-  amendTodo
+  amendTodo,
+  batchAmendTodos
 }
 
 export default todoActions

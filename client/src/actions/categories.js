@@ -85,7 +85,8 @@ const instantiateCategory = payload => dispatch => {
       id: json.data.id,
       name: json.data.attributes.name,
       description: json.data.attributes.description,
-      projectID: json.data.relationships.project.data.id
+      projectID: json.data.relationships.project.data.id,
+      order: json.data.attributes.order
     }
     dispatch(createCategory(categoryObject))
   })
