@@ -23,7 +23,6 @@ const Category = props => {
     )
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
-  const [order, setOrder] = useState(0)
   const location = useLocation()
   const dispatch = useDispatch()
   const ref = useRef(null)
@@ -47,7 +46,6 @@ const Category = props => {
   const getCoordinates = useCallback(
     size => {
       if (ref.current) {
-        console.log('resize category')
         const rect = ref.current.getBoundingClientRect()
         const coordinates = {
           type: 'category',
@@ -100,33 +98,65 @@ const Category = props => {
       coords =>
         coords.type === 'todo' && coords.item.categoryID === props.category.id
     )
-    for (const coords of todoCoordsArray) {
-      if (coords.item.id !== item.id) {
-        if (result.cursor.y > coords.position.top) {
-          console.log('cursor is below', {
-            element: coords.position.top,
-            cursor: result.cursor.y
+    todoCoordsArray.sort(
+      (todoCoords1, todoCoords2) =>
+        todoCoords1.item.order - todoCoords2.item.order
+    )
+    for (let i = 1; i < todoCoordsArray.length; i++) {
+      todoCoordsArray[i].order = i
+    }
+    let order = 0
+    let i = 0
+    while (i < todoCoordsArray.length) {
+      if (todoCoordsArray[i].item.id !== item.id) {
+        if (result.element.y < todoCoordsArray[i].position.top) {
+          console.log('element is below droppedElement', {
+            element: todoCoordsArray[i].position.top,
+            droppedElement: result.element.y
           })
+          order = i
+          for (let j = i; j < todoCoordsArray.length; j++) {
+            if (todoCoordsArray[j].item.id !== item.id) {
+              todoCoordsArray[j].item.order += 1
+              console.log(`id ${todoCoordsArray[j].item.id} order + 1`)
+            }
+          }
+          if (i === 0) {
+            break
+          }
+          for (let j = i - 1; j >= 0; j--) {
+            if (todoCoordsArray[j].item.id !== item.id) {
+              todoCoordsArray[j].item.order -= 1
+              console.log(`id ${todoCoordsArray[j].item.id} order -1`)
+            }
+          }
+          break
         } else {
-          console.log('cursor is above', {
-            element: coords.position.top,
-            cursor: result.cursor.y
+          console.log('element is above droppedElement', {
+            element: todoCoordsArray[i].position.top,
+            droppedElement: result.element.y
           })
+          order = i + 1
         }
       }
+      i++
     }
-    const todo = { ...item, categoryID: props.category.id }
-    if (item.categoryID !== props.category.id) {
-      dispatch(actions.amendTodo(todo))
+    const todosToUpdate = todoCoordsArray.map(coords => coords.item)
+    const existingTodo = todosToUpdate.find(existing => existing.id === item.id)
+    if (!existingTodo) {
+      const todo = { ...item, order: order, categoryID: props.category.id }
+      todosToUpdate.push(todo)
+    } else {
+      todosToUpdate[todosToUpdate.indexOf(existingTodo)].order = order
     }
-    // todoCoordsArray.sort((coord1, coord2) => {
-    //   if (coord1.order > coord2.order) {
-    //     return 1
-    //   } else if (coord1.order < coord2.order) {
-    //     return -1
-    //   } else return 0
-    // })
+    todosToUpdate.sort((todo1, todo2) => todo1.order - todo2.order)
+    console.log('todos to update', todosToUpdate)
+    for (let i = 0; i < todosToUpdate.length; i++) {
+      todosToUpdate[i].order = i
+    }
+    // dispatch(actions.batchAmendTodos(todosToUpdate))
   }
+
   const handleClick = () => {
     setShowConfirmScreen(true)
   }
@@ -142,6 +172,8 @@ const Category = props => {
     [dragging]
   )
 
+  const compareOrder = (todo1, todo2) => todo1.order - todo2.order
+
   return (
     <div
       id={`category-${props.category.id}`}
@@ -151,14 +183,12 @@ const Category = props => {
         transition: 'background-color 150ms ease',
         ...style
       }}
-      ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}
-    >
+      ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
       <Dropzone
         handleDrop={handleDrop}
         acceptType='todo'
         parentItem={props.category}
-        parentCoordinates={categoryCoordinates}
-      >
+        parentCoordinates={categoryCoordinates}>
         <h2>{props.category.name}</h2>
         <p>{props.category.description}</p>
         {props.showProject && (
@@ -174,14 +204,12 @@ const Category = props => {
                 to={{
                   pathname: `categories/${props.category.id}/edit`,
                   state: { background: location, edit: props.category }
-                }}
-              >
+                }}>
                 Edit
               </Link>
               <button
                 className={`pure-button pure-button-delete invisible`}
-                onClick={handleClick}
-              >
+                onClick={handleClick}>
                 Delete
               </button>
             </div>
@@ -190,8 +218,7 @@ const Category = props => {
                 <h1>Confirm delete?</h1>
                 <button
                   className='pure-button pure-button-delete'
-                  onClick={confirmRemove}
-                >
+                  onClick={confirmRemove}>
                   Delete
                 </button>
               </ConfirmScreen>
@@ -209,7 +236,7 @@ const Category = props => {
               <>
                 <h3>Todos</h3>
                 <div className='flex column todo-container'>
-                  {todos.map(todo => (
+                  {todos.sort(compareOrder).map(todo => (
                     <Todo
                       todo={todo}
                       showButtons={props.showButtons}
