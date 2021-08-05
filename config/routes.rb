@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   patch '/todos/batch_update', to: 'todos#batch_update'
+  patch '/categories/batch_update', to: 'categories#batch_update'
+  patch '/projects/batch_update', to: 'projects#batch_update'
 
   resources :user_projects, only: %i[index show]
   resources :users, only: %i[index show create update destroy]

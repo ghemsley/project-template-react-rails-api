@@ -26,6 +26,18 @@ class CategoriesController < ApplicationController
     render jsonapi: category
   end
 
+  def batch_update
+    categories = params[:_json].collect do |json|
+      Category.find(json[:id])
+    end
+    categories.each_with_index do |category, index|
+      json = params[:_json][index]
+      category.update!(name: json[:name], description: json[:description], order: json[:order],
+                       project_id: json[:projectID])
+    end
+    render jsonapi: categories
+  end
+
   def destroy
     category = Category.find(params[:id])
     category.destroy!

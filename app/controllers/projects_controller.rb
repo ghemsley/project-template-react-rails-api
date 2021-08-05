@@ -25,6 +25,17 @@ class ProjectsController < ApplicationController
     render jsonapi: project
   end
 
+  def batch_update
+    projects = params[:_json].collect do |json|
+      Project.find(json[:id])
+    end
+    projects.each_with_index do |project, index|
+      json = params[:_json][index]
+      project.update!(name: json[:name], description: json[:description], order: json[:order])
+    end
+    render jsonapi: projects
+  end
+
   def destroy
     project = Project.find(params[:id])
     project.destroy!
