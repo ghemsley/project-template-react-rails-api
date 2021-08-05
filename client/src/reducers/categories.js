@@ -1,4 +1,6 @@
 const categories = (state = [], action) => {
+  const compareOrder = (category1, category2) => category1.order - category2.order
+  let newState = []
   switch (action.type) {
     case 'CREATE_CATEGORY':
       console.log('creating category')
@@ -6,7 +8,7 @@ const categories = (state = [], action) => {
 
     case 'UPDATE_CATEGORY':
       console.log('updating category')
-      const newState = [...state]
+      newState = [...state]
       const currentCategory = newState.find(
         category => category.id === action.payload.id
       )
@@ -17,6 +19,22 @@ const categories = (state = [], action) => {
           }
         }
       }
+      return newState
+
+    case 'UPDATE_CATEGORIES':
+      console.log('batch updating categories')
+      newState = [...state]
+      for (const category of action.payload) {
+        const currentCategory = newState.find(existing => existing.id === category.id)
+        if (currentCategory) {
+          for (const key in category) {
+            if (key !== 'id') {
+              currentCategory[key] = category[key]
+            }
+          }
+        }
+      }
+      newState.sort(compareOrder)
       return newState
 
     case 'DELETE_CATEGORY':

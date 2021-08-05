@@ -1,4 +1,6 @@
 const projects = (state = [], action) => {
+  const compareOrder = (project1, project2) => project1.order - project2.order
+  let newState = []
   switch (action.type) {
     case 'CREATE_PROJECT':
       console.log('creating project')
@@ -6,7 +8,7 @@ const projects = (state = [], action) => {
 
     case 'UPDATE_PROJECT':
       console.log('updating project')
-      const newState = [...state]
+      newState = [...state]
       const currentProject = newState.find(
         project => project.id === action.payload.id
       )
@@ -17,6 +19,22 @@ const projects = (state = [], action) => {
           }
         }
       }
+      return newState
+
+    case 'UPDATE_PROJECTS':
+      console.log('batch updating projects')
+      newState = [...state]
+      for (const project of action.payload) {
+        const currentProject = newState.find(existing => existing.id === project.id)
+        if (currentProject) {
+          for (const key in project) {
+            if (key !== 'id') {
+              currentProject[key] = project[key]
+            }
+          }
+        }
+      }
+      newState.sort(compareOrder)
       return newState
 
     case 'DELETE_PROJECT':

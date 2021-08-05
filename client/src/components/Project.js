@@ -128,7 +128,7 @@ const Project = props => {
     for (let i = 0; i < categoriesToUpdate.length; i++) {
       categoriesToUpdate[i].order = i
     }
-    // dispatch(actions.batchAmendCategories(categoriesToUpdate))
+    dispatch(actions.batchAmendCategories(categoriesToUpdate))
   }
 
   // const handleDrop = (item, result) => {
