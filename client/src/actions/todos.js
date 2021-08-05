@@ -116,7 +116,6 @@ const amendTodo = payload => dispatch => {
 const batchAmendTodos = payload => dispatch => {
   console.log('batch amend todos')
   return dispatch(patchTodos(payload)).then(json => {
-    console.log('batch amend todo json', json)
     dispatch(updateTodos(payload))
   })
 }

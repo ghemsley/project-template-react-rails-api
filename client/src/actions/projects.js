@@ -47,6 +47,16 @@ const patchProject = payload => () => {
     .catch(error => console.log(error))
 }
 
+const patchProjects = payload => () => {
+  return fetch(`${constants.urls.BASE_URL}/projects/batch_update`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
 const destroyProject = payload => () => {
   console.log('destroying project')
   return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
@@ -62,6 +72,11 @@ const createProject = payload => ({
 
 const updateProject = payload => ({
   type: 'UPDATE_PROJECT',
+  payload
+})
+
+const updateProjects = payload => ({
+  type: 'UPDATE_PROJECTS',
   payload
 })
 
@@ -92,7 +107,7 @@ const instantiateProject = payload => dispatch => {
 const instantiateEverything = () => (dispatch, getState) => {
   console.log('instantiating everything')
   const state = getState()
-  
+
   return dispatch(fetchEverything())
     .then(json => {
       for (const project of json.data) {
@@ -106,7 +121,7 @@ const instantiateEverything = () => (dispatch, getState) => {
           dispatch(actions.createProject(projectObject))
         }
       }
-      
+
       return json
     })
     .then(json => {
@@ -149,7 +164,6 @@ const instantiateEverything = () => (dispatch, getState) => {
     })
 }
 
-
 const removeProject = payload => dispatch => {
   console.log('removing project')
   dispatch(destroyProject(payload)).then(json => {
@@ -168,6 +182,13 @@ const amendProject = payload => dispatch => {
   })
 }
 
+const batchAmendProjects = payload => dispatch => {
+  console.log('batch amend projects')
+  return dispatch(patchProjects(payload)).then(json => {
+    dispatch(updateProjects(payload))
+  })
+}
+
 const projectActions = {
   fetchProject,
   fetchProjects,
@@ -175,6 +196,7 @@ const projectActions = {
   sendProject,
   createProject,
   updateProject,
+  updateProjects,
   deleteProject,
   deeplyDeleteProject,
   instantiateProject,
@@ -182,7 +204,9 @@ const projectActions = {
   destroyProject,
   removeProject,
   patchProject,
-  amendProject
+  patchProjects,
+  amendProject,
+  batchAmendProjects
 }
 
 export default projectActions

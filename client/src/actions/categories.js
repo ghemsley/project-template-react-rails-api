@@ -92,7 +92,7 @@ const instantiateCategory = payload => dispatch => {
   })
 }
 
-const removeCategory = payload => (dispatch) => {
+const removeCategory = payload => dispatch => {
   console.log('removing category')
   dispatch(destroyCategory(payload)).then(json => {
     if (json.data.id === payload.id) {
@@ -110,6 +110,26 @@ const amendCategory = payload => dispatch => {
   })
 }
 
+const patchCategories = payload => () => {
+  return fetch(`${constants.urls.BASE_URL}/categories/batch_update`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+const updateCategories = payload => ({
+  type: 'UPDATE_CATEGORIES',
+  payload
+})
+const batchAmendCategories = payload => dispatch => {
+  console.log('batch amend categories')
+  return dispatch(patchCategories(payload)).then(json => {
+    dispatch(updateCategories(payload))
+  })
+}
+
 const categoryActions = {
   fetchCategory,
   fetchCategories,
@@ -123,7 +143,10 @@ const categoryActions = {
   destroyCategory,
   removeCategory,
   patchCategory,
-  amendCategory
+  amendCategory,
+  updateCategories,
+  patchCategories,
+  batchAmendCategories
 }
 
 export default categoryActions
