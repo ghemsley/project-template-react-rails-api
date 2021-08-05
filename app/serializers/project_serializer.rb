@@ -1,7 +1,7 @@
 class ProjectSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :name, :description, :created_at, :updated_at
+  attributes :id, :name, :description, :order, :created_at, :updated_at
 
   has_many :categories, links: {
     self: :url,

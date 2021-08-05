@@ -1,7 +1,7 @@
 class CategorySerializer
   include JSONAPI::Serializer
 
-  attributes :id, :name, :description, :project_id, :created_at, :updated_at
+  attributes :id, :name, :description, :order, :project_id, :created_at, :updated_at
 
   belongs_to :project, links: {
     self: :url,

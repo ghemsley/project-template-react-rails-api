@@ -1,7 +1,7 @@
 class TodoSerializer
   include JSONAPI::Serializer
 
-  attributes :id, :name, :description, :category_id, :created_at, :updated_at
+  attributes :id, :name, :description, :order, :category_id, :created_at, :updated_at
 
   belongs_to :category, links: {
     self: :url,

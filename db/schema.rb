@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2021_08_01_210034) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.integer "order", default: 0
     t.bigint "project_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -27,6 +28,7 @@ ActiveRecord::Schema.define(version: 2021_08_01_210034) do
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.integer "order", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -34,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_08_01_210034) do
   create_table "todos", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.integer "order", default: 0
     t.bigint "category_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
