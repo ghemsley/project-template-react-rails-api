@@ -20,14 +20,22 @@ class TodosController < ApplicationController
     render jsonapi: todo
   end
 
+  def batch_update
+    todos = params[:_json].collect do |json|
+      Todo.find(json[:id])
+    end
+    todos.each_with_index do |todo, index|
+      json = params[:_json][index]
+      todo.update!(name: json[:name], description: json[:description], order: json[:order],
+                   category_id: json[:categoryID])
+    end
+    render jsonapi: todos
+  end
+
   def update
     todo = Todo.find(params[:id])
     todo.update!(name: params[:name], description: params[:description], category_id: params[:categoryID])
     render jsonapi: todo
-  end
-
-  def batch_update
-    logger.info(params)
   end
 
   def destroy
