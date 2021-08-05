@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[id name description project_id created_at updated_at]
+    allowed = %i[id name description order project_id created_at updated_at]
 
     jsonapi_filter(Category.all, allowed) do |filtered|
       render jsonapi: filtered.result
@@ -22,7 +22,8 @@ class CategoriesController < ApplicationController
 
   def update
     category = Category.find(params[:id])
-    category.update!(name: params[:name], description: params[:description], project_id: params[:projectID])
+    category.update!(name: params[:name], description: params[:description], order: params[:order],
+                     project_id: params[:projectID])
     render jsonapi: category
   end
 

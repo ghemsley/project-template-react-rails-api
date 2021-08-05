@@ -3,7 +3,7 @@ class UserTodosController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[id name description category_id created_at updated_at]
+    allowed = %i[id name description order category_id created_at updated_at]
 
     jsonapi_filter(User.find(params[:id]).todos, allowed) do |filtered|
       render jsonapi: filtered.result

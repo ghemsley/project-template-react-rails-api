@@ -11,7 +11,7 @@ class UserProjectsController < ApplicationController
   end
 
   def index_user_projects
-    allowed = %i[id name description created_at updated_at]
+    allowed = %i[id name description order created_at updated_at]
 
     jsonapi_filter(User.find(params[:id]).projects, allowed) do |filtered|
       render jsonapi: filtered.result

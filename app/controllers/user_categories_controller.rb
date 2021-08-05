@@ -3,7 +3,7 @@ class UserCategoriesController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[id name description project_id created_at updated_at]
+    allowed = %i[id name description order project_id created_at updated_at]
 
     jsonapi_filter(User.find(params[:id]).categories, allowed) do |filtered|
       render jsonapi: filtered.result

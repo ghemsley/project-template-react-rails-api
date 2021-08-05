@@ -3,7 +3,7 @@ class ProjectsController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[id name description created_at updated_at]
+    allowed = %i[id name description order created_at updated_at]
 
     jsonapi_filter(Project.all, allowed) do |filtered|
       render jsonapi: filtered.result
@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
 
   def update
     project = Project.find(params[:id])
-    project.update!(name: params[:name], description: params[:description])
+    project.update!(name: params[:name], description: params[:description], order: params[:order])
     render jsonapi: project
   end
 
