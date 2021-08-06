@@ -7,144 +7,87 @@ import useResizeObserver from 'use-resize-observer'
 import mergeRefs from 'react-merge-refs'
 import actions from '../actions/index'
 import { debounce } from 'lodash'
+import {
+  makeSelectProjectByCategoryProjectID,
+  makeSelectTodosByCategoryID
+} from '../selectors'
 
-const Category = props => {
-  const todos = useSelector(state =>
-    state.todos.filter(todo => todo.categoryID === props.category.id)
+const Category = React.memo(props => {
+  console.log('render category')
+  const selectTodosByCategoryID = useCallback(makeSelectTodosByCategoryID, [
+    props
+  ])
+  const todos = useSelector(state => selectTodosByCategoryID(state, props))
+  const selectProjectsByCategoryProjectID = useCallback(
+    makeSelectProjectByCategoryProjectID,
+    [props]
   )
   const project = useSelector(state =>
-    state.projects.find(project => project.id === props.category.projectID)
-  )
-  const coordinates = useSelector(state => state.coordinates)
-  const categoryCoordinates = useSelector(state =>
-    state.coordinates.find(
-      coords =>
-        coords.type === 'category' && coords.item.id === props.category.id
-    )
+    selectProjectsByCategoryProjectID(state, props)
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
   const location = useLocation()
   const dispatch = useDispatch()
   const ref = useRef(null)
 
-  const [{ dragging, position }, drag, dragPreview] = useDrag(() => ({
-    type: 'category',
-    item: props.category,
-    previewOptions: { captureDraggingState: true },
-    collect: monitor => ({
-      dragging: monitor.isDragging(),
-      position: monitor.getSourceClientOffset()
+  const [{ dragging }, drag, dragPreview] = useDrag(
+    () => ({
+      type: 'category',
+      item: props.category,
+      previewOptions: { captureDraggingState: true },
+      options: { dropEffect: 'copy' },
+      collect: monitor => ({
+        dragging: monitor.isDragging()
+      })
     }),
-    options: { dropEffect: 'copy' },
-    end: (item, monitor) => {
-      // if (monitor.didDrop()) {
-      //   console.log('result', monitor.getDropResult())
-      // }
-    }
-  }))
+    [props.category]
+  )
 
-  const getCoordinates = useCallback(
-    size => {
-      if (ref.current) {
-        const rect = ref.current.getBoundingClientRect()
-        const coordinates = {
-          type: 'category',
-          item: props.category,
-          position: {
-            left: rect.left,
-            right: rect.right,
-            top: rect.top,
-            bottom: rect.bottom,
-            width: size.width,
-            height: size.height,
-            rectWidth: rect.width,
-            rectHeight: rect.height
-          }
+  const getCoordinates = useCallback(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      const newCoordinates = {
+        type: 'category',
+        item: props.category,
+        position: {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          rectWidth: rect.width,
+          rectHeight: rect.height
         }
-        dispatch(actions.refreshCoordinates(coordinates))
       }
-    },
-    [props.category, dispatch]
+      dispatch(actions.refreshCoordinates(newCoordinates))
+    }
+  }, [props.category, dispatch])
+
+  const onResize = useMemo(
+    () =>
+      debounce(getCoordinates, 200, {
+        trailing: true,
+        maxWait: 400
+      }),
+    [getCoordinates]
   )
 
-  const onResize = debounce(
-    size => {
-      getCoordinates(size)
-    },
-    100,
-    { trailing: true, maxWait: 250 }
+  const obeserver = useResizeObserver({ ref, onResize })
+
+  const onScroll = useMemo(
+    () =>
+      debounce(getCoordinates, 250, {
+        maxWait: 500,
+        trailing: true
+      }),
+    [getCoordinates]
   )
-
-  const onSroll = debounce(size => getCoordinates(size), 250, {
-    trailing: true,
-    maxWait: 500
-  })
-
-  const observer = useResizeObserver({ ref, onResize })
-
   useEffect(() => {
-    document.addEventListener('scroll', () =>
-      onSroll({ width: observer.width, height: observer.height })
-    )
+    getCoordinates()
+    document.addEventListener('scroll', onScroll)
     return () => {
-      document.removeEventListener('scroll', () =>
-        onSroll({ width: observer.width, height: observer.height })
-      )
+      document.removeEventListener('scroll', onScroll)
     }
-  }, [])
-
-  const handleDrop = (item, result) => {
-    const todoCoordsArray = coordinates.filter(
-      coords =>
-        coords.type === 'todo' && coords.item.categoryID === props.category.id
-    )
-    todoCoordsArray.sort(
-      (todoCoords1, todoCoords2) =>
-        todoCoords1.item.order - todoCoords2.item.order
-    )
-    for (let i = 1; i < todoCoordsArray.length; i++) {
-      todoCoordsArray[i].order = i
-    }
-    let order = 0
-    let i = 0
-    while (i < todoCoordsArray.length) {
-      if (todoCoordsArray[i].item.id !== item.id) {
-        if (result.element.y < todoCoordsArray[i].position.top) {
-          order = i
-          for (let j = i; j < todoCoordsArray.length; j++) {
-            if (todoCoordsArray[j].item.id !== item.id) {
-              todoCoordsArray[j].item.order += 1
-            }
-          }
-          if (i === 0) {
-            break
-          }
-          for (let j = i - 1; j >= 0; j--) {
-            if (todoCoordsArray[j].item.id !== item.id) {
-              todoCoordsArray[j].item.order -= 1
-            }
-          }
-          break
-        } else {
-          order = i + 1
-        }
-      }
-      i++
-    }
-    const todosToUpdate = todoCoordsArray.map(coords => coords.item)
-    const existingTodo = todosToUpdate.find(existing => existing.id === item.id)
-    if (!existingTodo) {
-      const todo = { ...item, order: order, categoryID: props.category.id }
-      todosToUpdate.push(todo)
-    } else {
-      todosToUpdate[todosToUpdate.indexOf(existingTodo)].order = order
-    }
-    todosToUpdate.sort((todo1, todo2) => todo1.order - todo2.order)
-    for (let i = 0; i < todosToUpdate.length; i++) {
-      todosToUpdate[i].order = i
-    }
-    dispatch(actions.batchAmendTodos(todosToUpdate))
-  }
+  }, [getCoordinates, onScroll])
 
   const handleClick = () => {
     setShowConfirmScreen(true)
@@ -161,8 +104,6 @@ const Category = props => {
     [dragging]
   )
 
-  const compareOrder = (todo1, todo2) => todo1.order - todo2.order
-
   return (
     <div
       id={`category-${props.category.id}`}
@@ -174,10 +115,9 @@ const Category = props => {
       }}
       ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
       <Dropzone
-        handleDrop={handleDrop}
+        parentID={props.category.id}
         acceptType='todo'
-        parentItem={props.category}
-        parentCoordinates={categoryCoordinates}>
+        parentType='category'>
         <h2>{props.category.name}</h2>
         <p>{props.category.description}</p>
         {props.showProject && (
@@ -225,11 +165,11 @@ const Category = props => {
               <>
                 <h3>Todos</h3>
                 <div className='flex column todo-container'>
-                  {todos.sort(compareOrder).map(todo => (
+                  {todos.map(todo => (
                     <Todo
                       todo={todo}
                       showButtons={props.showButtons}
-                      key={todo.id}
+                      key={`todo-${todo.id}`}
                     />
                   ))}
                 </div>
@@ -240,6 +180,6 @@ const Category = props => {
       </Dropzone>
     </div>
   )
-}
+})
 
 export default Category

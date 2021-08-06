@@ -5,164 +5,68 @@ import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
 import { Category, Dropzone, ConfirmScreen } from './index'
 import { debounce } from 'lodash'
+import { makeSelectCategoriesByProjectID } from '../selectors'
 
-const Project = props => {
+const Project = React.memo(props => {
+  console.log('render project')
+  const selectCategoriesByProjectID = useCallback(
+    makeSelectCategoriesByProjectID,
+    [props]
+  )
   const categories = useSelector(state =>
-    state.categories.filter(category => category.projectID === props.project.id)
+    selectCategoriesByProjectID(state, props)
   )
-  const coordinates = useSelector(state => state.coordinates)
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
-  const projectCoordinates = useSelector(state =>
-    state.coordinates.find(
-      coords => coords.type === 'project' && coords.item.id === props.project.id
-    )
-  )
   const location = useLocation()
   const dispatch = useDispatch()
   const ref = useRef(null)
 
-  const getCoordinates = useCallback(
-    size => {
-      if (ref.current) {
-        const rect = ref.current.getBoundingClientRect()
-        const coordinates = {
-          type: 'project',
-          item: props.project,
-          position: {
-            left: rect.left,
-            right: rect.right,
-            top: rect.top,
-            bottom: rect.bottom,
-            width: size.width,
-            height: size.height,
-            rectWidth: rect.width,
-            rectHeight: rect.height
-          }
+  const getCoordinates = useCallback(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      const coordinates = {
+        type: 'project',
+        item: props.project,
+        position: {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          rectWidth: rect.width,
+          rectHeight: rect.height
         }
-        dispatch(actions.refreshCoordinates(coordinates))
       }
-    },
-    [props.project, dispatch]
+      dispatch(actions.refreshCoordinates(coordinates))
+    }
+  }, [props.project, dispatch])
+
+  const onResize = useMemo(
+    () =>
+      debounce(getCoordinates, 300, {
+        trailing: true,
+        maxWait: 600
+      }),
+    [getCoordinates]
   )
 
-  const onResize = debounce(
-    size => {
-      getCoordinates(size)
-    },
-    100,
-    { trailing: true, maxWait: 250 }
+  const onScroll = useMemo(
+    () =>
+      debounce(getCoordinates, 250, {
+        trailing: true,
+        maxWait: 500
+      }),
+    [getCoordinates]
   )
-
-  const onSroll = debounce(size => getCoordinates(size), 250, {
-    trailing: true,
-    maxWait: 500
-  })
 
   const observer = useResizeObserver({ ref, onResize })
 
   useEffect(() => {
-    document.addEventListener('scroll', () =>
-      onSroll({ width: observer.width, height: observer.height })
-    )
+    getCoordinates()
+    document.addEventListener('scroll', onScroll)
     return () => {
-      document.removeEventListener('scroll', () =>
-        onSroll({ width: observer.width, height: observer.height })
-      )
+      document.removeEventListener('scroll', onScroll)
     }
-  }, [])
-
-  const style = useMemo(() => ({}), [])
-
-  const handleDrop = (item, result) => {
-    const categoryCoordsArray = coordinates.filter(
-      coords =>
-        coords.type === 'category' && coords.item.projectID === props.project.id
-    )
-    categoryCoordsArray.sort(
-      (categoryCoords1, categoryCoords2) =>
-        categoryCoords1.item.order - categoryCoords2.item.order
-    )
-    for (let i = 1; i < categoryCoordsArray.length; i++) {
-      categoryCoordsArray[i].order = i
-    }
-    let order = 0
-    let i = 0
-    while (i < categoryCoordsArray.length) {
-      if (categoryCoordsArray[i].item.id !== item.id) {
-        if (result.element.y < categoryCoordsArray[i].position.top) {
-          order = i
-          for (let j = i; j < categoryCoordsArray.length; j++) {
-            if (categoryCoordsArray[j].item.id !== item.id) {
-              categoryCoordsArray[j].item.order += 1
-            }
-          }
-          if (i === 0) {
-            break
-          }
-          for (let j = i - 1; j >= 0; j--) {
-            if (categoryCoordsArray[j].item.id !== item.id) {
-              categoryCoordsArray[j].item.order -= 1
-            }
-          }
-          break
-        } else {
-          order = i + 1
-        }
-      }
-      i++
-    }
-    const categoriesToUpdate = categoryCoordsArray.map(coords => coords.item)
-    const existingCategory = categoriesToUpdate.find(
-      existing => existing.id === item.id
-    )
-    if (!existingCategory) {
-      const category = { ...item, order: order, projectID: props.project.id }
-      categoriesToUpdate.push(category)
-    } else {
-      categoriesToUpdate[categoriesToUpdate.indexOf(existingCategory)].order =
-        order
-    }
-    categoriesToUpdate.sort(
-      (category1, category2) => category1.order - category2.order
-    )
-    for (let i = 0; i < categoriesToUpdate.length; i++) {
-      categoriesToUpdate[i].order = i
-    }
-    dispatch(actions.batchAmendCategories(categoriesToUpdate))
-  }
-
-  // const handleDrop = (item, result) => {
-  //   const categoryCoordsArray = coordinates.filter(
-  //     coords =>
-  //       coords.type === 'category' && coords.item.projectID === props.project.id
-  //   )
-  //   for (const coords of categoryCoordsArray) {
-  //     if (coords.item.id !== item.id) {
-  //       if (result.cursor.y > coords.position.top) {
-  //         console.log('cursor is below', {
-  //           element: coords.position.top,
-  //           cursor: result.cursor.y
-  //         })
-  //       } else {
-  //         console.log('cursor is above', {
-  //           element: coords.position.top,
-  //           cursor: result.cursor.y
-  //         })
-  //       }
-  //     }
-  //   }
-  //   const category = { ...item, projectID: props.project.id }
-  //   if (item.projectID !== props.project.id) {
-  //     dispatch(actions.amendCategory(category))
-  //   }
-  //   // categoryCoordsArray.sort((coord1, coord2) => {
-  //   //   if (coord1.order > coord2.order) {
-  //   //     return 1
-  //   //   } else if (coord1.order < coord2.order) {
-  //   //     return -1
-  //   //   } else return 0
-  //   // })
-  // }
+  }, [getCoordinates, onScroll])
 
   const handleClick = () => {
     setShowConfirmScreen(true)
@@ -173,8 +77,6 @@ const Project = props => {
   const confirmRemove = () => {
     dispatch(actions.removeProject(props.project))
   }
-  const compareOrder = (category1, category2) =>
-    category1.order - category2.order
 
   return (
     <div
@@ -182,14 +84,13 @@ const Project = props => {
       className='hoverable flex-child flex rounded project'
       style={{
         background: '#10a090',
-        color: 'whitesmoke',
-        ...style
+        color: 'whitesmoke'
       }}
       ref={ref}>
       <Dropzone
-        handleDrop={handleDrop}
+        parentID={props.project.id}
         acceptType='category'
-        parentCoordinates={projectCoordinates}>
+        parentType='project'>
         <h2>{props.project.name}</h2>
         <p>{props.project.description}</p>
         {props.showButtons && (
@@ -228,13 +129,12 @@ const Project = props => {
               <p style={{ fontSize: '14px' }}>Drop categories here!</p>
             )}
             <div className='flex category-container'>
-              {categories.sort(compareOrder).map(category => (
+              {categories.map(category => (
                 <Category
                   category={category}
                   showTodos={true}
                   showButtons={props.showButtons}
-                  items={props.items}
-                  key={category.id}
+                  key={`category-${category.id}`}
                 />
               ))}
             </div>
@@ -243,6 +143,6 @@ const Project = props => {
       </Dropzone>
     </div>
   )
-}
+})
 
 export default Project

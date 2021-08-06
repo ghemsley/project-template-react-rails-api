@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react'
 import { v4 as uuid } from 'uuid'
 
-const Hover = props => {
+const Hover = React.memo(props => {
   const [hidden, setHidden] = useState(true)
   const [left, setLeft] = useState(window.innerWidth)
   const [top, setTop] = useState(window.innerHeight)
@@ -61,6 +61,6 @@ const Hover = props => {
       {props.children}
     </div>
   )
-}
+})
 
 export default Hover
