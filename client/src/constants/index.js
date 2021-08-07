@@ -1,5 +1,7 @@
-import urls from './urls'
+import URLS from './urls'
+import ACTIONS from './actions'
+import AUTHENTICATION from './authentication'
 
-const constants = { urls }
+const CONSTANTS = { URLS, ACTIONS, AUTHENTICATION }
 
-export default constants
+export default CONSTANTS
