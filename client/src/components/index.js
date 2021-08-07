@@ -9,6 +9,11 @@ import Project from './Project'
 import ProjectForm from './ProjectForm'
 import Todo from './Todo'
 import TodoForm from './TodoForm'
+import SignupForm from './SignupForm'
+import LoginForm from './LoginForm'
+import LogoutScreen from './LogoutScreen'
+import withAuth from './withAuth'
+import Loading from './Loading'
 
 export {
   Hover,
@@ -21,5 +26,10 @@ export {
   ProjectForm,
   Dropzone,
   Modal,
-  ConfirmScreen
+  ConfirmScreen,
+  SignupForm,
+  LoginForm,
+  LogoutScreen,
+  withAuth,
+  Loading
 }
