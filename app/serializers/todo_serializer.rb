@@ -1,4 +1,4 @@
-class TodoSerializer
+class TodoSerializer < ActiveModel::Serializer
   include JSONAPI::Serializer
 
   attributes :id, :name, :description, :order, :category_id, :created_at, :updated_at

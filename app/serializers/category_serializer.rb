@@ -1,4 +1,4 @@
-class CategorySerializer
+class CategorySerializer < ActiveModel::Serializer
   include JSONAPI::Serializer
 
   attributes :id, :name, :description, :order, :project_id, :created_at, :updated_at
