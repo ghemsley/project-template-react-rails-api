@@ -18,11 +18,13 @@ projects.each do |project, _i|
   categories.each_with_index do |category, _j|
     Todo.create([{ name: 'Test todo', description: 'Todo or not todo, that is the question?', order: 0, category: category },
                  { name: 'Test todo 2',
-                   description: 'Test Todo: The Motion Picture: The Sequel: The Game: The Broadway Musical: The JSON Response', order: 1, category: category },
+                   description: 'Test Todo: The Motion Picture: The Sequel: The Game: The Broadway Musical: The JSON Response',
+                   order: 1, category: category },
                  { name: 'Test todo 3', description: 'Todo the third', order: 2, category: category }])
   end
-  users = User.create([{ username: 'test', password: 'test', password_confirmation: 'test' },
-                       { username: 'test2', password: 'test2', password_confirmation: 'test2' }])
+  users = User.create([{ username: 'test', email: 'test@example.com', password: 'password', password_confirmation: 'password' },
+                       { username: 'test2', email: 'test2@example.com', password: 'password',
+                         password_confirmation: 'password' }])
   users.each do |user|
     UserProject.create([{ user_id: user.id, project_id: project.id }])
   end
