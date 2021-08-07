@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDrop } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeSelectChildCoordinates } from '../selectors'
