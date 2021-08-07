@@ -1,7 +1,7 @@
 import React from 'react'
 import { ConfirmScreen } from '.'
 
-const Loading = () => {
+const Loading = (props) => {
   return (
     <ConfirmScreen>
       <p className='spin'>Loading...</p>

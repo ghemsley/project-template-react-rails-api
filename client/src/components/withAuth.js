@@ -1,32 +1,32 @@
-import React, { useEffect } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Loading, Modal } from '.'
 import actions from '../actions'
 
 function withAuth(WrappedComponent) {
-  class StupidClassComponent extends React.Component {
+  class StupidClassComponent extends Component {
     componentDidMount() {
       const { checkAuth } = this.props
       checkAuth()
     }
     render() {
-      const { authChecked, loggedIn } = this.props
+      const { authChecked, loggedIn, protectedRoute } = this.props
       if (!authChecked) {
-        return <Loading />
-      } else if (!loggedIn) {
+        return <Loading {...this.props} />
+      } else if (!loggedIn && protectedRoute) {
         return (
-          <Modal>
+          <Modal {...this.props}>
             <p>You must be logged in to view this page</p>
           </Modal>
         )
       } else return <WrappedComponent {...this.props} />
     }
   }
+
   const mapStateToProps = state => ({
     authChecked: state.authentication.authChecked,
     loggedIn: state.authentication.loggedIn
   })
-
   const mapDispatchToProps = dispatch => ({
     checkAuth: () => dispatch(actions.checkAuth())
   })

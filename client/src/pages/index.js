@@ -1,19 +1,45 @@
+import React from 'react'
 import Home from './Home'
 import Categories from './Categories'
 import Todos from './Todos'
 import Projects from './Projects'
+import { withAuth } from '../components'
+
+const AuthenticatedHome = withAuth(Home)
+const ProtectedProjects = withAuth(Projects)
+const ProtectedCategories = withAuth(Categories)
+const ProtectedTodos = withAuth(Todos)
 
 const Pages = [
-  { name: 'Home', component: Home, path: '/', protected: false },
-  { name: 'Projects', component: Projects, path: '/projects', protected: true },
+  {
+    name: 'Home',
+    component: routeProps => <AuthenticatedHome {...routeProps} />,
+    path: '/',
+    protectedRoute: false
+  },
+  {
+    name: 'Projects',
+    component: routeProps => (
+      <ProtectedProjects protectedRoute {...routeProps} />
+    ),
+    path: '/projects',
+    protectedRoute: true
+  },
   {
     name: 'Categories',
-    component: Categories,
+    component: routeProps => (
+      <ProtectedCategories protectedRoute {...routeProps} />
+    ),
     path: '/categories',
-    protected: true
+    protectedRoute: true
   },
-  { name: 'Todos', component: Todos, path: '/todos', protected: true }
+  {
+    name: 'Todos',
+    component: routeProps => <ProtectedTodos protectedRoute {...routeProps} />,
+    path: '/todos',
+    protectedRoute: true
+  }
 ]
 
-export { Home, Projects, Categories, Todos }
+export { AuthenticatedHome, ProtectedProjects, ProtectedCategories, ProtectedTodos }
 export default Pages

@@ -45,7 +45,7 @@ const SignupForm = () => {
         password_confirmation: passwordConfirmation
       })
     )
-      .then(() => history.goBack())
+      .then(() => history.push('/'))
       .catch(error => setError(error))
   }
   return (

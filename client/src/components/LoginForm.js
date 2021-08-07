@@ -31,34 +31,37 @@ const LoginForm = props => {
     dispatch(
       actions.loginUser({
         email,
-        password,
+        password
       })
     )
-      .then(() => history.goBack())
+      .then(() => history.push('/'))
       .catch(error => setError(error.message))
   }
   return (
     <Modal>
       <h1 className='fit margin-auto'>Login</h1>
       {error && <p>{error}</p>}
-      <form
-        onSubmit={handleSubmit}
-        className='pure-form pure-form-stacked fit margin-auto'>
-        <fieldset>
-          <label htmlFor='email'>Email</label>
-          <input
-            type='text'
-            name='email'
-            value={email}
-            onChange={handleChange}
-          />
-          <label htmlFor='password'>Password</label>
-          <input name='password' value={password} onChange={handleChange} />
-          <button className='pure-button pure-button-primary' type='submit'>
-            Submit
-          </button>
-        </fieldset>
-      </form>
+      {props.loggedIn && <p>You are already logged in</p>}
+      {!props.loggedIn && (
+        <form
+          onSubmit={handleSubmit}
+          className='pure-form pure-form-stacked fit margin-auto'>
+          <fieldset>
+            <label htmlFor='email'>Email</label>
+            <input
+              type='text'
+              name='email'
+              value={email}
+              onChange={handleChange}
+            />
+            <label htmlFor='password'>Password</label>
+            <input name='password' value={password} onChange={handleChange} />
+            <button className='pure-button pure-button-primary' type='submit'>
+              Submit
+            </button>
+          </fieldset>
+        </form>
+      )}
     </Modal>
   )
 }

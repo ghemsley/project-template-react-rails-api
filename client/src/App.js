@@ -1,4 +1,6 @@
+import React from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
+import Pages from './pages'
 import {
   Navbar,
   ProjectForm,
@@ -8,11 +10,11 @@ import {
   LoginForm,
   LogoutScreen,
   withAuth
-} from './components/index'
-import { useDispatch, useSelector } from 'react-redux'
-import Pages from './pages/index'
+} from './components'
 import './App.css'
 
+const AuthenticatedLoginForm = withAuth(LoginForm)
+const AuthenticatedSignupForm = withAuth(SignupForm)
 const ProtectedProjectForm = withAuth(ProjectForm)
 const ProtectedCategoryForm = withAuth(CategoryForm)
 const ProtectedTodoForm = withAuth(TodoForm)
@@ -27,53 +29,54 @@ function App() {
     <div className='pure-u-1'>
       <Navbar />
       <Switch location={background ? background : location}>
-        {Pages.map((page, i) => (
+        {Pages.map((Page, i) => (
           <Route
             exact
-            path={page.path}
+            path={Page.path}
             key={i}
-            component={
-              page.protected ? withAuth(page.component) : page.component
-            }
+            children={routeProps => Page.component(routeProps)}
           />
         ))}
       </Switch>
-      {background && (
+      <Route exact path='/signup' children={<AuthenticatedSignupForm />} />
+      <Route exact path='/login' children={<AuthenticatedLoginForm />} />
+      <Route
+        exact
+        path='/logout'
+        children={<ProtectedLogoutScreen protectedRoute />}
+      />
+      <Route
+        exact
+        path='/projects/new'
+        children={<ProtectedProjectForm protectedRoute />}
+      />
+      <Route
+        exact
+        path='/categories/new'
+        children={<ProtectedCategoryForm protectedRoute />}
+      />
+      <Route
+        exact
+        path='/todos/new'
+        children={<ProtectedTodoForm protectedRoute />}
+      />
+      {edit && (
         <>
           <Route
             exact
-            path='/projects/new'
-            children={<ProtectedProjectForm />}
+            path='/todos/:id/edit'
+            children={<ProtectedTodoForm edit={edit} protectedRoute />}
           />
           <Route
             exact
-            path='/categories/new'
-            children={<ProtectedCategoryForm />}
+            path='/categories/:id/edit'
+            children={<ProtectedCategoryForm edit={edit} protectedRoute />}
           />
-          <Route exact path='/todos/new' children={<ProtectedTodoForm />} />
-          {edit && (
-            <>
-              <Route
-                exact
-                path='/todos/:id/edit'
-                children={<ProtectedTodoForm edit={edit} />}
-              />
-              <Route
-                exact
-                path='/categories/:id/edit'
-                children={<ProtectedCategoryForm edit={edit} />}
-              />
-              <Route
-                exact
-                path='/projects/:id/edit'
-                children={<ProtectedProjectForm edit={edit} />}
-              />
-            </>
-          )}
-
-          <Route exact path='/signup' children={<SignupForm />} />
-          <Route exact path='/login' children={<LoginForm />} />
-          <Route exact path='/logout' children={<ProtectedLogoutScreen />} />
+          <Route
+            exact
+            path='/projects/:id/edit'
+            children={<ProtectedProjectForm edit={edit} protectedRoute />}
+          />
         </>
       )}
     </div>

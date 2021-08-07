@@ -14,7 +14,7 @@ const Modal = props => {
   const background = location.state && location.state.background
 
   const closeModal = () => {
-    history.push(background ? background.pathname : '/home')
+    history.push(background ? background.pathname : '/')
   }
   const preventClose = event => {
     event.stopPropagation()
