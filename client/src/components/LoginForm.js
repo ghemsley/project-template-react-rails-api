@@ -7,7 +7,7 @@ import { Modal } from './index'
 const LoginForm = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
+  const [errors, setErrors] = useState(null)
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -28,19 +28,36 @@ const LoginForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault()
-    dispatch(
-      actions.loginUser({
-        email,
-        password
-      })
-    )
-      .then(() => history.push('/'))
-      .catch(error => setError(error.message))
+    setErrors(null)
+    if (email.length > 0 && password.length > 0) {
+      dispatch(
+        actions.loginUser({
+          email,
+          password
+        })
+      )
+        .then(() => history.push('/'))
+        .catch(error => {
+          console.log(error)
+          setErrors([error.error])
+        })
+    } else {
+      let errorsArray = []
+      if (email.length < 1) {
+        errorsArray.push('You need to enter a username')
+      }
+      if (password.length < 1) {
+        errorsArray.push('You need to enter a password')
+      }
+      setErrors(errorsArray)
+    }
   }
   return (
     <Modal>
       <h1 className='fit margin-auto'>Login</h1>
-      {error && <p>{error}</p>}
+      {errors &&
+        errors.length > 0 &&
+        errors.map((error, i) => <p key={i}>{error}</p>)}
       {props.loggedIn && <p>You are already logged in</p>}
       {!props.loggedIn && (
         <form
@@ -49,13 +66,18 @@ const LoginForm = props => {
           <fieldset>
             <label htmlFor='email'>Email</label>
             <input
-              type='text'
+              type='email'
               name='email'
               value={email}
               onChange={handleChange}
             />
             <label htmlFor='password'>Password</label>
-            <input name='password' value={password} onChange={handleChange} />
+            <input
+              name='password'
+              value={password}
+              onChange={handleChange}
+              autoComplete='current-password'
+            />
             <button className='pure-button pure-button-primary' type='submit'>
               Submit
             </button>

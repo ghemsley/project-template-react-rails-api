@@ -79,7 +79,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render json: {
         data: UserSerializer.new(resource).serializable_hash,
         status: { code: 200, message: 'Signed up sucessfully.' }
-      }
+      }, status: :ok
     else
       render json: {
         status: { message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}" }

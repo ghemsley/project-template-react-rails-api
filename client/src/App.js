@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
-import Pages from './pages'
+import Pages from './pages' // order matters
 import {
   Navbar,
   ProjectForm,
@@ -9,7 +9,7 @@ import {
   SignupForm,
   LoginForm,
   LogoutScreen,
-  withAuth
+  withAuth  // order matters
 } from './components'
 import './App.css'
 

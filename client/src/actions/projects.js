@@ -119,7 +119,6 @@ const instantiateProject = payload => dispatch => {
 const instantiateEverything = () => (dispatch, getState) => {
   console.log('instantiating everything')
   const state = getState()
-
   return dispatch(fetchEverything())
     .then(json => {
       console.log(json)
