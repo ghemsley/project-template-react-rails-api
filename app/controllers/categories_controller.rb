@@ -5,23 +5,23 @@ class CategoriesController < ApplicationController
   def index
     allowed = %i[id name description order project_id created_at updated_at]
 
-    jsonapi_filter(Category.all, allowed) do |filtered|
+    jsonapi_filter(current_user.categories, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    render jsonapi: Category.find(params[:id])
+    render jsonapi: current_user.categories.find(params[:id])
   end
 
   def create
     category = Category.create!({ name: params[:name], description: params[:description],
-                                  project_id: params[:projectID] })
+                                                 project_id: params[:projectID] })
     render jsonapi: category
   end
 
   def update
-    category = Category.find(params[:id])
+    category = current_user.categories.find(params[:id])
     category.update!(name: params[:name], description: params[:description], order: params[:order],
                      project_id: params[:projectID])
     render jsonapi: category
@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
 
   def batch_update
     categories = params[:_json].collect do |json|
-      Category.find(json[:id])
+      current_user.categories.find(json[:id])
     end
     categories.each_with_index do |category, index|
       json = params[:_json][index]
@@ -40,7 +40,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    category = Category.find(params[:id])
+    category = current_user.categories.find(params[:id])
     category.destroy!
     render jsonapi: category
   end

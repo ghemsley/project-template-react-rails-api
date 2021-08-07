@@ -5,29 +5,29 @@ class ProjectsController < ApplicationController
   def index
     allowed = %i[id name description order created_at updated_at]
 
-    jsonapi_filter(Project.all, allowed) do |filtered|
+    jsonapi_filter(current_user.projects, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    render jsonapi: Project.find(params[:id])
+    render jsonapi: current_user.projects.find(params[:id])
   end
 
   def create
-    project = Project.create!({ name: params[:name], description: params[:description] })
+    project = current_user.projects.create!({ name: params[:name], description: params[:description] })
     render jsonapi: project
   end
 
   def update
-    project = Project.find(params[:id])
+    project = current_user.projects.find(params[:id])
     project.update!(name: params[:name], description: params[:description], order: params[:order])
     render jsonapi: project
   end
 
   def batch_update
     projects = params[:_json].collect do |json|
-      Project.find(json[:id])
+      current_user.projects.find(json[:id])
     end
     projects.each_with_index do |project, index|
       json = params[:_json][index]
@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    project = Project.find(params[:id])
+    project = current_user.projects.find(params[:id])
     project.destroy!
     render jsonapi: project
   end

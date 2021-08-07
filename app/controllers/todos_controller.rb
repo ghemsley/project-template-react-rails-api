@@ -5,13 +5,13 @@ class TodosController < ApplicationController
   def index
     allowed = %i[id name description order category_id created_at updated_at]
 
-    jsonapi_filter(Todo.all, allowed) do |filtered|
+    jsonapi_filter(current_user.todos.all, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    render jsonapi: Todo.find(params[:id])
+    render jsonapi: current_user.todos.find(params[:id])
   end
 
   def create
@@ -21,7 +21,7 @@ class TodosController < ApplicationController
   end
 
   def update
-    todo = Todo.find(params[:id])
+    todo = current_user.todos.find(params[:id])
     todo.update!(name: params[:name], description: params[:description], order: params[:order],
                  category_id: params[:categoryID])
     render jsonapi: todo
@@ -29,7 +29,7 @@ class TodosController < ApplicationController
 
   def batch_update
     todos = params[:_json].collect do |json|
-      Todo.find(json[:id])
+      current_user.todos.find(json[:id])
     end
     todos.each_with_index do |todo, index|
       json = params[:_json][index]
@@ -40,7 +40,7 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    todo = Todo.find(params[:id])
+    todo = current_user.todos.find(params[:id])
     todo.destroy!
     render jsonapi: todo
   end

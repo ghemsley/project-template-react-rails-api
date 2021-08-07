@@ -3,7 +3,7 @@ class TodoCategoryController < ApplicationController
   include JSONAPI::Filtering
 
   def show
-    render jsonapi: Todo.find(params[:id]).category
+    render jsonapi: current_user.todos.find(params[:id]).category
   end
 
   private

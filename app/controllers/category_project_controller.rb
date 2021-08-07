@@ -3,7 +3,7 @@ class CategoryProjectController < ApplicationController
   include JSONAPI::Filtering
 
   def show
-    render jsonapi: Category.find(params[:id]).project
+    render jsonapi: current_user.categories.find(params[:id]).project
   end
 
   private
