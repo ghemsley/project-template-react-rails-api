@@ -1,0 +1,5 @@
+const AUTHENTICATION = {
+  THIRTY_MINUTES: 1800000
+}
+
+export default AUTHENTICATION
