@@ -1,25 +1,30 @@
-import constants from '../constants'
+import actions from '.'
+import CONSTANTS from '../constants'
 
 const fetchTodo = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const fetchTodos = () => () => {
-  return fetch(`${constants.urls.BASE_URL}/todos`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const sendTodo = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/todos`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -27,9 +32,13 @@ const sendTodo = payload => () => {
 }
 
 const patchTodo = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -37,9 +46,13 @@ const patchTodo = payload => () => {
 }
 
 const patchTodos = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/todos/batch_update`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/batch_update`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -48,9 +61,9 @@ const patchTodos = payload => () => {
 
 const destroyTodo = payload => () => {
   console.log('destroying todo')
-  return fetch(`${constants.urls.BASE_URL}/todos/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     method: 'DELETE',
-    headers: { Accept: 'application/json' }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))

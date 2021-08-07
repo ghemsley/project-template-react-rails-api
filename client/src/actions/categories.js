@@ -1,26 +1,30 @@
 import actions from './index'
-import constants from '../constants'
+import CONSTANTS from '../constants'
 
 const fetchCategory = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const fetchCategories = () => () => {
-  return fetch(`${constants.urls.BASE_URL}/categories`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const sendCategory = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/categories`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories`, {
     method: 'post',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -28,9 +32,13 @@ const sendCategory = payload => () => {
 }
 
 const patchCategory = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -39,9 +47,9 @@ const patchCategory = payload => () => {
 
 const destroyCategory = payload => () => {
   console.log('destroying category')
-  return fetch(`${constants.urls.BASE_URL}/categories/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     method: 'delete',
-    headers: { Accept: 'application/json' }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
@@ -111,7 +119,7 @@ const amendCategory = payload => dispatch => {
 }
 
 const patchCategories = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/categories/batch_update`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/batch_update`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload)

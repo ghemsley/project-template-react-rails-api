@@ -1,34 +1,38 @@
 import actions from './index'
-import constants from '../constants'
+import CONSTANTS from '../constants'
 
 const fetchProject = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const fetchProjects = () => () => {
-  return fetch(`${constants.urls.BASE_URL}/projects`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const fetchEverything = () => () => {
-  return fetch(`${constants.urls.BASE_URL}/projects?include=categories,todos`, {
-    headers: { Accept: 'application/json' }
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects?include=categories,todos`, {
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
 const sendProject = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/projects`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects`, {
     method: 'post',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -38,9 +42,13 @@ const sendProject = payload => () => {
 const patchProject = payload => () => {
   console.log(payload)
   console.log(JSON.stringify(payload))
-  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -48,9 +56,13 @@ const patchProject = payload => () => {
 }
 
 const patchProjects = payload => () => {
-  return fetch(`${constants.urls.BASE_URL}/projects/batch_update`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/batch_update`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())
@@ -59,9 +71,9 @@ const patchProjects = payload => () => {
 
 const destroyProject = payload => () => {
   console.log('destroying project')
-  return fetch(`${constants.urls.BASE_URL}/projects/${payload.id}`, {
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'delete',
-    headers: { Accept: 'application/json' }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
   }).then(response => response.json())
 }
 
@@ -110,6 +122,7 @@ const instantiateEverything = () => (dispatch, getState) => {
 
   return dispatch(fetchEverything())
     .then(json => {
+      console.log(json)
       for (const project of json.data) {
         const projectObject = {
           id: project.id,
