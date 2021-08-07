@@ -1,5 +1,12 @@
 import React from 'react'
 
-const Home = () => <div className='center fit center-text'>Home</div>
+const Home = () => {
+  return (
+    <div className='center center-text'>
+      <div className='button-container'>
+      </div>
+    </div>
+  )
+}
 
 export default Home
