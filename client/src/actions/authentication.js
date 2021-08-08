@@ -16,7 +16,6 @@ const getToken = () => {
 }
 
 const authenticateUser = payload => {
-  console.log('payload', payload)
   return {
     type: CONSTANTS.ACTIONS.AUTHENTICATED,
     payload: {

@@ -32,8 +32,6 @@ const sendProject = payload => {
 }
 
 const patchProject = payload => () => {
-  console.log(payload)
-  console.log(JSON.stringify(payload))
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'PATCH',
     headers: {
@@ -112,16 +110,31 @@ const instantiateProject = payload => dispatch => {
     }
     dispatch(createProject(project))
     dispatch(actions.createUserProject(userProject))
+    return json
   })
 }
 
-const removeProject = payload => dispatch => {
+const removeProject = payload => (dispatch, getState) => {
   console.log('removing project')
-  dispatch(destroyProject(payload)).then(json => {
-    if (json.data.id === payload.id) {
-      dispatch(deeplyDeleteProject(payload))
-    }
-  })
+
+  const state = getState()
+  const currentUser = state.authentication.currentUser
+  const userProjectsFromOtherUsers = state.userProjects.filter(
+    userProj =>
+      userProj.projectID === payload.id && userProj.userID !== currentUser.id
+  )
+  if (userProjectsFromOtherUsers.length > 0) {
+    return Promise.reject(
+      "You can't delete a project that still has other users"
+    )
+  } else {
+    return dispatch(destroyProject(payload)).then(json => {
+      if (json.data.id === payload.id) {
+        dispatch(deeplyDeleteProject(payload))
+      }
+      return json
+    })
+  }
 }
 
 const amendProject = payload => dispatch => {
@@ -130,6 +143,7 @@ const amendProject = payload => dispatch => {
     if (json.data.id === payload.id) {
       dispatch(updateProject(payload))
     }
+    return json
   })
 }
 
@@ -137,6 +151,7 @@ const batchAmendProjects = payload => dispatch => {
   console.log('batch amend projects')
   return dispatch(patchProjects(payload)).then(json => {
     dispatch(updateProjects(payload))
+    return json
   })
 }
 
