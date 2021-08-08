@@ -16,19 +16,19 @@ const getToken = () => {
 }
 
 const authenticateUser = payload => {
-  console.log(payload)
+  console.log('payload', payload)
   return {
     type: CONSTANTS.ACTIONS.AUTHENTICATED,
     payload: {
-      id: payload.data.data.attributes.id,
-      username: payload.data.data.attributes.username,
-      email: payload.data.data.attributes.email,
-      createdAt: payload.data.data.attributes.created_at,
-      signInCount: payload.data.data.attributes.sign_in_count,
-      currentSignIn: payload.data.data.attributes.current_sign_in_at,
-      lastSignIn: payload.data.data.attributes.last_sign_in_at,
-      currentIP: payload.data.data.attributes.current_sign_in_ip,
-      lastIP: payload.data.data.attributes.last_sign_in_ip
+      id: payload.user.data.attributes.id,
+      username: payload.user.data.attributes.username,
+      email: payload.user.data.attributes.email,
+      createdAt: payload.user.data.attributes.created_at,
+      signInCount: payload.user.data.attributes.sign_in_count,
+      currentSignIn: payload.user.data.attributes.current_sign_in_at,
+      lastSignIn: payload.user.data.attributes.last_sign_in_at,
+      currentIP: payload.user.data.attributes.current_sign_in_ip,
+      lastIP: payload.user.data.attributes.last_sign_in_ip
     }
   }
 }
