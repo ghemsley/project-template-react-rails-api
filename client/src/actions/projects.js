@@ -17,15 +17,7 @@ const fetchProjects = () => () => {
     .catch(error => console.log(error))
 }
 
-const fetchEverything = () => () => {
-  return fetch(`${CONSTANTS.URLS.BASE_URL}/projects?include=categories,todos`, {
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
-  })
-    .then(response => response.json())
-    .catch(error => console.log(error))
-}
-
-const sendProject = payload => () => {
+const sendProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects`, {
     method: 'post',
     headers: {
@@ -105,75 +97,22 @@ const deeplyDeleteProject = payload => dispatch => {
 
 const instantiateProject = payload => dispatch => {
   console.log('instantiating project')
-  return dispatch(sendProject(payload)).then(json => {
-    const projectObject = {
-      id: json.data.id,
-      name: json.data.attributes.name,
-      description: json.data.attributes.description,
-      order: json.data.attributes.order
+  return sendProject(payload).then(json => {
+    console.log('new project', json)
+    const project = {
+      id: json.project.data.id,
+      name: json.project.data.attributes.name,
+      description: json.project.data.attributes.description,
+      order: json.project.data.attributes.order
     }
-    dispatch(createProject(projectObject))
+    const userProject = {
+      id: json.user_project.data.attributes.id,
+      userID: json.user_project.data.attributes.user_id,
+      projectID: json.user_project.data.attributes.project_id
+    }
+    dispatch(createProject(project))
+    dispatch(actions.createUserProject(userProject))
   })
-}
-
-const instantiateEverything = () => (dispatch, getState) => {
-  console.log('instantiating everything')
-  const state = getState()
-  return dispatch(fetchEverything())
-    .then(json => {
-      console.log(json)
-      for (const project of json.data) {
-        const projectObject = {
-          id: project.id,
-          name: project.attributes.name,
-          order: project.attributes.order,
-          description: project.attributes.description
-        }
-        if (!state.projects.find(project => project.id === projectObject.id)) {
-          dispatch(actions.createProject(projectObject))
-        }
-      }
-
-      return json
-    })
-    .then(json => {
-      for (const included of json.included) {
-        if (included.type === 'category') {
-          const categoryObject = {
-            id: included.id,
-            name: included.attributes.name,
-            description: included.attributes.description,
-            projectID: included.relationships.project.data.id,
-            order: included.attributes.order
-          }
-          if (
-            !state.categories.find(
-              category => category.id === categoryObject.id
-            )
-          ) {
-            dispatch(actions.createCategory(categoryObject))
-          }
-        }
-      }
-      return json
-    })
-    .then(json => {
-      for (const included of json.included) {
-        if (included.type === 'todo') {
-          const todoObject = {
-            id: included.id,
-            name: included.attributes.name,
-            description: included.attributes.description,
-            categoryID: included.relationships.category.data.id,
-            order: included.attributes.order
-          }
-          if (!state.todos.find(todo => todo.id === todoObject.id)) {
-            dispatch(actions.createTodo(todoObject))
-          }
-        }
-      }
-      return json
-    })
 }
 
 const removeProject = payload => dispatch => {
@@ -204,7 +143,6 @@ const batchAmendProjects = payload => dispatch => {
 const projectActions = {
   fetchProject,
   fetchProjects,
-  fetchEverything,
   sendProject,
   createProject,
   updateProject,
@@ -212,7 +150,6 @@ const projectActions = {
   deleteProject,
   deeplyDeleteProject,
   instantiateProject,
-  instantiateEverything,
   destroyProject,
   removeProject,
   patchProject,
