@@ -31,4 +31,6 @@ class UserSerializer < ActiveModel::Serializer
       "http://localhost:3000/users/#{object.id}?include=todos"
     }
   }
+
+  cache_options store: ActiveSupport::Cache::MemoryStore.new, expires_in: 5.minutes
 end

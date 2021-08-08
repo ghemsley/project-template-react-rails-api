@@ -1,7 +1,7 @@
 class UserProjectSerializer < ActiveModel::Serializer
   include JSONAPI::Serializer
   
-  attributes :id, :user_id, :project_id
+  attributes :id, :user_id, :project_id, :created_at
 
   belongs_to :user, links: {
     self: :url,
@@ -16,4 +16,6 @@ class UserProjectSerializer < ActiveModel::Serializer
       "http://localhost:3000/user_projects/#{object.project_id}?include=project"
     }
   }
+
+  cache_options store: ActiveSupport::Cache::MemoryStore.new, expires_in: 5.minutes
 end

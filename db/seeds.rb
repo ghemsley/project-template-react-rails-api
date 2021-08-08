@@ -9,23 +9,24 @@ projects = Project.create([{ name: 'Final project', description: 'Phase 5 projec
                            { name: 'Job search', description: 'Things I need to do to find a job as a developer',
                              order: 1 }])
 
-projects.each do |project, _i|
+projects.each do |project|
   categories = Category.create([{ name: 'Needs doing', description: 'Work that still needs to be done', order: 0, project: project },
                                 { name: 'In progress', description: 'Work that has already been started', order: 1,
                                   project: project },
                                 { name: 'Done', description: 'Work that has been finished', order: 2,
                                   project: project }])
-  categories.each_with_index do |category, _j|
+  categories.each do |category|
     Todo.create([{ name: 'Test todo', description: 'Todo or not todo, that is the question?', order: 0, category: category },
                  { name: 'Test todo 2',
                    description: 'Test Todo: The Motion Picture: The Sequel: The Game: The Broadway Musical: The JSON Response',
                    order: 1, category: category },
                  { name: 'Test todo 3', description: 'Todo the third', order: 2, category: category }])
   end
-  users = User.create([{ username: 'test', email: 'test@example.com', password: 'password', password_confirmation: 'password' },
-                       { username: 'test2', email: 'test2@example.com', password: 'password',
-                         password_confirmation: 'password' }])
-  users.each do |user|
-    UserProject.create([{ user_id: user.id, project_id: project.id }])
-  end
+end
+
+users = User.create([{ username: 'test', email: 'test@example.com', password: 'password', password_confirmation: 'password' },
+                     { username: 'test2', email: 'test2@example.com', password: 'password',
+                       password_confirmation: 'password' }])
+users.each_with_index do |user, i|
+  UserProject.create([{ user_id: user.id, project_id: i + 1 }])
 end
