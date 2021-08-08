@@ -6,14 +6,14 @@ class UserProjectSerializer < ActiveModel::Serializer
   belongs_to :user, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/users/#{object.user_id}"
+      "http://localhost:3000/user_projects/#{object.id}?include=user"
     }
   }
 
   belongs_to :project, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/projects/#{object.project_id}"
+      "http://localhost:3000/user_projects/#{object.project_id}?include=project"
     }
   }
 end

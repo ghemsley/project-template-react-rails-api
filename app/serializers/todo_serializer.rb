@@ -6,7 +6,7 @@ class TodoSerializer < ActiveModel::Serializer
   belongs_to :category, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/categories/#{object.category_id}"
+      "http://localhost:3000/todos/#{object.id}?include=category"
     }
   }
 

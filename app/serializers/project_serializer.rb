@@ -6,21 +6,28 @@ class ProjectSerializer < ActiveModel::Serializer
   has_many :categories, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/projects/#{object.id}/categories"
+      "http://localhost:3000/projects/#{object.id}?include=categories"
     }
   }
 
   has_many :todos, through: :categories, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/projects/#{object.id}/todos"
+      "http://localhost:3000/projects/#{object.id}?include=todos"
+    }
+  }
+
+  has_many :user_projects, links: {
+    self: :url,
+    related: lambda { |object|
+      "http://localhost:3000/projects/#{object.id}/include=user_projects"
     }
   }
 
   has_many :users, through: :user_projects, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/projects/#{object.id}/users"
+      "http://localhost:3000/projects/#{object.id}?include=users"
     }
   }
 

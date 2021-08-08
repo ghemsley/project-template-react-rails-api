@@ -6,14 +6,14 @@ class CategorySerializer < ActiveModel::Serializer
   belongs_to :project, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/projects/#{object.project_id}"
+      "http://localhost:3000/categories/#{object.id}?include=project"
     }
   }
 
   has_many :todos, links: {
     self: :url,
     related: lambda { |object|
-      "http://localhost:3000/categories/#{object.id}/todos"
+      "http://localhost:3000/categories/#{object.id}?include=todos"
     }
   }
 
