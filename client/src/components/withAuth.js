@@ -25,7 +25,8 @@ function withAuth(WrappedComponent) {
 
   const mapStateToProps = state => ({
     authChecked: state.authentication.authChecked,
-    loggedIn: state.authentication.loggedIn
+    loggedIn: state.authentication.loggedIn,
+    currentUser: state.authentication.currentUser
   })
   const mapDispatchToProps = dispatch => ({
     checkAuth: () => dispatch(actions.checkAuth())

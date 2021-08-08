@@ -11,9 +11,9 @@ const Projects = () => {
 
   useEffect(() => {
     if (projects.length < 1) {
-      dispatch(actions.instantiateEverything())
+      dispatch(actions.instantiateEverythingForUser())
     }
-  }, [dispatch, projects])
+  }, [])
 
   return (
     <div className='center center-text project-page'>
