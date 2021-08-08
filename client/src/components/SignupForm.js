@@ -58,7 +58,6 @@ const SignupForm = props => {
           }
         })
         .catch(error => {
-          console.log(error)
           setErrors([error.status.message])
         })
     } else {

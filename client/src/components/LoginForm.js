@@ -38,7 +38,6 @@ const LoginForm = props => {
       )
         .then(() => history.push('/'))
         .catch(error => {
-          console.log(error)
           setErrors([error.error])
         })
     } else {
@@ -70,10 +69,12 @@ const LoginForm = props => {
               name='email'
               value={email}
               onChange={handleChange}
+              autoComplete='username'
             />
             <label htmlFor='password'>Password</label>
             <input
               name='password'
+              type='password'
               value={password}
               onChange={handleChange}
               autoComplete='current-password'
