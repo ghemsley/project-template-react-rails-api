@@ -77,3 +77,22 @@ export const makeSelectCategoriesByProjectID = createSelector(
   [selectCategories, selectProjectID],
   filterCategoriesByProjectId
 )
+
+const selectUserProjects = state => state.userProjects
+
+const selectCurrentUserID = state => state.authentication.currentUser.id
+
+const findUserProjectByCurrentUserIDAndProjectID = (
+  userProjects,
+  currentUserID,
+  projectID
+) => {
+  return userProjects.find(
+    userProj =>
+      userProj.userID === currentUserID && userProj.projectID === projectID
+  )
+}
+export const makeSelectUserProject = createSelector(
+  [selectUserProjects, selectCurrentUserID, selectProjectID],
+  findUserProjectByCurrentUserIDAndProjectID
+)
