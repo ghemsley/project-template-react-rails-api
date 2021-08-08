@@ -43,10 +43,15 @@ const sendUserProject = payload => {
 }
 
 const destroyUserProject = payload => {
-  return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}`, {
-    method: 'delete',
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
-  }).then(response => response.json())
+  return fetch(
+    `${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}?include=project`,
+    {
+      method: 'delete',
+      headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    }
+  )
+    .then(response => response.json())
+    .catch(error => console.log(error))
 }
 
 const createUserProject = payload => ({
@@ -60,7 +65,7 @@ const deleteUserProject = payload => ({
 })
 
 const instantiateUserProject = payload => dispatch => {
-  dispatch(sendUserProject(payload)).then(json => {
+  return sendUserProject(payload).then(json => {
     if (json.user_project.data.attributes.id === payload.id) {
       const userProject = {
         id: json.user_project.data.attributes.id,
@@ -78,7 +83,6 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
   const user = state.authentication.currentUser
   return fetchEverythingForUser(user)
     .then(json => {
-      console.log(json)
       if (json.included) {
         for (const included of json.included) {
           if (
@@ -159,6 +163,25 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
     })
 }
 
+const removeUserProject = payload => (dispatch, getState) => {
+  const otherUsersForProject = getState().userProjects.filter(
+    userProj =>
+      userProj.projectID === payload.projectID && userProj.id !== payload.id
+  )
+  if (otherUsersForProject < 1) {
+    return Promise.reject(
+      "You can't leave your own project if you're its only user"
+    )
+  } else {
+    return destroyUserProject(payload).then(json => {
+      if (json.data.attributes.id === payload.id) {
+        dispatch(deleteUserProject(payload))
+      }
+      return json
+    })
+  }
+}
+
 const userProjectActions = {
   fetchUserProject,
   fetchUserProjects,
@@ -168,7 +191,8 @@ const userProjectActions = {
   sendUserProject,
   instantiateUserProject,
   fetchEverythingForUser,
-  instantiateEverythingForUser
+  instantiateEverythingForUser,
+  removeUserProject
 }
 
 export default userProjectActions
