@@ -1,17 +1,23 @@
+import helpers from './helpers'
+
 const coordinates = (state = [], action) => {
+  let payload = null
+  if (action.payload) {
+    payload = helpers.convertIdToInt(action.payload)
+  }
   switch (action.type) {
     case 'REFRESH_COORDINATES':
       const coords = state.find(
         coords =>
-          coords.type === action.payload.type &&
-          coords.item.id === action.payload.item.id
+          coords.type === payload.type &&
+          coords.item.id === payload.item.id
       )
-      if (coords && coords.position !== action.payload.position) {
+      if (coords && coords.position !== payload.position) {
         const newState = [...state]
-        newState[newState.indexOf(coords)] = action.payload
+        newState[newState.indexOf(coords)] = payload
         return newState
       }
-      return [...state, action.payload]
+      return [...state, payload]
 
     default:
       return state

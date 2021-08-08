@@ -1,21 +1,27 @@
+import helpers from './helpers'
+
 const projects = (state = [], action) => {
   const compareOrder = (project1, project2) => project1.order - project2.order
   let newState = []
+  let payload = null
+  if (action.payload) {
+    payload = helpers.convertIdToInt(action.payload)
+  }
   switch (action.type) {
     case 'CREATE_PROJECT':
       console.log('creating project')
-      return [...state, action.payload]
+      return [...state, payload]
 
     case 'UPDATE_PROJECT':
       console.log('updating project')
       newState = [...state]
       const currentProject = newState.find(
-        project => project.id === action.payload.id
+        project => project.id === payload.id
       )
       if (currentProject) {
-        for (const key in action.payload) {
+        for (const key in payload) {
           if (key !== 'id') {
-            currentProject[key] = action.payload[key]
+            currentProject[key] = payload[key]
           }
         }
       }
@@ -24,8 +30,10 @@ const projects = (state = [], action) => {
     case 'UPDATE_PROJECTS':
       console.log('batch updating projects')
       newState = [...state]
-      for (const project of action.payload) {
-        const currentProject = newState.find(existing => existing.id === project.id)
+      for (const project of payload) {
+        const currentProject = newState.find(
+          existing => existing.id === project.id
+        )
         if (currentProject) {
           for (const key in project) {
             if (key !== 'id') {
@@ -39,7 +47,7 @@ const projects = (state = [], action) => {
 
     case 'DELETE_PROJECT':
       console.log('deleting project')
-      return [...state.filter(project => project.id !== action.payload.id)]
+      return [...state.filter(project => project.id !== payload.id)]
 
     default:
       return state
