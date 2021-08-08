@@ -4,19 +4,21 @@ class ProjectsController < ApplicationController
 
   def index
     allowed = %i[id name description order created_at updated_at]
-
-    jsonapi_filter(current_user.projects, allowed) do |filtered|
-      render jsonapi: filtered.result
+    jsonapi_filter(Project.all, allowed) do |filtered|
+      render jsonapi: filtered.result, status: :ok
     end
   end
 
   def show
-    render jsonapi: current_user.projects.find(params[:id])
+    render jsonapi: Project.find(params[:id])
   end
 
   def create
     project = current_user.projects.create!({ name: params[:name], description: params[:description] })
-    render jsonapi: project
+    user_project = UserProject.create!(user_id: current_user.id, project_id: project.id)
+    render json: { user: UserSerializer.new(current_user).serializable_hash,
+                   project: ProjectSerializer.new(project).serializable_hash,
+                   user_project: UserProjectSerializer.new(user_project).serializable_hash }, status: :ok
   end
 
   def update

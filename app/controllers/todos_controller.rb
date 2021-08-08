@@ -3,15 +3,15 @@ class TodosController < ApplicationController
   include JSONAPI::Filtering
 
   def index
-    allowed = %i[id name description order category_id created_at updated_at]
+    allowed = %i[id name description order category_id created_at updated_at category_project_id category_project_user_project_id category_project_user_project_user_id]
 
-    jsonapi_filter(current_user.todos.all, allowed) do |filtered|
+    jsonapi_filter(Todo.all, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    render jsonapi: current_user.todos.find(params[:id])
+    render jsonapi: Todo.find(params[:id])
   end
 
   def create

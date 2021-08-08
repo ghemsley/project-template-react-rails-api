@@ -5,18 +5,18 @@ class CategoriesController < ApplicationController
   def index
     allowed = %i[id name description order project_id created_at updated_at]
 
-    jsonapi_filter(current_user.categories, allowed) do |filtered|
+    jsonapi_filter(Category.all, allowed) do |filtered|
       render jsonapi: filtered.result
     end
   end
 
   def show
-    render jsonapi: current_user.categories.find(params[:id])
+    render jsonapi: Category.find(params[:id])
   end
 
   def create
     category = Category.create!({ name: params[:name], description: params[:description],
-                                                 project_id: params[:projectID] })
+                                  project_id: params[:projectID] })
     render jsonapi: category
   end
 
