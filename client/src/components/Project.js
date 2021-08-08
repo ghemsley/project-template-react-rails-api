@@ -5,7 +5,10 @@ import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
 import { Category, Dropzone, ConfirmScreen } from './index'
 import { debounce } from 'lodash'
-import { makeSelectCategoriesByProjectID } from '../selectors'
+import {
+  makeSelectCategoriesByProjectID,
+  makeSelectUserProject
+} from '../selectors'
 
 const Project = React.memo(props => {
   console.log('render project')
@@ -16,7 +19,13 @@ const Project = React.memo(props => {
   const categories = useSelector(state =>
     selectCategoriesByProjectID(state, props)
   )
-  const [showConfirmScreen, setShowConfirmScreen] = useState(false)
+  const selectUserProject = useCallback(makeSelectUserProject, [props])
+  const userProject = useSelector(state => selectUserProject(state, props))
+  const currentUser = useSelector(state => state.authentication.currentUser)
+  const [showJoinLeaveConfirmScreen, setShowJoinLeaveConfirmScreen] =
+    useState(false)
+  const [showDeleteConfirmScreen, setShowDeleteConfirmScreen] = useState(false)
+  const [leaveError, setLeaveError] = useState(null)
   const location = useLocation()
   const dispatch = useDispatch()
   const ref = useRef(null)
@@ -68,11 +77,31 @@ const Project = React.memo(props => {
     }
   }, [getCoordinates, onScroll])
 
-  const handleClick = () => {
-    setShowConfirmScreen(true)
+  const handleLeaveJoinClick = () => {
+    setShowJoinLeaveConfirmScreen(true)
   }
-  const closeAction = () => {
-    setShowConfirmScreen(false)
+  const closeJoinLeaveAction = () => {
+    setShowJoinLeaveConfirmScreen(false)
+  }
+  const handleDeleteClick = () => {
+    setShowDeleteConfirmScreen(true)
+  }
+  const closeDeleteAction = () => {
+    setShowDeleteConfirmScreen(false)
+  }
+  const confirmJoin = () => {
+    dispatch(
+      actions.instantiateUserProject({
+        user_id: currentUser.id,
+        project_id: props.project.id
+      })
+    )
+  }
+  const confirmLeave = () => {
+    setLeaveError(null)
+    dispatch(actions.removeUserProject(userProject)).catch(error =>
+      setLeaveError(error)
+    )
   }
   const confirmRemove = () => {
     dispatch(actions.removeProject(props.project))
@@ -96,6 +125,11 @@ const Project = React.memo(props => {
         {props.showButtons && (
           <>
             <div className='button-container'>
+              <button
+                className={`pure-button pure-button-primary invisible`}
+                onClick={handleLeaveJoinClick}>
+                {userProject ? 'Leave' : 'Join'}
+              </button>
               <Link
                 className={`pure-button pure-button-primary invisible`}
                 to={{
@@ -106,20 +140,10 @@ const Project = React.memo(props => {
               </Link>
               <button
                 className={`pure-button pure-button-delete invisible`}
-                onClick={handleClick}>
+                onClick={handleDeleteClick}>
                 Delete
               </button>
             </div>
-            {showConfirmScreen && (
-              <ConfirmScreen closeAction={closeAction}>
-                <h1>Confirm delete?</h1>
-                <button
-                  className='pure-button pure-button-delete'
-                  onClick={confirmRemove}>
-                  Delete
-                </button>
-              </ConfirmScreen>
-            )}
           </>
         )}
         {props.showCategories && (
@@ -141,6 +165,27 @@ const Project = React.memo(props => {
           </>
         )}
       </Dropzone>
+      {showJoinLeaveConfirmScreen && (
+        <ConfirmScreen closeAction={closeJoinLeaveAction}>
+          <h1>Confirm {userProject ? 'leave' : 'join'}?</h1>
+          {leaveError && <p>{leaveError}</p>}
+          <button
+            className='pure-button pure-button-delete'
+            onClick={userProject ? confirmLeave : confirmJoin}>
+            {userProject ? 'Leave' : 'Join'}
+          </button>
+        </ConfirmScreen>
+      )}
+      {showDeleteConfirmScreen && (
+        <ConfirmScreen closeAction={closeDeleteAction}>
+          <h1>Confirm delete?</h1>
+          <button
+            className='pure-button pure-button-delete'
+            onClick={confirmRemove}>
+            Delete
+          </button>
+        </ConfirmScreen>
+      )}
     </div>
   )
 })
