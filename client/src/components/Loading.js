@@ -4,7 +4,7 @@ import { ConfirmScreen } from '.'
 const Loading = (props) => {
   return (
     <ConfirmScreen>
-      <p className='spin'>Loading...</p>
+      <h1 className='loading'>Loading...</h1>
     </ConfirmScreen>
   )
 }

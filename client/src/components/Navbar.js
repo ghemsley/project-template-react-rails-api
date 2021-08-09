@@ -8,11 +8,11 @@ const Navbar = () => {
   )
   const location = useLocation()
   return (
-    <div className='center fit pure-menu pure-menu-horizontal pure-menu-scrollable'>
+    <div className='navbar center fit pure-menu pure-menu-horizontal pure-menu-scrollable'>
       <ul className='pure-menu-list'>
         {Pages.map((page, i) => (
           <li className='pure-menu-item' key={i}>
-            <Link to={page.path} className='pure-menu-link'>
+            <Link to={{ pathname: page.path }} className='pure-menu-link pure-menu-heading'>
               {page.name}
             </Link>
           </li>
@@ -21,15 +21,15 @@ const Navbar = () => {
           <>
             <li className='pure-menu-item' key={'signup'}>
               <Link
-                className='pure-menu-link'
-                to={{ pathname: 'signup', state: { background: location } }}>
+                className='pure-menu-link pure-menu-heading'
+                to={{ pathname: '/signup', state: { background: location } }}>
                 Sign up
               </Link>
             </li>
             <li className='pure-menu-item' key={'login'}>
               <Link
-                className='pure-menu-link'
-                to={{ pathname: 'login', state: { background: location } }}>
+                className='pure-menu-link pure-menu-heading'
+                to={{ pathname: '/login', state: { background: location } }}>
                 Login
               </Link>
             </li>
@@ -38,14 +38,14 @@ const Navbar = () => {
         {authChecked && loggedIn && currentUser && (
           <li className='pure-menu-item' key={'logout'}>
             <Link
-              className='pure-menu-link'
-              to={{ pathname: 'logout', state: { background: location } }}>
+              className='pure-menu-link pure-menu-heading'
+              to={{ pathname: '/logout', state: { background: location } }}>
               Logout
             </Link>
           </li>
         )}
       </ul>
-      <div className='button-container'></div>
+      {loggedIn && currentUser && <p>Logged in as {currentUser.email}</p>}
     </div>
   )
 }

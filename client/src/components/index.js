@@ -14,6 +14,7 @@ import LoginForm from './LoginForm'
 import LogoutScreen from './LogoutScreen'
 import withAuth from './withAuth'
 import Loading from './Loading'
+import Footer from './Footer'
 
 export {
   Hover,
@@ -31,5 +32,6 @@ export {
   LoginForm,
   LogoutScreen,
   withAuth,
-  Loading
+  Loading,
+  Footer
 }
