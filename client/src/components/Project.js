@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
 import { Category, Dropzone, ConfirmScreen } from './index'
@@ -11,7 +11,6 @@ import {
 } from '../selectors'
 
 const Project = React.memo(props => {
-  console.log('render project')
   const selectCategoriesByProjectID = useCallback(
     makeSelectCategoriesByProjectID,
     [props]
@@ -26,12 +25,13 @@ const Project = React.memo(props => {
     useState(false)
   const [showDeleteConfirmScreen, setShowDeleteConfirmScreen] = useState(false)
   const [leaveError, setLeaveError] = useState(null)
+  const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
   const ref = useRef(null)
 
   const getCoordinates = useCallback(() => {
-    if (ref.current) {
+    if (ref.current && !props.disablePosition) {
       const rect = ref.current.getBoundingClientRect()
       const coordinates = {
         type: 'project',
@@ -47,7 +47,7 @@ const Project = React.memo(props => {
       }
       dispatch(actions.refreshCoordinates(coordinates))
     }
-  }, [props.project, dispatch])
+  }, [props.project, props.disablePosition, dispatch])
 
   const onResize = useMemo(
     () =>
@@ -67,16 +67,33 @@ const Project = React.memo(props => {
     [getCoordinates]
   )
 
-  const observer = useResizeObserver({ ref, onResize })
+  useResizeObserver({ ref, onResize })
 
   useEffect(() => {
-    getCoordinates()
-    document.addEventListener('scroll', onScroll)
-    return () => {
-      document.removeEventListener('scroll', onScroll)
+    if (!props.disablePosition) {
+      getCoordinates()
+      document.addEventListener('scroll', onScroll)
+      return () => {
+        document.removeEventListener('scroll', onScroll)
+      }
     }
-  }, [getCoordinates, onScroll])
+  }, [props.disablePosition, getCoordinates, onScroll])
 
+  const handleJoinLeaveClickPositionDisabled = () => {
+    if (!currentUser.id) {
+      history.push('/signup')
+    } else if (currentUser.id && !userProject) {
+      dispatch(
+        actions
+          .instantiateUserProject({
+            user_id: currentUser.id,
+            project_id: props.project.id
+          })
+      ).then(() => history.push('/projects'))
+    } else if (currentUser.id && userProject) {
+      dispatch(actions.removeUserProject(userProject))
+    }
+  }
   const handleLeaveJoinClick = () => {
     setShowJoinLeaveConfirmScreen(true)
   }
@@ -108,63 +125,84 @@ const Project = React.memo(props => {
   }
 
   return (
-    <div
-      id={`project-${props.project.id}`}
-      className='hoverable flex-child flex rounded project'
-      style={{
-        background: '#10a090',
-        color: 'whitesmoke'
-      }}
-      ref={ref}>
-      <Dropzone
-        parentID={props.project.id}
-        acceptType='category'
-        parentType='project'>
-        <h2>{props.project.name}</h2>
-        <p>{props.project.description}</p>
-        {props.showButtons && (
-          <>
-            <div className='button-container'>
+    <>
+      <div
+        id={`project-${props.project.id}`}
+        className='hoverable flex-child flex rounded project'
+        style={{
+          background: '#10a090',
+          color: 'whitesmoke'
+        }}
+        ref={ref}>
+        <Dropzone
+          parentID={props.project.id}
+          acceptType='category'
+          parentType='project'>
+          <h2>{props.project.name}</h2>
+          <p>{props.project.description}</p>
+          <div className='button-container'>
+            {props.showButtons && props.disablePosition && !currentUser && (
+              <Link
+                className={`pure-button pure-button-primary invisible`}
+                to={{
+                  pathname: `/signup`,
+                  state: { background: location }
+                }}>
+                Join
+              </Link>
+            )}
+            {props.showButtons && props.disablePosition && !userProject && (
+              <button
+                className={`pure-button pure-button-primary invisible`}
+                onClick={handleJoinLeaveClickPositionDisabled}>
+                {userProject ? 'Leave' : 'Join'}
+              </button>
+            )}
+            {props.showButtons && !props.disablePosition && currentUser.id && (
               <button
                 className={`pure-button pure-button-primary invisible`}
                 onClick={handleLeaveJoinClick}>
                 {userProject ? 'Leave' : 'Join'}
               </button>
-              <Link
-                className={`pure-button pure-button-primary invisible`}
-                to={{
-                  pathname: `projects/${props.project.id}/edit`,
-                  state: { background: location, edit: props.project }
-                }}>
-                Edit
-              </Link>
-              <button
-                className={`pure-button pure-button-delete invisible`}
-                onClick={handleDeleteClick}>
-                Delete
-              </button>
-            </div>
-          </>
-        )}
-        {props.showCategories && (
-          <>
-            <h3>Categories</h3>
-            {categories.length < 1 && (
-              <p style={{ fontSize: '14px' }}>Drop categories here!</p>
             )}
-            <div className='flex category-container'>
-              {categories.map(category => (
-                <Category
-                  category={category}
-                  showTodos={true}
-                  showButtons={props.showButtons}
-                  key={`category-${category.id}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </Dropzone>
+            {props.showButtons && !props.disablePosition && userProject && (
+              <>
+                <Link
+                  className={`pure-button pure-button-primary invisible`}
+                  to={{
+                    pathname: `/projects/${props.project.id}/edit`,
+                    state: { background: location, edit: props.project }
+                  }}>
+                  Edit
+                </Link>
+                <button
+                  className={`pure-button pure-button-delete invisible`}
+                  onClick={handleDeleteClick}>
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
+          {props.showCategories && (
+            <>
+              {!props.disablePosition && <h3>Categories</h3>}
+              {categories.length < 1 && !props.disablePosition && (
+                <p style={{ fontSize: '14px' }}>Drop categories here!</p>
+              )}
+              <div className='flex category-container'>
+                {categories.map(category => (
+                  <Category
+                    category={category}
+                    showTodos={true}
+                    showButtons={props.showButtons}
+                    key={`category-${category.id}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </Dropzone>
+      </div>
       {showJoinLeaveConfirmScreen && (
         <ConfirmScreen closeAction={closeJoinLeaveAction}>
           <h1>Confirm {userProject ? 'leave' : 'join'}?</h1>
@@ -186,7 +224,7 @@ const Project = React.memo(props => {
           </button>
         </ConfirmScreen>
       )}
-    </div>
+    </>
   )
 })
 
