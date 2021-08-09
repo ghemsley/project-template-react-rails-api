@@ -46,7 +46,6 @@ const patchCategory = payload => () => {
 }
 
 const destroyCategory = payload => () => {
-  console.log('destroying category')
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
@@ -71,50 +70,53 @@ const deleteCategory = payload => ({
 })
 
 const deeplyDeleteCategory = payload => dispatch => {
-  console.log('deeply deleting category')
   dispatch(deleteCategory(payload))
   dispatch(actions.deleteTodosByCategory(payload))
 }
 
 const deleteCategoriesByProject = payload => (dispatch, getState) => {
-  console.log('deleting categories by project')
   const categories = getState().categories.filter(
-    category => category.projectID === payload.id
+    category => parseInt(category.projectID) === parseInt(payload.id)
   )
   for (const category of categories) {
     dispatch(deeplyDeleteCategory(category))
   }
 }
 
-const instantiateCategory = payload => dispatch => {
-  console.log('instantiating category')
+const instantiateCategory = payload => (dispatch, getState) => {
+  const state = getState()
   return dispatch(sendCategory(payload)).then(json => {
-    const categoryObject = {
-      id: json.data.id,
-      name: json.data.attributes.name,
-      description: json.data.attributes.description,
-      projectID: json.data.relationships.project.data.id,
-      order: json.data.attributes.order
+    if (
+      !state.categories.find(cat => parseInt(cat.id) === parseInt(json.data.id))
+    ) {
+      const categoryObject = {
+        id: json.data.id,
+        name: json.data.attributes.name,
+        description: json.data.attributes.description,
+        projectID: json.data.relationships.project.data.id,
+        order: json.data.attributes.order
+      }
+      dispatch(createCategory(categoryObject))
     }
-    dispatch(createCategory(categoryObject))
+    return json
   })
 }
 
 const removeCategory = payload => dispatch => {
-  console.log('removing category')
   dispatch(destroyCategory(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (parseInt(json.data.id) === parseInt(payload.id)) {
       dispatch(deeplyDeleteCategory(payload))
     }
+    return json
   })
 }
 
 const amendCategory = payload => dispatch => {
-  console.log('amending category')
   return dispatch(patchCategory(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (parseInt(json.data.id) === parseInt(payload.id)) {
       dispatch(updateCategory(payload))
     }
+    return json
   })
 }
 
@@ -127,14 +129,16 @@ const patchCategories = payload => () => {
     .then(response => response.json())
     .catch(error => console.log(error))
 }
+
 const updateCategories = payload => ({
   type: 'UPDATE_CATEGORIES',
   payload
 })
+
 const batchAmendCategories = payload => dispatch => {
-  console.log('batch amend categories')
   return dispatch(patchCategories(payload)).then(json => {
     dispatch(updateCategories(payload))
+    return json
   })
 }
 

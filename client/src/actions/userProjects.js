@@ -43,13 +43,10 @@ const sendUserProject = payload => {
 }
 
 const destroyUserProject = payload => {
-  return fetch(
-    `${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}?include=project`,
-    {
-      method: 'delete',
-      headers: { Accept: 'application/json', Authorization: actions.getToken() }
-    }
-  )
+  return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}`, {
+    method: 'delete',
+    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  })
     .then(response => response.json())
     .catch(error => console.log(error))
 }
@@ -66,19 +63,19 @@ const deleteUserProject = payload => ({
 
 const instantiateUserProject = payload => dispatch => {
   return sendUserProject(payload).then(json => {
-    if (json.user_project.data.attributes.id === payload.id) {
+    if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
       const userProject = {
-        id: json.user_project.data.attributes.id,
-        user_id: json.user_project.data.attributes.user_id,
-        project_id: json.user_project.data.attributes.project_id
+        id: json.data.attributes.id,
+        user_id: json.data.attributes.user_id,
+        project_id: json.data.attributes.project_id
       }
       dispatch(createUserProject(userProject))
     }
+    return json
   })
 }
 
 const instantiateEverythingForUser = () => (dispatch, getState) => {
-  console.log('instantiating everything')
   const state = getState()
   const user = state.authentication.currentUser
   return fetchEverythingForUser(user)
@@ -87,7 +84,9 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'project' &&
-            !state.projects.find(project => project.id === included.id)
+            !state.projects.find(
+              project => parseInt(project.id) === parseInt(included.id)
+            )
           ) {
             const projectObject = {
               id: included.id,
@@ -106,7 +105,9 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'category' &&
-            !state.categories.find(category => category.id === included.id)
+            !state.categories.find(
+              category => parseInt(category.id) === parseInt(included.id)
+            )
           ) {
             const categoryObject = {
               id: included.id,
@@ -126,7 +127,9 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'todo' &&
-            !state.todos.find(todo => todo.id === included.id)
+            !state.todos.find(
+              todo => parseInt(todo.id) === parseInt(included.id)
+            )
           ) {
             const todoObject = {
               id: included.id,
@@ -147,7 +150,7 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
           if (
             included.type === 'user_project' &&
             !state.userProjects.find(
-              userProject => userProject.id === included.id
+              userProject => parseInt(userProject.id) === parseInt(included.id)
             )
           ) {
             const existingUserProject = {
@@ -166,7 +169,8 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
 const removeUserProject = payload => (dispatch, getState) => {
   const otherUsersForProject = getState().userProjects.filter(
     userProj =>
-      userProj.projectID === payload.projectID && userProj.id !== payload.id
+      parseInt(userProj.projectID) === parseInt(payload.projectID) &&
+      parseInt(userProj.id) !== parseInt(payload.id)
   )
   if (otherUsersForProject < 1) {
     return Promise.reject(
@@ -174,7 +178,7 @@ const removeUserProject = payload => (dispatch, getState) => {
     )
   } else {
     return destroyUserProject(payload).then(json => {
-      if (json.data.attributes.id === payload.id) {
+      if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
         dispatch(deleteUserProject(payload))
       }
       return json

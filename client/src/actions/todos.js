@@ -60,7 +60,6 @@ const patchTodos = payload => () => {
 }
 
 const destroyTodo = payload => () => {
-  console.log('destroying todo')
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     method: 'DELETE',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
@@ -94,42 +93,47 @@ const deleteTodosByCategory = payload => ({
   payload
 })
 
-const instantiateTodo = payload => dispatch => {
-  console.log('instantiating todo')
+const instantiateTodo = payload => (dispatch, getState) => {
+  const state = getState()
   return dispatch(sendTodo(payload)).then(json => {
-    const todoObject = {
-      id: json.data.id,
-      name: json.data.attributes.name,
-      description: json.data.attributes.description,
-      categoryID: json.data.relationships.category.data.id,
-      order: json.data.attributes.order
+    if (
+      !state.todos.find(todo => parseInt(todo.id) === parseInt(json.data.id))
+    ) {
+      const todoObject = {
+        id: json.data.id,
+        name: json.data.attributes.name,
+        description: json.data.attributes.description,
+        categoryID: json.data.relationships.category.data.id,
+        order: json.data.attributes.order
+      }
+      dispatch(createTodo(todoObject))
     }
-    dispatch(createTodo(todoObject))
+    return json
   })
 }
 
 const removeTodo = payload => dispatch => {
-  console.log('removing todo')
   dispatch(destroyTodo(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (parseInt(json.data.id) === parseInt(payload.id)) {
       dispatch(deleteTodo(payload))
     }
+    return json
   })
 }
 
 const amendTodo = payload => dispatch => {
-  console.log('amending todo')
   return dispatch(patchTodo(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (parseInt(json.data.id) === parseInt(payload.id)) {
       dispatch(updateTodo(payload))
     }
+    return json
   })
 }
 
 const batchAmendTodos = payload => dispatch => {
-  console.log('batch amend todos')
   return dispatch(patchTodos(payload)).then(json => {
     dispatch(updateTodos(payload))
+    return json
   })
 }
 
