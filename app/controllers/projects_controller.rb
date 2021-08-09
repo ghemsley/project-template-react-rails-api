@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   include JSONAPI::Fetching
   include JSONAPI::Filtering
+  skip_before_action :authenticate_user!, only: [:index]
 
   def index
     allowed = %i[id name description order created_at updated_at]

@@ -22,7 +22,7 @@ class UserProjectsController < ApplicationController
   def update; end
 
   def destroy
-    user_project = UserProject.find_by!(user_id: current_user.id, project_id: params[:project_id])
+    user_project = UserProject.find(params[:id])
     user_project.destroy!
     render jsonapi: user_project
   end
