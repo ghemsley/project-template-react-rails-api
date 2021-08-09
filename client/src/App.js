@@ -9,7 +9,8 @@ import {
   SignupForm,
   LoginForm,
   LogoutScreen,
-  withAuth  // order matters
+  withAuth, // order matters,
+  Footer
 } from './components'
 import './App.css'
 
@@ -26,60 +27,63 @@ function App() {
   const edit = location.state && location.state.edit
 
   return (
-    <div className='pure-u-1'>
-      <Navbar />
-      <Switch location={background ? background : location}>
-        {Pages.map((Page, i) => (
-          <Route
-            exact
-            path={Page.path}
-            key={i}
-            children={routeProps => Page.component(routeProps)}
-          />
-        ))}
-      </Switch>
-      <Route exact path='/signup' children={<AuthenticatedSignupForm />} />
-      <Route exact path='/login' children={<AuthenticatedLoginForm />} />
-      <Route
-        exact
-        path='/logout'
-        children={<ProtectedLogoutScreen protectedRoute />}
-      />
-      <Route
-        exact
-        path='/projects/new'
-        children={<ProtectedProjectForm protectedRoute />}
-      />
-      <Route
-        exact
-        path='/categories/new'
-        children={<ProtectedCategoryForm protectedRoute />}
-      />
-      <Route
-        exact
-        path='/todos/new'
-        children={<ProtectedTodoForm protectedRoute />}
-      />
-      {edit && (
-        <>
-          <Route
-            exact
-            path='/todos/:id/edit'
-            children={<ProtectedTodoForm edit={edit} protectedRoute />}
-          />
-          <Route
-            exact
-            path='/categories/:id/edit'
-            children={<ProtectedCategoryForm edit={edit} protectedRoute />}
-          />
-          <Route
-            exact
-            path='/projects/:id/edit'
-            children={<ProtectedProjectForm edit={edit} protectedRoute />}
-          />
-        </>
-      )}
-    </div>
+    <>
+      <div className='pure-u-1 content'>
+        <Navbar />
+        <Switch location={background ? background : location}>
+          {Pages.map((Page, i) => (
+            <Route
+              exact
+              path={Page.path}
+              key={i}
+              children={routeProps => Page.component(routeProps)}
+            />
+          ))}
+        </Switch>
+        <Route exact path='/signup' children={<AuthenticatedSignupForm />} />
+        <Route exact path='/login' children={<AuthenticatedLoginForm />} />
+        <Route
+          exact
+          path='/logout'
+          children={<ProtectedLogoutScreen protectedRoute />}
+        />
+        <Route
+          exact
+          path='/projects/new'
+          children={<ProtectedProjectForm protectedRoute />}
+        />
+        <Route
+          exact
+          path='/categories/new'
+          children={<ProtectedCategoryForm protectedRoute />}
+        />
+        <Route
+          exact
+          path='/todos/new'
+          children={<ProtectedTodoForm protectedRoute />}
+        />
+        {edit && (
+          <>
+            <Route
+              exact
+              path='/todos/:id/edit'
+              children={<ProtectedTodoForm edit={edit} protectedRoute />}
+            />
+            <Route
+              exact
+              path='/categories/:id/edit'
+              children={<ProtectedCategoryForm edit={edit} protectedRoute />}
+            />
+            <Route
+              exact
+              path='/projects/:id/edit'
+              children={<ProtectedProjectForm edit={edit} protectedRoute />}
+            />
+          </>
+        )}
+      </div>
+      <Footer />
+    </>
   )
 }
 
