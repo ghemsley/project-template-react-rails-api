@@ -10,7 +10,6 @@ import { debounce } from 'lodash'
 import { makeSelectCategoryByTodoCategoryID } from '../selectors/index'
 
 const Todo = React.memo(props => {
-  console.log('render todo')
   const selectCategoryByTodoCategoryID = useCallback(
     makeSelectCategoryByTodoCategoryID,
     [props]
@@ -126,7 +125,7 @@ const Todo = React.memo(props => {
             <Link
               className={`pure-button pure-button-primary invisible`}
               to={{
-                pathname: `todos/${props.todo.id}/edit`,
+                pathname: `/todos/${props.todo.id}/edit`,
                 state: { background: location, edit: props.todo }
               }}>
               Edit
