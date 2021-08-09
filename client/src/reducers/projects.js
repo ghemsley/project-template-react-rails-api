@@ -9,15 +9,11 @@ const projects = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_PROJECT':
-      console.log('creating project')
       return [...state, payload]
 
     case 'UPDATE_PROJECT':
-      console.log('updating project')
       newState = [...state]
-      const currentProject = newState.find(
-        project => project.id === payload.id
-      )
+      const currentProject = newState.find(project => project.id === payload.id)
       if (currentProject) {
         for (const key in payload) {
           if (key !== 'id') {
@@ -28,7 +24,6 @@ const projects = (state = [], action) => {
       return newState
 
     case 'UPDATE_PROJECTS':
-      console.log('batch updating projects')
       newState = [...state]
       for (const project of payload) {
         const currentProject = newState.find(
@@ -46,8 +41,10 @@ const projects = (state = [], action) => {
       return newState
 
     case 'DELETE_PROJECT':
-      console.log('deleting project')
       return [...state.filter(project => project.id !== payload.id)]
+
+    case 'RESET_PROJECTS':
+      return []
 
     default:
       return state

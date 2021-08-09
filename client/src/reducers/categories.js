@@ -9,11 +9,9 @@ const categories = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_CATEGORY':
-      console.log('creating category')
       return [...state, payload]
 
     case 'UPDATE_CATEGORY':
-      console.log('updating category')
       newState = [...state]
       const currentCategory = newState.find(
         category => category.id === payload.id
@@ -28,7 +26,6 @@ const categories = (state = [], action) => {
       return newState
 
     case 'UPDATE_CATEGORIES':
-      console.log('batch updating categories')
       newState = [...state]
       for (const category of payload) {
         const currentCategory = newState.find(existing => existing.id === category.id)
@@ -44,7 +41,6 @@ const categories = (state = [], action) => {
       return newState
 
     case 'DELETE_CATEGORY':
-      console.log('deleting category')
       return [...state.filter(category => category.id !== payload.id)]
 
     default:
