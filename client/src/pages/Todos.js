@@ -1,26 +1,29 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Todo from '../components/Todo'
 import { Link, useLocation } from 'react-router-dom'
+import Todo from '../components/Todo'
 import actions from '../actions'
+import { makeSelectTodosByCurrentUserID } from '../selectors'
 
 const Todos = () => {
-  const todos = useSelector(state => state.todos)
+  const selectTodosByCurrentUserID = useCallback(
+    makeSelectTodosByCurrentUserID,
+    []
+  )
+  const todos = useSelector(state => selectTodosByCurrentUserID(state))
   const location = useLocation()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (todos.length < 1) {
-      dispatch(actions.instantiateEverythingForUser())
-    }
-  }, [])
+    dispatch(actions.instantiateEverythingForUser())
+  }, [dispatch])
 
   return (
     <div className='center center-text todo-page'>
       <div className='button-container'>
         <Link
           className='pure-button pure-button-primary'
-          to={{ pathname: 'todos/new', state: { background: location } }}>
+          to={{ pathname: '/todos/new', state: { background: location } }}>
           Create Todo
         </Link>
       </div>
