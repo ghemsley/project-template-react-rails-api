@@ -8,7 +8,6 @@
 projects = Project.create([{ name: 'Final project', description: 'Phase 5 project built with Rails, React and Redux', order: 0 },
                            { name: 'Job search', description: 'Things I need to do to find a job as a developer',
                              order: 1 }])
-
 projects.each do |project|
   categories = Category.create([{ name: 'Needs doing', description: 'Work that still needs to be done', order: 0, project: project },
                                 { name: 'In progress', description: 'Work that has already been started', order: 1,
@@ -23,10 +22,9 @@ projects.each do |project|
                  { name: 'Test todo 3', description: 'Todo the third', order: 2, category: category }])
   end
 end
-
-users = User.create([{ username: 'test', email: 'test@example.com', password: 'password', password_confirmation: 'password' },
-                     { username: 'test2', email: 'test2@example.com', password: 'password',
-                       password_confirmation: 'password' }])
-users.each_with_index do |user, i|
-  UserProject.create([{ user_id: user.id, project_id: i + 1 }])
-end
+user = User.create({ username: 'test', email: 'test@example.com', password: 'password',
+                     password_confirmation: 'password' })
+user2 = User.create({ username: 'test2', email: 'test2@example.com', password: 'password',
+                      password_confirmation: 'password' })
+UserProject.create({ user_id: user.id, project_id: Project.all.first.id })
+UserProject.create({ user_id: user2.id, project_id: Project.all.last.id })
