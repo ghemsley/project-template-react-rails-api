@@ -13,7 +13,6 @@ import {
 } from '../selectors'
 
 const Category = React.memo(props => {
-  console.log('render category')
   const selectTodosByCategoryID = useCallback(makeSelectTodosByCategoryID, [
     props
   ])
@@ -105,33 +104,33 @@ const Category = React.memo(props => {
   )
 
   return (
-    <div
-      id={`category-${props.category.id}`}
-      className='hoverable flex-child rounded category'
-      style={{
-        color: 'whitesmoke',
-        transition: 'background-color 150ms ease',
-        ...style
-      }}
-      ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
-      <Dropzone
-        parentID={props.category.id}
-        acceptType='todo'
-        parentType='category'>
-        <h2>{props.category.name}</h2>
-        <p>{props.category.description}</p>
-        {props.showProject && (
-          <p>
-            <strong>Project:</strong> {project.name}
-          </p>
-        )}
-        {props.showButtons && (
-          <>
+    <>
+      <div
+        id={`category-${props.category.id}`}
+        className='hoverable flex-child rounded category'
+        style={{
+          color: 'whitesmoke',
+          transition: 'background-color 150ms ease',
+          ...style
+        }}
+        ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
+        <Dropzone
+          parentID={props.category.id}
+          acceptType='todo'
+          parentType='category'>
+          <h2>{props.category.name}</h2>
+          <p>{props.category.description}</p>
+          {props.showProject && (
+            <p>
+              <strong>Project:</strong> {project.name}
+            </p>
+          )}
+          {props.showButtons && (
             <div className='button-container'>
               <Link
                 className={`pure-button pure-button-primary invisible`}
                 to={{
-                  pathname: `categories/${props.category.id}/edit`,
+                  pathname: `/categories/${props.category.id}/edit`,
                   state: { background: location, edit: props.category }
                 }}>
                 Edit
@@ -142,43 +141,43 @@ const Category = React.memo(props => {
                 Delete
               </button>
             </div>
-            {showConfirmScreen && (
-              <ConfirmScreen closeAction={closeAction}>
-                <h1>Confirm delete?</h1>
-                <button
-                  className='pure-button pure-button-delete'
-                  onClick={confirmRemove}>
-                  Delete
-                </button>
-              </ConfirmScreen>
-            )}
-          </>
-        )}
-        {props.showTodos && (
-          <>
-            {todos.length < 1 ? (
-              <>
-                <h3>Todos</h3>
-                <p style={{ fontSize: '14px' }}>Drop todos here!</p>
-              </>
-            ) : (
-              <>
-                <h3>Todos</h3>
-                <div className='flex column todo-container'>
-                  {todos.map(todo => (
-                    <Todo
-                      todo={todo}
-                      showButtons={props.showButtons}
-                      key={`todo-${todo.id}`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </Dropzone>
-    </div>
+          )}
+          {props.showTodos && (
+            <>
+              {todos.length < 1 ? (
+                <>
+                  <h3>Todos</h3>
+                  <p style={{ fontSize: '14px' }}>Drop todos here!</p>
+                </>
+              ) : (
+                <>
+                  <h3>Todos</h3>
+                  <div className='flex column todo-container'>
+                    {todos.map(todo => (
+                      <Todo
+                        todo={todo}
+                        showButtons={props.showButtons}
+                        key={`todo-${todo.id}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </Dropzone>
+      </div>
+      {showConfirmScreen && (
+        <ConfirmScreen closeAction={closeAction}>
+          <h1>Confirm delete?</h1>
+          <button
+            className='pure-button pure-button-delete'
+            onClick={confirmRemove}>
+            Delete
+          </button>
+        </ConfirmScreen>
+      )}
+    </>
   )
 })
 
