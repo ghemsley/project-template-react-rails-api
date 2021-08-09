@@ -4,16 +4,18 @@ import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
 
-const CategoryForm = props => {
+const CategoryForm = React.memo(props => {
   const projects = useSelector(state => state.projects)
   const [name, setName] = useState(props.edit ? props.edit.name : '')
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
   )
   const [projectID, setProjectID] = useState(
-    props.edit ? props.edit.projectID : projects[0] ? projects[0].id : ''
+    props.edit ? parseInt(props.edit.projectID) : parseInt(projects[0].id)
   )
-  const project = projects.find(project => project.id === projectID)
+  const project = projects.find(
+    project => parseInt(project.id) === parseInt(projectID)
+  )
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -51,7 +53,7 @@ const CategoryForm = props => {
         break
 
       case 'projectID':
-        setProjectID(event.target.value)
+        setProjectID(parseInt(event.target.value))
         break
 
       default:
@@ -72,8 +74,7 @@ const CategoryForm = props => {
           </h1>
           <form
             onSubmit={handleSubmit}
-            className='pure-form pure-form-stacked fit margin-auto'
-          >
+            className='pure-form pure-form-stacked fit margin-auto'>
             <fieldset>
               <label htmlFor='name'>Name</label>
               <input
@@ -98,8 +99,7 @@ const CategoryForm = props => {
                 <select
                   name='projectID'
                   value={projectID}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   {projects.map((project, i) => (
                     <option value={project.id} key={i}>
                       {project.name}
@@ -116,5 +116,5 @@ const CategoryForm = props => {
       )}
     </Modal>
   )
-}
+})
 export default CategoryForm

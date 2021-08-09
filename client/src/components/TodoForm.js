@@ -1,21 +1,27 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../actions/index'
 import Hover from './Hover'
 import Category from './Category'
 import { Modal } from './index'
 import { useHistory } from 'react-router-dom'
-
-const TodoForm = props => {
+import { makeSelectCategoryByTodoEditCategoryID } from '../selectors/index'
+const TodoForm = React.memo(props => {
   const categories = useSelector(state => state.categories)
   const [name, setName] = useState(props.edit ? props.edit.name : '')
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
   )
   const [categoryID, setCategoryID] = useState(
-    props.edit ? props.edit.categoryID : categories[0] ? categories[0].id : ''
+    props.edit ? parseInt(props.edit.categoryID) : parseInt(categories[0].id)
   )
-  const category = categories.find(category => category.id === categoryID)
+  const selectCategoryByTodoEditCategoryID = useCallback(
+    makeSelectCategoryByTodoEditCategoryID,
+    [props, categories, categoryID]
+  )
+  const category = useSelector(state =>
+    selectCategoryByTodoEditCategoryID(state, categoryID)
+  )
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -53,14 +59,13 @@ const TodoForm = props => {
         break
 
       case 'categoryID':
-        setCategoryID(event.target.value)
+        setCategoryID(parseInt(event.target.value))
         break
 
       default:
         break
     }
   }
-
   return (
     <Modal>
       {categories.length < 1 ? (
@@ -74,8 +79,7 @@ const TodoForm = props => {
           </h1>
           <form
             onSubmit={handleSubmit}
-            className='pure-form pure-form-stacked fit margin-auto'
-          >
+            className='pure-form pure-form-stacked fit margin-auto'>
             <fieldset>
               <label htmlFor='name'>Name</label>
               <input
@@ -100,8 +104,7 @@ const TodoForm = props => {
                 <select
                   name='categoryID'
                   value={categoryID}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   {categories.map((category, i) => (
                     <option value={category.id} key={i}>
                       {category.name}
@@ -118,5 +121,5 @@ const TodoForm = props => {
       )}
     </Modal>
   )
-}
+})
 export default TodoForm
