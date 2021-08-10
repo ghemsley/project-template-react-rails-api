@@ -27,7 +27,7 @@ const Home = React.memo(props => {
     <div className='center center-text'>
       <h2 className='recent-projects margin-05'>Recent Projects</h2>
       <Slider
-        lazyLoad={'progressive'}
+        lazyLoad={'ondemand'}
         swipeToSlide={true}
         variableWidth={true}
         pauseOnDotsHover={true}
