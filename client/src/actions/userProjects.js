@@ -63,13 +63,15 @@ const deleteUserProject = payload => ({
 
 const instantiateUserProject = payload => dispatch => {
   return sendUserProject(payload).then(json => {
-    if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
-      const userProject = {
-        id: json.data.attributes.id,
-        user_id: json.data.attributes.user_id,
-        project_id: json.data.attributes.project_id
+    if (json.data) {
+      if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
+        const userProject = {
+          id: json.data.attributes.id,
+          user_id: json.data.attributes.user_id,
+          project_id: json.data.attributes.project_id
+        }
+        dispatch(createUserProject(userProject))
       }
-      dispatch(createUserProject(userProject))
     }
     return json
   })

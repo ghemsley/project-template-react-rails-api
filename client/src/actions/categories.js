@@ -86,17 +86,21 @@ const deleteCategoriesByProject = payload => (dispatch, getState) => {
 const instantiateCategory = payload => (dispatch, getState) => {
   const state = getState()
   return dispatch(sendCategory(payload)).then(json => {
-    if (
-      !state.categories.find(cat => parseInt(cat.id) === parseInt(json.data.id))
-    ) {
-      const categoryObject = {
-        id: json.data.id,
-        name: json.data.attributes.name,
-        description: json.data.attributes.description,
-        projectID: json.data.relationships.project.data.id,
-        order: json.data.attributes.order
+    if (json.data) {
+      if (
+        !state.categories.find(
+          cat => parseInt(cat.id) === parseInt(json.data.id)
+        )
+      ) {
+        const categoryObject = {
+          id: json.data.id,
+          name: json.data.attributes.name,
+          description: json.data.attributes.description,
+          projectID: json.data.relationships.project.data.id,
+          order: json.data.attributes.order
+        }
+        dispatch(createCategory(categoryObject))
       }
-      dispatch(createCategory(categoryObject))
     }
     return json
   })
@@ -104,8 +108,10 @@ const instantiateCategory = payload => (dispatch, getState) => {
 
 const removeCategory = payload => dispatch => {
   dispatch(destroyCategory(payload)).then(json => {
-    if (parseInt(json.data.id) === parseInt(payload.id)) {
-      dispatch(deeplyDeleteCategory(payload))
+    if (json.data) {
+       if (parseInt(json.data.id) === parseInt(payload.id)) {
+         dispatch(deeplyDeleteCategory(payload))
+       }
     }
     return json
   })
@@ -123,7 +129,11 @@ const amendCategory = payload => dispatch => {
 const patchCategories = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/batch_update`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: actions.getToken()
+    },
     body: JSON.stringify(payload)
   })
     .then(response => response.json())

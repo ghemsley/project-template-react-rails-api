@@ -96,18 +96,21 @@ const deleteTodosByCategory = payload => ({
 const instantiateTodo = payload => (dispatch, getState) => {
   const state = getState()
   return dispatch(sendTodo(payload)).then(json => {
-    if (
-      !state.todos.find(todo => parseInt(todo.id) === parseInt(json.data.id))
-    ) {
-      const todoObject = {
-        id: json.data.id,
-        name: json.data.attributes.name,
-        description: json.data.attributes.description,
-        categoryID: json.data.relationships.category.data.id,
-        order: json.data.attributes.order
+    if (json.data) {
+      if (
+        !state.todos.find(todo => parseInt(todo.id) === parseInt(json.data.id))
+      ) {
+        const todoObject = {
+          id: json.data.id,
+          name: json.data.attributes.name,
+          description: json.data.attributes.description,
+          categoryID: json.data.relationships.category.data.id,
+          order: json.data.attributes.order
+        }
+        dispatch(createTodo(todoObject))
       }
-      dispatch(createTodo(todoObject))
     }
+
     return json
   })
 }

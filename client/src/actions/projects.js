@@ -94,30 +94,32 @@ const deeplyDeleteProject = payload => dispatch => {
 const instantiateProject = payload => (dispatch, getState) => {
   const state = getState()
   return sendProject(payload).then(json => {
-    if (
-      !state.projects.find(
-        project =>
-          parseInt(project.id) === parseInt(json.project.data.attributes.id)
-      ) &&
-      !state.userProjects.find(
-        userProj =>
-          parseInt(userProj.id) ===
-          parseInt(json.user_project.data.attributes.id)
-      )
-    ) {
-      const project = {
-        id: json.project.data.id,
-        name: json.project.data.attributes.name,
-        description: json.project.data.attributes.description,
-        order: json.project.data.attributes.order
+    if (json.project) {
+      if (
+        !state.projects.find(
+          project =>
+            parseInt(project.id) === parseInt(json.project.data.attributes.id)
+        ) &&
+        !state.userProjects.find(
+          userProj =>
+            parseInt(userProj.id) ===
+            parseInt(json.user_project.data.attributes.id)
+        )
+      ) {
+        const project = {
+          id: json.project.data.id,
+          name: json.project.data.attributes.name,
+          description: json.project.data.attributes.description,
+          order: json.project.data.attributes.order
+        }
+        const userProject = {
+          id: json.user_project.data.attributes.id,
+          userID: json.user_project.data.attributes.user_id,
+          projectID: json.user_project.data.attributes.project_id
+        }
+        dispatch(createProject(project))
+        dispatch(actions.createUserProject(userProject))
       }
-      const userProject = {
-        id: json.user_project.data.attributes.id,
-        userID: json.user_project.data.attributes.user_id,
-        projectID: json.user_project.data.attributes.project_id
-      }
-      dispatch(createProject(project))
-      dispatch(actions.createUserProject(userProject))
     }
     return json
   })
@@ -127,38 +129,42 @@ const instantiateAllProjects = () => (dispatch, getState) => {
   const state = getState()
   return fetchAllProjects()
     .then(json => {
-      for (const project of json.data) {
-        if (
-          !state.projects.find(
-            proj => parseInt(proj.id) === parseInt(project.attributes.id)
-          )
-        ) {
-          dispatch(
-            createProject({
-              id: project.attributes.id,
-              name: project.attributes.name,
-              description: project.attributes.description,
-              order: project.attributes.order
-            })
-          )
+      if (json.data) {
+        for (const project of json.data) {
+          if (
+            !state.projects.find(
+              proj => parseInt(proj.id) === parseInt(project.attributes.id)
+            )
+          ) {
+            dispatch(
+              createProject({
+                id: project.attributes.id,
+                name: project.attributes.name,
+                description: project.attributes.description,
+                order: project.attributes.order
+              })
+            )
+          }
         }
       }
       return json
     })
     .then(json => {
-      for (const included of json.included) {
-        if (
-          included.type === 'user_project' &&
-          !state.userProjects.find(
-            userProject => parseInt(userProject.id) === parseInt(included.id)
-          )
-        ) {
-          const userProject = {
-            id: included.id,
-            userID: included.attributes.user_id,
-            projectID: included.attributes.project_id
+      if (json.included) {
+        for (const included of json.included) {
+          if (
+            included.type === 'user_project' &&
+            !state.userProjects.find(
+              userProject => parseInt(userProject.id) === parseInt(included.id)
+            )
+          ) {
+            const userProject = {
+              id: included.id,
+              userID: included.attributes.user_id,
+              projectID: included.attributes.project_id
+            }
+            dispatch(actions.createUserProject(userProject))
           }
-          dispatch(actions.createUserProject(userProject))
         }
       }
       return json
