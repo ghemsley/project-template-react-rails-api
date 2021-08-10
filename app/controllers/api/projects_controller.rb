@@ -1,4 +1,4 @@
-class ProjectsController < ApplicationController
+class Api::ProjectsController < ApplicationController
   include JSONAPI::Fetching
   include JSONAPI::Filtering
   skip_before_action :authenticate_user!, only: [:index]
@@ -15,8 +15,8 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    project = current_user.projects.create!({ name: params[:name], description: params[:description] })
-    user_project = UserProject.create!(user_id: current_user.id, project_id: project.id, owner: true)
+    project = Project.create!({ name: params[:name], description: params[:description] })
+    user_project = current_user.user_projects.create!(project_id: project.id, owner: true)
     render json: { user: UserSerializer.new(current_user).serializable_hash,
                    project: ProjectSerializer.new(project).serializable_hash,
                    user_project: UserProjectSerializer.new(user_project).serializable_hash }, status: :ok

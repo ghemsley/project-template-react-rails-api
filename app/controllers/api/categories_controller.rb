@@ -1,4 +1,4 @@
-class CategoriesController < ApplicationController
+class Api::CategoriesController < ApplicationController
   include JSONAPI::Fetching
   include JSONAPI::Filtering
 

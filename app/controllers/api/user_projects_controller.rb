@@ -1,4 +1,4 @@
-class UserProjectsController < ApplicationController
+class Api::UserProjectsController < ApplicationController
   include JSONAPI::Fetching
   include JSONAPI::Filtering
 

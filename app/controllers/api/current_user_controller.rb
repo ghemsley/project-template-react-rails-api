@@ -1,4 +1,4 @@
-class CurrentUserController < ApplicationController
+class Api::CurrentUserController < ApplicationController
   def index
     render json: {
       user: UserSerializer.new(current_user).serializable_hash,

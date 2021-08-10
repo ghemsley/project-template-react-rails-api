@@ -1,4 +1,4 @@
-class TodosController < ApplicationController
+class Api::TodosController < ApplicationController
   include JSONAPI::Fetching
   include JSONAPI::Filtering
 
