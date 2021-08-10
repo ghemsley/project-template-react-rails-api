@@ -15,7 +15,12 @@ class UserProjectsController < ApplicationController
   end
 
   def create
-    user_project = UserProject.create!(user_id: current_user.id, project_id: params[:project_id])
+    owner = if UserProject.where(owner: true, project_id: params[:project_id]).count.zero? && params[:owner] == true
+              true
+            else
+              false
+            end
+    user_project = UserProject.create!(user_id: current_user.id, project_id: params[:project_id], owner: owner)
     render jsonapi: user_project
   end
 

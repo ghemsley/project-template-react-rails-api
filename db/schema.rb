@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2021_08_06_173530) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.integer "order", default: 0
+    t.integer "order", default: 0, null: false
     t.bigint "project_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2021_08_06_173530) do
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.integer "order", default: 0
+    t.integer "order", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2021_08_06_173530) do
   create_table "todos", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.integer "order", default: 0
+    t.integer "order", default: 0, null: false
     t.bigint "category_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -46,20 +46,20 @@ ActiveRecord::Schema.define(version: 2021_08_06_173530) do
   create_table "user_projects", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "project_id", null: false
+    t.boolean "owner", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id"], name: "index_user_projects_on_project_id"
+    t.index ["user_id", "project_id"], name: "index_user_projects_on_user_id_and_project_id", unique: true
     t.index ["user_id"], name: "index_user_projects_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
+    t.string "username", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2021_08_06_173530) do
     t.string "jti", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "categories", "projects"

@@ -26,5 +26,5 @@ user = User.create({ username: 'test', email: 'test@example.com', password: 'pas
                      password_confirmation: 'password' })
 user2 = User.create({ username: 'test2', email: 'test2@example.com', password: 'password',
                       password_confirmation: 'password' })
-UserProject.create({ user_id: user.id, project_id: Project.all.first.id })
-UserProject.create({ user_id: user2.id, project_id: Project.all.last.id })
+UserProject.create({ user_id: user.id, project_id: Project.all.first.id, owner: true })
+UserProject.create({ user_id: user2.id, project_id: Project.all.last.id, owner: true })
