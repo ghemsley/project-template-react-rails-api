@@ -3,13 +3,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Category } from '../components/index'
 import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions'
-import { makeSelectCategoriesByCurrentUserID } from '../selectors'
+import {
+  makeSelectCategoriesByCurrentUserID,
+  makeSelectProjectsByCurrentUserID
+} from '../selectors'
 
 const Categories = () => {
+  const selectProjectsByCurrentUserID = useCallback(
+    makeSelectProjectsByCurrentUserID,
+    []
+  )
   const selectCategoriesByCurrentUserID = useCallback(
     makeSelectCategoriesByCurrentUserID,
     []
   )
+  const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const categories = useSelector(state =>
     selectCategoriesByCurrentUserID(state)
   )
@@ -20,7 +28,11 @@ const Categories = () => {
     dispatch(actions.instantiateEverythingForUser())
   }, [dispatch])
 
-  return (
+  return projects.length < 1 ? (
+    <p className='fit margin-auto'>
+      Please create a project first before trying to create a category!
+    </p>
+  ) : (
     <div className='center center-text category-page'>
       <div className='button-container'>
         <Link

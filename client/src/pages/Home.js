@@ -6,9 +6,14 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { Link, useLocation } from 'react-router-dom'
+import { makeSelectDeduplicatedProjects } from '../selectors'
 
 const Home = React.memo(props => {
-  const projects = useSelector(state => state.projects)
+  const selectDeduplicatedProjects = useCallback(
+    makeSelectDeduplicatedProjects,
+    []
+  )
+  const projects = useSelector(state => selectDeduplicatedProjects(state))
   const { loggedIn, currentUser } = useSelector(state => state.authentication)
   const location = useLocation()
   const dispatch = useDispatch()

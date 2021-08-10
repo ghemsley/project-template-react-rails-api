@@ -3,9 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import Todo from '../components/Todo'
 import actions from '../actions'
-import { makeSelectTodosByCurrentUserID } from '../selectors'
+import {
+  makeSelectTodosByCurrentUserID,
+  makeSelectCategoriesByCurrentUserID
+} from '../selectors'
 
 const Todos = () => {
+  const selectCategoriesByCurrentUserID = useCallback(
+    makeSelectCategoriesByCurrentUserID,
+    []
+  )
+  const categories = useSelector(state =>
+    selectCategoriesByCurrentUserID(state)
+  )
   const selectTodosByCurrentUserID = useCallback(
     makeSelectTodosByCurrentUserID,
     []
@@ -18,7 +28,11 @@ const Todos = () => {
     dispatch(actions.instantiateEverythingForUser())
   }, [dispatch])
 
-  return (
+  return categories.length < 1 ? (
+    <p className='fit margin-auto'>
+      Please create a category first before trying to create a todo!
+    </p>
+  ) : (
     <div className='center center-text todo-page'>
       <div className='button-container'>
         <Link
