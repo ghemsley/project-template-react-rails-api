@@ -50,5 +50,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.1.8",
+    "@types/react-slick": "^0.23.5",
+    "@types/uuid": "^8.3.1"
   }
 }

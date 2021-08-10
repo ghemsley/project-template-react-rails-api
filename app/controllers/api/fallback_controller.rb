@@ -4,6 +4,6 @@ class FallbackController < ApplicationController
   skip_before_action :authenticate_user!
   def index
     # React app index page
-    render file: 'public/index.html'
+    render file: 'client/public/index.html'
   end
 end
