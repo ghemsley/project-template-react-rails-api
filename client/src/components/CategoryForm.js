@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
+import { makeSelectProjectsByCurrentUserID } from '../selectors'
 
 const CategoryForm = React.memo(props => {
-  const projects = useSelector(state => state.projects)
+  const selectProjectsByCurrentUserID = useCallback(
+    makeSelectProjectsByCurrentUserID,
+    []
+  )
+  const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const [name, setName] = useState(props.edit ? props.edit.name : '')
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
@@ -63,57 +68,51 @@ const CategoryForm = React.memo(props => {
 
   return (
     <Modal>
-      {projects.length < 1 ? (
-        <p className='fit margin-auto'>
-          Please create a project first before trying to create a category!
-        </p>
-      ) : (
-        <>
-          <h1 className='fit margin-auto'>
-            {props.edit ? 'Edit' : 'New'} Category
-          </h1>
-          <form
-            onSubmit={handleSubmit}
-            className='pure-form pure-form-stacked fit margin-auto'>
-            <fieldset>
-              <label htmlFor='name'>Name</label>
-              <input
-                type='text'
-                name='name'
-                value={name}
-                onChange={handleChange}
-              />
-              <label htmlFor='description'>Description</label>
-              <textarea
-                name='description'
-                value={description}
-                onChange={handleChange}
-              />
-              <label htmlFor='projectID' className='hoverable'>
-                {projects.length > 0 && (
-                  <Hover>
-                    <Project project={project} showCategories />
-                  </Hover>
-                )}
-                Project
-                <select
-                  name='projectID'
-                  value={projectID}
-                  onChange={handleChange}>
-                  {projects.map((project, i) => (
-                    <option value={project.id} key={i}>
-                      {project.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button className='pure-button pure-button-primary' type='submit'>
-                Submit
-              </button>
-            </fieldset>
-          </form>
-        </>
-      )}
+      <>
+        <h1 className='fit margin-auto'>
+          {props.edit ? 'Edit' : 'New'} Category
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className='pure-form pure-form-stacked fit margin-auto'>
+          <fieldset>
+            <label htmlFor='name'>Name</label>
+            <input
+              type='text'
+              name='name'
+              value={name}
+              onChange={handleChange}
+            />
+            <label htmlFor='description'>Description</label>
+            <textarea
+              name='description'
+              value={description}
+              onChange={handleChange}
+            />
+            <label htmlFor='projectID' className='hoverable'>
+              {projects.length > 0 && (
+                <Hover>
+                  <Project project={project} showCategories />
+                </Hover>
+              )}
+              Project
+              <select
+                name='projectID'
+                value={projectID}
+                onChange={handleChange}>
+                {projects.map((project, i) => (
+                  <option value={project.id} key={i}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button className='pure-button pure-button-primary' type='submit'>
+              Submit
+            </button>
+          </fieldset>
+        </form>
+      </>
     </Modal>
   )
 })

@@ -68,57 +68,49 @@ const TodoForm = React.memo(props => {
   }
   return (
     <Modal>
-      {categories.length < 1 ? (
-        <p className='fit margin-auto'>
-          Please create a category first before trying to create a todo!
-        </p>
-      ) : (
-        <>
-          <h1 className='fit margin-auto'>
-            {props.edit ? 'Edit' : 'New'} Todo
-          </h1>
-          <form
-            onSubmit={handleSubmit}
-            className='pure-form pure-form-stacked fit margin-auto'>
-            <fieldset>
-              <label htmlFor='name'>Name</label>
-              <input
-                type='text'
-                name='name'
-                value={name}
-                onChange={handleChange}
-              />
-              <label htmlFor='description'>Description</label>
-              <textarea
-                name='description'
-                value={description}
-                onChange={handleChange}
-              />
-              <label htmlFor='categoryID' className='hoverable'>
-                {categories.length > 0 && (
-                  <Hover>
-                    <Category category={category} showTodos showProject />
-                  </Hover>
-                )}
-                Category
-                <select
-                  name='categoryID'
-                  value={categoryID}
-                  onChange={handleChange}>
-                  {categories.map((category, i) => (
-                    <option value={category.id} key={i}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button className='pure-button pure-button-primary' type='submit'>
-                Submit
-              </button>
-            </fieldset>
-          </form>
-        </>
-      )}
+      <>
+        <h1 className='fit margin-auto'>{props.edit ? 'Edit' : 'New'} Todo</h1>
+        <form
+          onSubmit={handleSubmit}
+          className='pure-form pure-form-stacked fit margin-auto'>
+          <fieldset>
+            <label htmlFor='name'>Name</label>
+            <input
+              type='text'
+              name='name'
+              value={name}
+              onChange={handleChange}
+            />
+            <label htmlFor='description'>Description</label>
+            <textarea
+              name='description'
+              value={description}
+              onChange={handleChange}
+            />
+            <label htmlFor='categoryID' className='hoverable'>
+              {categories.length > 0 && (
+                <Hover>
+                  <Category category={category} showTodos showProject />
+                </Hover>
+              )}
+              Category
+              <select
+                name='categoryID'
+                value={categoryID}
+                onChange={handleChange}>
+                {categories.map((category, i) => (
+                  <option value={category.id} key={i}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button className='pure-button pure-button-primary' type='submit'>
+              Submit
+            </button>
+          </fieldset>
+        </form>
+      </>
     </Modal>
   )
 })

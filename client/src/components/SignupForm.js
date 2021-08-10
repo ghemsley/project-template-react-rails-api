@@ -53,9 +53,7 @@ const SignupForm = props => {
         })
       )
         .then(() => {
-          if (loggedIn) {
-            history.push('/')
-          }
+          history.push('/')
         })
         .catch(error => {
           setErrors([error.status.message])
@@ -99,6 +97,7 @@ const SignupForm = props => {
             name='email'
             value={email}
             onChange={handleChange}
+            autoComplete='username'
           />
           <label htmlFor='password'>Password</label>
           <input
