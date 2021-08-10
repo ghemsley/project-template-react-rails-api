@@ -1,7 +1,16 @@
 const convertIdToInt = object => {
   for (const key in object) {
     if (
-      ['id', 'categoryID', 'projectID', 'userID', 'order'].includes(key) &&
+      new Set([
+        'id',
+        'categoryID',
+        'category_id',
+        'projectID',
+        'project_id',
+        'userID',
+        'user_id',
+        'order'
+      ]).has(key) &&
       typeof object[key] === 'string'
     ) {
       try {
