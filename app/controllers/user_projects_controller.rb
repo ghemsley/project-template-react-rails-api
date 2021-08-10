@@ -15,7 +15,7 @@ class UserProjectsController < ApplicationController
   end
 
   def create
-    owner = if UserProject.where(owner: true, project_id: params[:project_id]).count.zero? && params[:owner] == true
+    owner = if UserProject.where(owner: true, project_id: params[:project_id]).count.zero?
               true
             else
               false

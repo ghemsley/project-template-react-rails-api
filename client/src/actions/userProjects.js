@@ -80,7 +80,8 @@ const addUserProject = payload => (dispatch, getState) => {
         const userProject = {
           id: json.data.attributes.id,
           user_id: json.data.attributes.user_id,
-          project_id: json.data.attributes.project_id
+          project_id: json.data.attributes.project_id,
+          owner: json.data.attributes.owner
         }
         dispatch(createUserProject(userProject))
       }
@@ -177,7 +178,8 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
             const userProject = {
               id: included.id,
               userID: included.attributes.user_id,
-              projectID: included.attributes.project_id
+              projectID: included.attributes.project_id,
+              owner: included.attributes.owner
             }
             dispatch(actions.createUserProject(userProject))
           }
