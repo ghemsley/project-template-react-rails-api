@@ -1,11 +1,12 @@
 import actions from '.'
 import CONSTANTS from '../constants'
+import helpers from '../helpers'
 
 const fetchUserProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -13,7 +14,7 @@ const fetchUserProjects = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -24,7 +25,7 @@ const fetchEverythingForUser = user => {
       headers: { Accept: 'application/json', Authorization: actions.getToken() }
     }
   )
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -46,7 +47,7 @@ const sendUserProject = payload => (dispatch, getState) => {
       },
       body: JSON.stringify(payload)
     })
-      .then(response => response.json())
+      .then(response => helpers.convertIdToInt(response.json()))
       .catch(error => console.log(error))
   } else
     return Promise.reject(
@@ -59,7 +60,7 @@ const destroyUserProject = payload => {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -73,10 +74,11 @@ const deleteUserProject = payload => ({
   payload
 })
 
-const addUserProject = payload => (dispatch, getState) => {
+const addUserProject = payload => dispatch => {
+  helpers.convertIdToInt(payload)
   return dispatch(sendUserProject(payload)).then(json => {
     if (json.data) {
-      if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
+      if (json.data.attributes.id === payload.id) {
         const userProject = {
           id: json.data.attributes.id,
           user_id: json.data.attributes.user_id,
@@ -99,9 +101,7 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'project' &&
-            !state.projects.find(
-              project => parseInt(project.id) === parseInt(included.id)
-            )
+            !state.projects.find(project => project.id === included.id)
           ) {
             const projectObject = {
               id: included.id,
@@ -120,9 +120,7 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'category' &&
-            !state.categories.find(
-              category => parseInt(category.id) === parseInt(included.id)
-            )
+            !state.categories.find(category => category.id === included.id)
           ) {
             const categoryObject = {
               id: included.id,
@@ -142,9 +140,7 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
         for (const included of json.included) {
           if (
             included.type === 'todo' &&
-            !state.todos.find(
-              todo => parseInt(todo.id) === parseInt(included.id)
-            )
+            !state.todos.find(todo => todo.id === included.id)
           ) {
             const todoObject = {
               id: included.id,
@@ -166,13 +162,9 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
             included.type === 'user_project' &&
             !state.userProjects.find(
               userProject =>
-                parseInt(userProject.id) === parseInt(included.id) &&
-                !(
-                  parseInt(userProject.projectID) ===
-                    parseInt(included.attributes.project_id) &&
-                  parseInt(userProject.userID) ===
-                    parseInt(included.attributes.user_id)
-                )
+                userProject.id === included.id ||
+                (userProject.projectID === included.attributes.project_id &&
+                  userProject.userID === included.attributes.user_id)
             )
           ) {
             const userProject = {
@@ -192,8 +184,7 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
 const removeUserProject = payload => (dispatch, getState) => {
   const otherUsersForProject = getState().userProjects.filter(
     userProj =>
-      parseInt(userProj.projectID) === parseInt(payload.projectID) &&
-      parseInt(userProj.id) !== parseInt(payload.id)
+      userProj.projectID === payload.projectID && userProj.id !== payload.id
   )
   if (otherUsersForProject < 1) {
     return Promise.reject(
@@ -205,7 +196,7 @@ const removeUserProject = payload => (dispatch, getState) => {
     )
   } else {
     return destroyUserProject(payload).then(json => {
-      if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
+      if (json.data.attributes.id === payload.id) {
         dispatch(deleteUserProject(payload))
       }
       return json

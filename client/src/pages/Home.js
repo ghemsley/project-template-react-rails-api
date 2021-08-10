@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Project } from '../components'
-import actions from '../actions'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 import { Link, useLocation } from 'react-router-dom'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick-theme.css'
+import 'slick-carousel/slick/slick.css'
+import { v4 as uuid } from 'uuid'
+import actions from '../actions'
+import { Project } from '../components'
 import { makeSelectDeduplicatedProjects } from '../selectors'
 
 const Home = React.memo(props => {
@@ -26,7 +27,7 @@ const Home = React.memo(props => {
     <div className='center center-text'>
       <h2 className='recent-projects margin-05'>Recent Projects</h2>
       <Slider
-        lazyLoad={true}
+        lazyLoad={'progressive'}
         swipeToSlide={true}
         variableWidth={true}
         pauseOnDotsHover={true}
@@ -47,7 +48,7 @@ const Home = React.memo(props => {
               project={project}
               showButtons={true}
               showCategories={false}
-              key={`project-${project.id}`}
+              key={uuid()}
               disablePosition={true}
             />
           </div>

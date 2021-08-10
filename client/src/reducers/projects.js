@@ -1,4 +1,4 @@
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const projects = (state = [], action) => {
   let newState = []
@@ -8,17 +8,13 @@ const projects = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_PROJECT':
-      if (
-        !state.find(project => parseInt(project.id) === parseInt(payload.id))
-      ) {
+      if (!state.find(project => project.id === payload.id)) {
         return [...state, payload]
       } else return state
 
     case 'UPDATE_PROJECT':
       newState = [...state]
-      const currentProject = newState.find(
-        project => parseInt(project.id) === parseInt(payload.id)
-      )
+      const currentProject = newState.find(project => project.id === payload.id)
       if (currentProject) {
         for (const key in payload) {
           if (key !== 'id') {
@@ -32,7 +28,7 @@ const projects = (state = [], action) => {
       newState = [...state]
       for (const project of payload) {
         const currentProject = newState.find(
-          existing => parseInt(existing.id) === parseInt(project.id)
+          existing => existing.id === project.id
         )
         if (currentProject) {
           for (const key in project) {
@@ -45,11 +41,7 @@ const projects = (state = [], action) => {
       return newState
 
     case 'DELETE_PROJECT':
-      return [
-        ...state.filter(
-          project => parseInt(project.id) !== parseInt(payload.id)
-        )
-      ]
+      return [...state.filter(project => project.id !== payload.id)]
 
     case 'RESET_PROJECTS':
       return []

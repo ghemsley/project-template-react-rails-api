@@ -35,7 +35,7 @@ const Navbar = () => {
             </li>
           </>
         )}
-        {authChecked && loggedIn && currentUser && (
+        {authChecked && loggedIn && currentUser.id && (
           <li className='pure-menu-item' key={'logout'}>
             <Link
               className='pure-menu-link pure-menu-heading'
@@ -45,7 +45,7 @@ const Navbar = () => {
           </li>
         )}
       </ul>
-      {loggedIn && currentUser && <p>Logged in as {currentUser.username}</p>}
+      {loggedIn && currentUser.id && <p>Logged in as {currentUser.username}</p>}
     </div>
   )
 }

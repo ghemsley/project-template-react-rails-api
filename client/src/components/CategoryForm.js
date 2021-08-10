@@ -16,11 +16,9 @@ const CategoryForm = React.memo(props => {
     props.edit ? props.edit.description : ''
   )
   const [projectID, setProjectID] = useState(
-    props.edit ? parseInt(props.edit.projectID) : parseInt(projects[0].id)
+    props.edit ? props.edit.projectID : projects[0].id
   )
-  const project = projects.find(
-    project => parseInt(project.id) === parseInt(projectID)
-  )
+  const project = projects.find(project => project.id === projectID)
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -58,7 +56,7 @@ const CategoryForm = React.memo(props => {
         break
 
       case 'projectID':
-        setProjectID(parseInt(event.target.value))
+        setProjectID(event.target.value)
         break
 
       default:

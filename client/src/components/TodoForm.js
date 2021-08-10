@@ -13,7 +13,7 @@ const TodoForm = React.memo(props => {
     props.edit ? props.edit.description : ''
   )
   const [categoryID, setCategoryID] = useState(
-    props.edit ? parseInt(props.edit.categoryID) : parseInt(categories[0].id)
+    props.edit ? props.edit.categoryID : categories[0].id
   )
   const selectCategoryByTodoEditCategoryID = useCallback(
     makeSelectCategoryByTodoEditCategoryID,

@@ -1,11 +1,12 @@
 import actions from './index'
 import CONSTANTS from '../constants'
+import helpers from '../helpers'
 
 const fetchCategory = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt( response.json()))
     .catch(error => console.log(error))
 }
 
@@ -13,7 +14,7 @@ const fetchCategories = () => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -27,7 +28,7 @@ const sendCategory = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -41,7 +42,7 @@ const patchCategory = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -50,7 +51,7 @@ const destroyCategory = payload => () => {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -76,7 +77,7 @@ const deeplyDeleteCategory = payload => dispatch => {
 
 const deleteCategoriesByProject = payload => (dispatch, getState) => {
   const categories = getState().categories.filter(
-    category => parseInt(category.projectID) === parseInt(payload.id)
+    category => category.projectID === payload.id
   )
   for (const category of categories) {
     dispatch(deeplyDeleteCategory(category))
@@ -89,7 +90,7 @@ const instantiateCategory = payload => (dispatch, getState) => {
     if (json.data) {
       if (
         !state.categories.find(
-          cat => parseInt(cat.id) === parseInt(json.data.id)
+          cat => cat.id === json.data.id
         )
       ) {
         const categoryObject = {
@@ -109,7 +110,7 @@ const instantiateCategory = payload => (dispatch, getState) => {
 const removeCategory = payload => dispatch => {
   dispatch(destroyCategory(payload)).then(json => {
     if (json.data) {
-       if (parseInt(json.data.id) === parseInt(payload.id)) {
+       if (json.data.id === payload.id) {
          dispatch(deeplyDeleteCategory(payload))
        }
     }
@@ -119,7 +120,7 @@ const removeCategory = payload => dispatch => {
 
 const amendCategory = payload => dispatch => {
   return dispatch(patchCategory(payload)).then(json => {
-    if (parseInt(json.data.id) === parseInt(payload.id)) {
+    if (json.data.id === payload.id) {
       dispatch(updateCategory(payload))
     }
     return json
@@ -136,7 +137,7 @@ const patchCategories = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 

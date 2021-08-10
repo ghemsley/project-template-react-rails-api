@@ -1,4 +1,5 @@
 import CONSTANTS from '../constants'
+import helpers from '../helpers'
 
 const setToken = token => {
   const currentTime = new Date(Date.now()).getTime()
@@ -47,12 +48,12 @@ const signupUser = credentials => dispatch =>
   }).then(res => {
     if (res.ok) {
       setToken(res.headers.get('Authorization'))
-      return res.json().then(json => {
+      return helpers.convertIdToInt(res.json()).then(json => {
         dispatch(authenticateUser(json))
         return json
       })
     } else {
-      return res.json().then(error => {
+      return helpers.convertIdToInt(res.json()).then(error => {
         dispatch(unauthenticateUser())
         return Promise.reject(error)
       })
@@ -70,12 +71,12 @@ const loginUser = credentials => dispatch =>
   }).then(res => {
     if (res.ok) {
       setToken(res.headers.get('Authorization'))
-      return res.json().then(json => {
+      return helpers.convertIdToInt(res.json()).then(json => {
         dispatch(authenticateUser(json))
         return json
       })
     } else {
-      return res.json().then(error => {
+      return helpers.convertIdToInt(res.json()).then(error => {
         dispatch(unauthenticateUser())
         return Promise.reject(error)
       })
@@ -92,12 +93,12 @@ const logoutUser = () => dispatch =>
     }
   }).then(res => {
     if (res.ok) {
-      return res.json().then(json => {
+      return helpers.convertIdToInt(res.json()).then(json => {
         dispatch(unauthenticateUser())
         return json
       })
     } else {
-      return res.json().then(error => {
+      return helpers.convertIdToInt(res.json()).then(error => {
         dispatch(unauthenticateUser())
         return Promise.reject(error)
       })
@@ -113,12 +114,12 @@ const checkAuth = () => dispatch =>
     }
   }).then(res => {
     if (res.ok) {
-      return res.json().then(json => {
+      return helpers.convertIdToInt(res.json()).then(json => {
         dispatch(authenticateUser(json))
         return json
       })
     } else {
-      return res.json().then(error => {
+      return helpers.convertIdToInt(res.json()).then(error => {
         dispatch(unauthenticateUser())
         return Promise.reject(error)
       })

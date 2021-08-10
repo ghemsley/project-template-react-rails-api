@@ -13,7 +13,7 @@ const filterCoordinates = (coordinates, acceptType, parentType, parentID) =>
     .filter(
       coords =>
         coords.type === acceptType &&
-        parseInt(coords.item[`${parentType}ID`]) === parseInt(parentID)
+        coords.item[`${parentType}ID`] === parentID
     )
     .sort((coords1, coords2) => coords1.item.order - coords2.item.order)
 
@@ -30,7 +30,7 @@ const selectCategoryProjectID = createIdSelector(
 )
 
 const findProjectByCategoryProjectID = (projects, projectID) =>
-  projects.find(project => parseInt(project.id) === parseInt(projectID))
+  projects.find(project => project.id === projectID)
 
 export const makeSelectProjectByCategoryProjectID = createSelector(
   [selectProjects, selectCategoryProjectID],
@@ -43,9 +43,7 @@ const selectCategoryID = createIdSelector(props => props.category.id)
 
 const filterTodosByCategoryID = (todos, categoryID) => {
   const compareOrder = (todo1, todo2) => todo1.order - todo2.order
-  return todos
-    .filter(todo => parseInt(todo.categoryID) === parseInt(categoryID))
-    .sort(compareOrder)
+  return todos.filter(todo => todo.categoryID === categoryID).sort(compareOrder)
 }
 
 export const makeSelectTodosByCategoryID = createSelector(
@@ -58,9 +56,7 @@ const selectCategories = state => state.categories
 const selectTodoCategoryID = createIdSelector(props => props.todo.categoryID)
 
 const findCategoryByTodoCategoryID = (categories, todoCategoryID) =>
-  categories.find(
-    category => parseInt(category.id) === parseInt(todoCategoryID)
-  )
+  categories.find(category => category.id === todoCategoryID)
 
 export const makeSelectCategoryByTodoCategoryID = createSelector(
   [selectCategories, selectTodoCategoryID],
@@ -70,7 +66,7 @@ export const makeSelectCategoryByTodoCategoryID = createSelector(
 const selectTodoEditCategoryID = createIdSelector(categoryID => categoryID)
 
 const findCategoryByTodoEditCategoryID = (categories, categoryID) =>
-  categories.find(category => parseInt(category.id) === parseInt(categoryID))
+  categories.find(category => category.id === categoryID)
 
 export const makeSelectCategoryByTodoEditCategoryID = createSelector(
   [selectCategories, selectTodoEditCategoryID],
@@ -83,7 +79,7 @@ const filterCategoriesByProjectId = (categories, projectID) => {
   const compareOrder = (category1, category2) =>
     category1.order - category2.order
   return categories
-    .filter(category => parseInt(category.projectID) === parseInt(projectID))
+    .filter(category => category.projectID === projectID)
     .sort(compareOrder)
 }
 
@@ -103,8 +99,7 @@ const findUserProjectByCurrentUserIDAndProjectID = (
 ) => {
   return userProjects.find(
     userProj =>
-      parseInt(userProj.userID) === parseInt(currentUserID) &&
-      parseInt(userProj.projectID) === parseInt(projectID)
+      userProj.userID === currentUserID && userProj.projectID === projectID
   )
 }
 export const makeSelectUserProject = createSelector(
@@ -118,23 +113,20 @@ const filterProjectsByCurrentUserID = (
   currentUserID
 ) => {
   const currentUserUserProjects = userProjects.filter(
-    userProj => parseInt(userProj.userID) === parseInt(currentUserID)
+    userProj => userProj.userID === currentUserID
   )
   const currentUserProjects = []
   for (const userProject of currentUserUserProjects) {
     const foundProject = projects.find(
-      proj => parseInt(proj.id) === parseInt(userProject.projectID)
+      proj => proj.id === userProject.projectID
     )
     if (
       foundProject &&
-      !currentUserProjects.find(
-        proj => parseInt(proj.id) === parseInt(foundProject.id)
-      )
+      !currentUserProjects.find(proj => proj.id === foundProject.id)
     ) {
       currentUserProjects.push(foundProject)
     }
   }
-  console.log('current user projects', currentUserProjects)
   return currentUserProjects
 }
 
@@ -149,20 +141,16 @@ const filterCategoriesByCurrentUserID = (
   currentUserID
 ) => {
   const currentUserUserProjects = userProjects.filter(
-    userProj => parseInt(userProj.userID) === parseInt(currentUserID)
+    userProj => userProj.userID === currentUserID
   )
   const currentUserCategories = []
   for (const userProject of currentUserUserProjects) {
     const foundCategories = categories.filter(
-      cat => parseInt(cat.projectID) === parseInt(userProject.projectID)
+      cat => cat.projectID === userProject.projectID
     )
     if (foundCategories) {
       for (const foundCategory of foundCategories) {
-        if (
-          !currentUserCategories.find(
-            cat => parseInt(cat.id) === parseInt(foundCategory.id)
-          )
-        ) {
+        if (!currentUserCategories.find(cat => cat.id === foundCategory.id)) {
           currentUserCategories.push(foundCategory)
         }
       }
@@ -183,20 +171,16 @@ const filterTodosByCurrentUserID = (
   currentUserID
 ) => {
   const currentUserUserProjects = userProjects.filter(
-    userProj => parseInt(userProj.userID) === parseInt(currentUserID)
+    userProj => userProj.userID === currentUserID
   )
   const currentUserCategories = []
   for (const userProject of currentUserUserProjects) {
     const foundCategories = categories.filter(
-      cat => parseInt(cat.projectID) === parseInt(userProject.projectID)
+      cat => cat.projectID === userProject.projectID
     )
     if (foundCategories) {
       for (const foundCategory of foundCategories) {
-        if (
-          !currentUserCategories.find(
-            cat => parseInt(cat.id) === parseInt(foundCategory.id)
-          )
-        ) {
+        if (!currentUserCategories.find(cat => cat.id === foundCategory.id)) {
           currentUserCategories.push(foundCategory)
         }
       }
@@ -204,16 +188,10 @@ const filterTodosByCurrentUserID = (
   }
   const currentUserTodos = []
   for (const category of currentUserCategories) {
-    const foundTodos = todos.filter(
-      todo => parseInt(todo.categoryID) === parseInt(category.id)
-    )
+    const foundTodos = todos.filter(todo => todo.categoryID === category.id)
     if (foundTodos) {
       for (const foundTodo of foundTodos) {
-        if (
-          !currentUserTodos.find(
-            todo => parseInt(todo.id) === parseInt(foundTodo.id)
-          )
-        ) {
+        if (!currentUserTodos.find(todo => todo.id === foundTodo.id)) {
           currentUserTodos.push(foundTodo)
         }
       }
@@ -227,14 +205,17 @@ export const makeSelectTodosByCurrentUserID = createSelector(
   filterTodosByCurrentUserID
 )
 
-const dedupProjects = (projects) => {
+const dedupProjects = projects => {
   const deduplicatedProjects = []
   for (const project of projects) {
-    if (!deduplicatedProjects.find(proj => parseInt(proj.id) === parseInt(project.id))) {
+    if (!deduplicatedProjects.find(proj => proj.id === project.id)) {
       deduplicatedProjects.push(project)
     }
   }
   return projects
 }
 
-export const makeSelectDeduplicatedProjects = createSelector([selectProjects], dedupProjects)
+export const makeSelectDeduplicatedProjects = createSelector(
+  [selectProjects],
+  dedupProjects
+)

@@ -1,14 +1,14 @@
+import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
-import { Category, Dropzone, ConfirmScreen } from './index'
-import { debounce } from 'lodash'
 import {
   makeSelectCategoriesByProjectID,
   makeSelectUserProject
 } from '../selectors'
+import { Category, ConfirmScreen, Dropzone } from './index'
 
 const Project = React.memo(props => {
   const selectCategoriesByProjectID = useCallback(
@@ -157,7 +157,7 @@ const Project = React.memo(props => {
           <h2>{props.project.name}</h2>
           <p>{props.project.description}</p>
           <div className='button-container'>
-            {props.showButtons && props.disablePosition && !currentUser && (
+            {props.showButtons && props.disablePosition && !currentUser.id && (
               <Link
                 className={`pure-button pure-button-primary invisible`}
                 to={{

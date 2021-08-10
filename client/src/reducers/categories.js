@@ -1,4 +1,4 @@
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const categories = (state = [], action) => {
   let newState = []
@@ -8,14 +8,14 @@ const categories = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_CATEGORY':
-      if (!state.find(cat => parseInt(cat.id) === parseInt(payload.id))) {
+      if (!state.find(cat => cat.id === payload.id)) {
         return [...state, payload]
       } else return state
 
     case 'UPDATE_CATEGORY':
       newState = [...state]
       const currentCategory = newState.find(
-        category => parseInt(category.id) === parseInt(payload.id)
+        category => category.id === payload.id
       )
       if (currentCategory) {
         for (const key in payload) {
@@ -30,7 +30,7 @@ const categories = (state = [], action) => {
       newState = [...state]
       for (const category of payload) {
         const currentCategory = newState.find(
-          existing => parseInt(existing.id) === parseInt(category.id)
+          existing => existing.id === category.id
         )
         if (currentCategory) {
           for (const key in category) {
@@ -45,7 +45,7 @@ const categories = (state = [], action) => {
     case 'DELETE_CATEGORY':
       return [
         ...state.filter(
-          category => parseInt(category.id) !== parseInt(payload.id)
+          category => category.id !== payload.id
         )
       ]
 

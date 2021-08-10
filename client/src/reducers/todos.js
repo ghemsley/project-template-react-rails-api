@@ -1,4 +1,4 @@
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const todos = (state = [], action) => {
   let newState = []
@@ -8,7 +8,7 @@ const todos = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_TODO':
-      if (!state.find(todo => parseInt(todo.id) === parseInt(payload.id))) {
+      if (!state.find(todo => todo.id === payload.id)) {
         return [...state, payload]
       } else return state
 

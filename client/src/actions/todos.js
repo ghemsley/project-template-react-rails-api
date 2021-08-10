@@ -1,11 +1,12 @@
 import actions from '.'
 import CONSTANTS from '../constants'
+import helpers from '../helpers'
 
 const fetchTodo = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -13,7 +14,7 @@ const fetchTodos = () => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -27,7 +28,7 @@ const sendTodo = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -41,7 +42,7 @@ const patchTodo = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -55,7 +56,7 @@ const patchTodos = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -64,7 +65,7 @@ const destroyTodo = payload => () => {
     method: 'DELETE',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -98,7 +99,7 @@ const instantiateTodo = payload => (dispatch, getState) => {
   return dispatch(sendTodo(payload)).then(json => {
     if (json.data) {
       if (
-        !state.todos.find(todo => parseInt(todo.id) === parseInt(json.data.id))
+        !state.todos.find(todo => todo.id === json.data.id)
       ) {
         const todoObject = {
           id: json.data.id,
@@ -117,7 +118,7 @@ const instantiateTodo = payload => (dispatch, getState) => {
 
 const removeTodo = payload => dispatch => {
   dispatch(destroyTodo(payload)).then(json => {
-    if (parseInt(json.data.id) === parseInt(payload.id)) {
+    if (json.data.id === payload.id) {
       dispatch(deleteTodo(payload))
     }
     return json
@@ -126,7 +127,7 @@ const removeTodo = payload => dispatch => {
 
 const amendTodo = payload => dispatch => {
   return dispatch(patchTodo(payload)).then(json => {
-    if (parseInt(json.data.id) === parseInt(payload.id)) {
+    if (json.data.id === payload.id) {
       dispatch(updateTodo(payload))
     }
     return json

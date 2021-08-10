@@ -1,5 +1,5 @@
 import CONSTANTS from '../constants'
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const authentication = (
   state = { authChecked: false, loggedIn: false, currentUser: {} },

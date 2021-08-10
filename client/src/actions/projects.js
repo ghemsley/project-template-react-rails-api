@@ -1,11 +1,12 @@
 import actions from './index'
 import CONSTANTS from '../constants'
+import helpers from '../helpers'
 
 const fetchProject = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -13,7 +14,7 @@ const fetchAllProjects = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects?include=user_projects`, {
     headers: { Accept: 'application/json' }
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -27,7 +28,7 @@ const sendProject = payload => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -41,7 +42,7 @@ const patchProject = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -55,7 +56,7 @@ const patchProjects = payload => () => {
     },
     body: JSON.stringify(payload)
   })
-    .then(response => response.json())
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -63,7 +64,7 @@ const destroyProject = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
-  }).then(response => response.json())
+  }).then(response => helpers.convertIdToInt(response.json()))
 }
 
 const createProject = payload => ({
@@ -97,13 +98,10 @@ const instantiateProject = payload => (dispatch, getState) => {
     if (json.project) {
       if (
         !state.projects.find(
-          project =>
-            parseInt(project.id) === parseInt(json.project.data.attributes.id)
+          project => project.id === json.project.data.attributes.id
         ) &&
         !state.userProjects.find(
-          userProj =>
-            parseInt(userProj.id) ===
-            parseInt(json.user_project.data.attributes.id)
+          userProj => userProj.id === json.user_project.data.attributes.id
         )
       ) {
         const project = {
@@ -131,11 +129,7 @@ const instantiateAllProjects = () => (dispatch, getState) => {
     .then(json => {
       if (json.data) {
         for (const project of json.data) {
-          if (
-            !state.projects.find(
-              proj => parseInt(proj.id) === parseInt(project.attributes.id)
-            )
-          ) {
+          if (!state.projects.find(proj => proj.id === project.attributes.id)) {
             dispatch(
               createProject({
                 id: project.attributes.id,
@@ -155,13 +149,17 @@ const instantiateAllProjects = () => (dispatch, getState) => {
           if (
             included.type === 'user_project' &&
             !state.userProjects.find(
-              userProject => parseInt(userProject.id) === parseInt(included.id)
+              userProject =>
+                userProject.id === included.id ||
+                (userProject.userID === included.user_id &&
+                  userProject.projectID === included.project_id)
             )
           ) {
             const userProject = {
               id: included.id,
               userID: included.attributes.user_id,
-              projectID: included.attributes.project_id
+              projectID: included.attributes.project_id,
+              owner: included.attributes.owner
             }
             dispatch(actions.createUserProject(userProject))
           }
@@ -176,8 +174,7 @@ const removeProject = payload => (dispatch, getState) => {
   const currentUser = state.authentication.currentUser
   const userProjectsFromOtherUsers = state.userProjects.filter(
     userProj =>
-      parseInt(userProj.projectID) === parseInt(payload.id) &&
-      parseInt(userProj.userID) !== parseInt(currentUser.id)
+      userProj.projectID === payload.id && userProj.userID !== currentUser.id
   )
   if (userProjectsFromOtherUsers.length > 0) {
     return Promise.reject(
@@ -185,7 +182,7 @@ const removeProject = payload => (dispatch, getState) => {
     )
   } else {
     return dispatch(destroyProject(payload)).then(json => {
-      if (parseInt(json.data.id) === parseInt(payload.id)) {
+      if (json.data.id === payload.id) {
         dispatch(deeplyDeleteProject(payload))
       }
       return json
@@ -195,7 +192,7 @@ const removeProject = payload => (dispatch, getState) => {
 
 const amendProject = payload => dispatch => {
   return dispatch(patchProject(payload)).then(json => {
-    if (parseInt(json.data.id) === parseInt(payload.id)) {
+    if (json.data.id === payload.id) {
       dispatch(updateProject(payload))
     }
     return json

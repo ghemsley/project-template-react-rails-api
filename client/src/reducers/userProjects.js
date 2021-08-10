@@ -1,4 +1,4 @@
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const userProjects = (state = [], action) => {
   let payload = null
@@ -10,10 +10,10 @@ const userProjects = (state = [], action) => {
       if (
         !state.find(
           userProj =>
-            parseInt(userProj.id) === parseInt(payload.id) &&
-            !(
-              parseInt(userProj.projectID) === parseInt(payload.projectID) &&
-              parseInt(userProj.userID) === parseInt(payload.userID)
+            userProj.id === payload.id ||
+            (
+              userProj.projectID === payload.projectID &&
+              userProj.userID === payload.userID
             )
         )
       ) {
@@ -21,11 +21,7 @@ const userProjects = (state = [], action) => {
       } else return state
 
     case 'DELETE_USER_PROJECT':
-      return [
-        ...state.filter(
-          userProject => parseInt(userProject.id) !== parseInt(payload.id)
-        )
-      ]
+      return [...state.filter(userProject => userProject.id !== payload.id)]
 
     default:
       return state

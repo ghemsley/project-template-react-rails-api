@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 import actions from '../actions'
 import { Modal } from './index'
 
 const SignupForm = props => {
-  const loggedIn = useSelector(state => state.authentication.loggedIn)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

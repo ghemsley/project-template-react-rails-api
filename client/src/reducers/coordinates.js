@@ -1,4 +1,4 @@
-import helpers from './helpers'
+import helpers from '../helpers'
 
 const coordinates = (state = [], action) => {
   let payload = null
@@ -10,7 +10,7 @@ const coordinates = (state = [], action) => {
       const coords = state.find(
         coords =>
           coords.type === payload.type &&
-          parseInt(coords.item.id) === parseInt(payload.item.id)
+          coords.item.id === payload.item.id
       )
       if (coords && coords.position !== payload.position) {
         const newState = [...state]
