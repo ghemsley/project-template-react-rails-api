@@ -7,7 +7,13 @@ const convertIdToInt = object => {
       try {
         object[key] = parseInt(object[key])
       } catch (e) {
-        continue
+        console.log(e)
+      }
+    } else if (typeof object[key] === 'object') {
+      try {
+        convertIdToInt(object[key])
+      } catch (e) {
+        console.log(e)
       }
     }
   }
