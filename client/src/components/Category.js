@@ -70,7 +70,7 @@ const Category = React.memo(props => {
     [getCoordinates]
   )
 
-  const obeserver = useResizeObserver({ ref, onResize })
+  useResizeObserver({ ref, onResize })
 
   const onScroll = useMemo(
     () =>

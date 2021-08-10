@@ -45,7 +45,7 @@ const Navbar = () => {
           </li>
         )}
       </ul>
-      {loggedIn && currentUser && <p>Logged in as {currentUser.email}</p>}
+      {loggedIn && currentUser && <p>Logged in as {currentUser.username}</p>}
     </div>
   )
 }

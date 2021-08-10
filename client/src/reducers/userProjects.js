@@ -8,7 +8,14 @@ const userProjects = (state = [], action) => {
   switch (action.type) {
     case 'CREATE_USER_PROJECT':
       if (
-        !state.find(userProj => parseInt(userProj.id) === parseInt(payload.id))
+        !state.find(
+          userProj =>
+            parseInt(userProj.id) === parseInt(payload.id) &&
+            !(
+              parseInt(userProj.projectID) === parseInt(payload.projectID) &&
+              parseInt(userProj.userID) === parseInt(payload.userID)
+            )
+        )
       ) {
         return [...state, payload]
       } else return state

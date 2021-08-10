@@ -20,6 +20,7 @@ const Project = React.memo(props => {
   )
   const selectUserProject = useCallback(makeSelectUserProject, [props])
   const userProject = useSelector(state => selectUserProject(state, props))
+  const userProjects = useSelector(state => state.userProjects)
   const currentUser = useSelector(state => state.authentication.currentUser)
   const [showJoinLeaveConfirmScreen, setShowJoinLeaveConfirmScreen] =
     useState(false)
@@ -83,13 +84,20 @@ const Project = React.memo(props => {
     if (!currentUser.id) {
       history.push('/signup')
     } else if (currentUser.id && !userProject) {
-      dispatch(
-        actions
-          .instantiateUserProject({
+      if (
+        !userProjects.find(
+          userProj =>
+            userProj.userID === currentUser.id &&
+            userProj.projectID === props.project.id
+        )
+      ) {
+        dispatch(
+          actions.addUserProject({
             user_id: currentUser.id,
             project_id: props.project.id
           })
-      ).then(() => history.push('/projects'))
+        ).then(() => history.push('/projects'))
+      }
     } else if (currentUser.id && userProject) {
       dispatch(actions.removeUserProject(userProject))
     }
@@ -107,12 +115,20 @@ const Project = React.memo(props => {
     setShowDeleteConfirmScreen(false)
   }
   const confirmJoin = () => {
-    dispatch(
-      actions.instantiateUserProject({
-        user_id: currentUser.id,
-        project_id: props.project.id
-      })
-    )
+    if (
+      !userProjects.find(
+        userProj =>
+          userProj.userID === currentUser.id &&
+          userProj.projectID === props.project.id
+      )
+    ) {
+      dispatch(
+        actions.addUserProject({
+          user_id: currentUser.id,
+          project_id: props.project.id
+        })
+      )
+    }
   }
   const confirmLeave = () => {
     setLeaveError(null)

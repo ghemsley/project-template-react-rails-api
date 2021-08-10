@@ -77,7 +77,7 @@ const Todo = React.memo(props => {
     [getCoordinates]
   )
 
-  const observer = useResizeObserver({ ref, onResize })
+  useResizeObserver({ ref, onResize })
 
   useEffect(() => {
     getCoordinates()

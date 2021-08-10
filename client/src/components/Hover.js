@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 
 const Hover = React.memo(props => {
@@ -7,7 +7,7 @@ const Hover = React.memo(props => {
   const [top, setTop] = useState(window.innerHeight)
   const [elementLeft, setElementLeft] = useState(0)
   const [elementTop, setElementTop] = useState(0)
-  const id = uuid()
+  const id = useMemo(() => uuid(), [])
 
   useLayoutEffect(() => {
     const handlePointerEnter = event => {
@@ -56,8 +56,9 @@ const Hover = React.memo(props => {
           top - elementTop + 32
         }px, 0px)`
       }}
-      className={`hover center center-text fit ${hidden ? 'fadeout' : 'fadein'}`}
-    >
+      className={`hover center center-text fit ${
+        hidden ? 'fadeout' : 'fadein'
+      }`}>
       {props.children}
     </div>
   )

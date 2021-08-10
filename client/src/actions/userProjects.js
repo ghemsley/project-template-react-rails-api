@@ -28,18 +28,30 @@ const fetchEverythingForUser = user => {
     .catch(error => console.log(error))
 }
 
-const sendUserProject = payload => {
-  return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects`, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
-    },
-    body: JSON.stringify(payload)
-  })
-    .then(response => response.json())
-    .catch(error => console.log(error))
+const sendUserProject = payload => (dispatch, getState) => {
+  const userProjects = getState().userProjects
+  if (
+    !userProjects.find(
+      userProj =>
+        userProj.projectID === payload.project_id &&
+        userProj.userID === payload.user_id
+    )
+  ) {
+    return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: actions.getToken()
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(response => response.json())
+      .catch(error => console.log(error))
+  } else
+    return Promise.reject(
+      'Userproject already exists for the provided user and project'
+    )
 }
 
 const destroyUserProject = payload => {
@@ -61,8 +73,8 @@ const deleteUserProject = payload => ({
   payload
 })
 
-const instantiateUserProject = payload => dispatch => {
-  return sendUserProject(payload).then(json => {
+const addUserProject = payload => (dispatch, getState) => {
+  return dispatch(sendUserProject(payload)).then(json => {
     if (json.data) {
       if (parseInt(json.data.attributes.id) === parseInt(payload.id)) {
         const userProject = {
@@ -152,15 +164,22 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
           if (
             included.type === 'user_project' &&
             !state.userProjects.find(
-              userProject => parseInt(userProject.id) === parseInt(included.id)
+              userProject =>
+                parseInt(userProject.id) === parseInt(included.id) &&
+                !(
+                  parseInt(userProject.projectID) ===
+                    parseInt(included.attributes.project_id) &&
+                  parseInt(userProject.userID) ===
+                    parseInt(included.attributes.user_id)
+                )
             )
           ) {
-            const existingUserProject = {
+            const userProject = {
               id: included.id,
               userID: included.attributes.user_id,
               projectID: included.attributes.project_id
             }
-            dispatch(actions.createUserProject(existingUserProject))
+            dispatch(actions.createUserProject(userProject))
           }
         }
       }
@@ -177,6 +196,10 @@ const removeUserProject = payload => (dispatch, getState) => {
   if (otherUsersForProject < 1) {
     return Promise.reject(
       "You can't leave your own project if you're its only user"
+    )
+  } else if (payload.owner === true) {
+    return Promise.reject(
+      "You can't leave your own project if you're its owner"
     )
   } else {
     return destroyUserProject(payload).then(json => {
@@ -195,7 +218,7 @@ const userProjectActions = {
   createUserProject,
   deleteUserProject,
   sendUserProject,
-  instantiateUserProject,
+  addUserProject,
   fetchEverythingForUser,
   instantiateEverythingForUser,
   removeUserProject
