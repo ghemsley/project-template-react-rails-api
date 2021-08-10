@@ -10,7 +10,7 @@ const coordinates = (state = [], action) => {
       const coords = state.find(
         coords =>
           coords.type === payload.type &&
-          coords.item.id === payload.item.id
+          parseInt(coords.item.id) === parseInt(payload.item.id)
       )
       if (coords && coords.position !== payload.position) {
         const newState = [...state]

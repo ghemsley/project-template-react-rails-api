@@ -1,7 +1,6 @@
 import helpers from './helpers'
 
 const todos = (state = [], action) => {
-  const compareOrder = (todo1, todo2) => todo1.order - todo2.order
   let newState = []
   let payload = null
   if (action.payload) {
@@ -9,9 +8,9 @@ const todos = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_TODO':
-      newState = [...state, payload]
-      newState.sort(compareOrder)
-      return newState
+      if (!state.find(todo => parseInt(todo.id) === parseInt(payload.id))) {
+        return [...state, payload]
+      } else return state
 
     case 'UPDATE_TODO':
       newState = [...state]
@@ -23,7 +22,6 @@ const todos = (state = [], action) => {
           }
         }
       }
-      newState.sort(compareOrder)
       return newState
 
     case 'UPDATE_TODOS':
@@ -38,19 +36,14 @@ const todos = (state = [], action) => {
           }
         }
       }
-      newState.sort(compareOrder)
       return newState
 
     case 'DELETE_TODO':
       newState = [...state.filter(todo => todo.id !== payload.id)]
-      newState.sort(compareOrder)
       return newState
 
     case 'DELETE_TODOS_BY_CATEGORY':
-      newState = [
-        ...state.filter(todo => todo.categoryID !== payload.id)
-      ]
-      newState.sort(compareOrder)
+      newState = [...state.filter(todo => todo.categoryID !== payload.id)]
       return newState
 
     default:

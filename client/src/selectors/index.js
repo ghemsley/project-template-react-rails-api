@@ -125,10 +125,16 @@ const filterProjectsByCurrentUserID = (
     const foundProject = projects.find(
       proj => parseInt(proj.id) === parseInt(userProject.projectID)
     )
-    if (foundProject) {
+    if (
+      foundProject &&
+      !currentUserProjects.find(
+        proj => parseInt(proj.id) === parseInt(foundProject.id)
+      )
+    ) {
       currentUserProjects.push(foundProject)
     }
   }
+  console.log('current user projects', currentUserProjects)
   return currentUserProjects
 }
 
@@ -151,7 +157,15 @@ const filterCategoriesByCurrentUserID = (
       cat => parseInt(cat.projectID) === parseInt(userProject.projectID)
     )
     if (foundCategories) {
-      currentUserCategories.push(...foundCategories)
+      for (const foundCategory of foundCategories) {
+        if (
+          !currentUserCategories.find(
+            cat => parseInt(cat.id) === parseInt(foundCategory.id)
+          )
+        ) {
+          currentUserCategories.push(foundCategory)
+        }
+      }
     }
   }
   return currentUserCategories
@@ -177,7 +191,15 @@ const filterTodosByCurrentUserID = (
       cat => parseInt(cat.projectID) === parseInt(userProject.projectID)
     )
     if (foundCategories) {
-      currentUserCategories.push(...foundCategories)
+      for (const foundCategory of foundCategories) {
+        if (
+          !currentUserCategories.find(
+            cat => parseInt(cat.id) === parseInt(foundCategory.id)
+          )
+        ) {
+          currentUserCategories.push(foundCategory)
+        }
+      }
     }
   }
   const currentUserTodos = []
@@ -185,8 +207,16 @@ const filterTodosByCurrentUserID = (
     const foundTodos = todos.filter(
       todo => parseInt(todo.categoryID) === parseInt(category.id)
     )
-    if (todos) {
-      currentUserTodos.push(...foundTodos)
+    if (foundTodos) {
+      for (const foundTodo of foundTodos) {
+        if (
+          !currentUserTodos.find(
+            todo => parseInt(todo.id) === parseInt(foundTodo.id)
+          )
+        ) {
+          currentUserTodos.push(foundTodo)
+        }
+      }
     }
   }
   return currentUserTodos
@@ -196,3 +226,15 @@ export const makeSelectTodosByCurrentUserID = createSelector(
   [selectTodos, selectUserProjects, selectCategories, selectCurrentUserID],
   filterTodosByCurrentUserID
 )
+
+const dedupProjects = (projects) => {
+  const deduplicatedProjects = []
+  for (const project of projects) {
+    if (!deduplicatedProjects.find(proj => parseInt(proj.id) === parseInt(project.id))) {
+      deduplicatedProjects.push(project)
+    }
+  }
+  return projects
+}
+
+export const makeSelectDeduplicatedProjects = createSelector([selectProjects], dedupProjects)

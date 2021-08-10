@@ -7,10 +7,18 @@ const userProjects = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_USER_PROJECT':
-      return [...state, payload]
+      if (
+        !state.find(userProj => parseInt(userProj.id) === parseInt(payload.id))
+      ) {
+        return [...state, payload]
+      } else return state
 
     case 'DELETE_USER_PROJECT':
-      return [...state.filter(userProject => userProject.id !== payload.id)]
+      return [
+        ...state.filter(
+          userProject => parseInt(userProject.id) !== parseInt(payload.id)
+        )
+      ]
 
     default:
       return state

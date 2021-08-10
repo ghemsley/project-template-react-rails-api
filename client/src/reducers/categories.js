@@ -1,7 +1,6 @@
 import helpers from './helpers'
 
 const categories = (state = [], action) => {
-  const compareOrder = (category1, category2) => category1.order - category2.order
   let newState = []
   let payload = null
   if (action.payload) {
@@ -9,12 +8,14 @@ const categories = (state = [], action) => {
   }
   switch (action.type) {
     case 'CREATE_CATEGORY':
-      return [...state, payload]
+      if (!state.find(cat => parseInt(cat.id) === parseInt(payload.id))) {
+        return [...state, payload]
+      } else return state
 
     case 'UPDATE_CATEGORY':
       newState = [...state]
       const currentCategory = newState.find(
-        category => category.id === payload.id
+        category => parseInt(category.id) === parseInt(payload.id)
       )
       if (currentCategory) {
         for (const key in payload) {
@@ -28,7 +29,9 @@ const categories = (state = [], action) => {
     case 'UPDATE_CATEGORIES':
       newState = [...state]
       for (const category of payload) {
-        const currentCategory = newState.find(existing => existing.id === category.id)
+        const currentCategory = newState.find(
+          existing => parseInt(existing.id) === parseInt(category.id)
+        )
         if (currentCategory) {
           for (const key in category) {
             if (key !== 'id') {
@@ -37,11 +40,14 @@ const categories = (state = [], action) => {
           }
         }
       }
-      newState.sort(compareOrder)
       return newState
 
     case 'DELETE_CATEGORY':
-      return [...state.filter(category => category.id !== payload.id)]
+      return [
+        ...state.filter(
+          category => parseInt(category.id) !== parseInt(payload.id)
+        )
+      ]
 
     default:
       return state
