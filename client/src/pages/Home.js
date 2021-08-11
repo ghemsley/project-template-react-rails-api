@@ -27,7 +27,6 @@ const Home = React.memo(props => {
     <div className='center center-text'>
       <h2 className='recent-projects margin-05'>Recent Projects</h2>
       <Slider
-        lazyLoad={'ondemand'}
         swipeToSlide={true}
         variableWidth={true}
         pauseOnDotsHover={true}
@@ -39,8 +38,7 @@ const Home = React.memo(props => {
         slidesToScroll={1}
         adaptiveHeight={true}
         autoplay={true}
-        autoplaySpeed={5000}
-        centerMode={true}
+        autoplaySpeed={3000}
         focusOnSelect={true}>
         {projects.map(project => (
           <div className='flex project-container'>
@@ -60,6 +58,30 @@ const Home = React.memo(props => {
             <h1>Tada!</h1>
             <h2>Todo List</h2>
             <p>A little todo list app for big plans</p>
+            <div className='instructions-container'>
+              <p>
+                Step 1:{' '}
+                <Link
+                  to={{
+                    pathname: '/signup',
+                    state: { background: location }
+                  }}
+                  className={`pure-button pure-button-primary`}>
+                  Sign up
+                </Link>{' '}
+                or{' '}
+                <Link
+                  to={{
+                    pathname: '/login',
+                    state: { background: location }
+                  }}
+                  className={`pure-button pure-button-primary`}>
+                  Log in
+                </Link>
+              </p>
+              <p>Step 2: Create or join a project</p>
+              <p>Step 3: Add a category, and then your todos!</p>
+            </div>
           </div>
         </div>
         <div className='title-right flex project-container'>
