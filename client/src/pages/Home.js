@@ -32,8 +32,7 @@ const Home = React.memo(props => {
         pauseOnDotsHover={true}
         dots={true}
         infinite={true}
-        rows={1}
-        speed={250}
+        speed={333}
         slidesToShow={1}
         slidesToScroll={1}
         adaptiveHeight={true}
@@ -41,12 +40,11 @@ const Home = React.memo(props => {
         autoplaySpeed={3000}
         focusOnSelect={true}>
         {projects.map(project => (
-          <div className='flex project-container'>
+          <div className='flex project-container' key={uuid()}>
             <Project
               project={project}
               showButtons={true}
               showCategories={false}
-              key={uuid()}
               disablePosition={true}
             />
           </div>
