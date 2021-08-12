@@ -10,7 +10,8 @@ import {
   LoginForm,
   LogoutScreen,
   withAuth, // order matters,
-  Footer
+  Footer,
+  Loading
 } from './components'
 import './App.css'
 
@@ -21,7 +22,7 @@ const ProtectedCategoryForm = withAuth(CategoryForm)
 const ProtectedTodoForm = withAuth(TodoForm)
 const ProtectedLogoutScreen = withAuth(LogoutScreen)
 
-function App() {
+const App = () => {
   const location = useLocation()
   const background = location.state && location.state.background
   const edit = location.state && location.state.edit
@@ -29,60 +30,112 @@ function App() {
   return (
     <>
       <div className='pure-u-1 content'>
-        <Navbar />
+        <Route children={routeProps => <Navbar {...routeProps} />} />
         <Switch location={background ? background : location}>
-          {Pages.map((Page, i) => (
-            <Route
-              exact
-              path={Page.path}
-              key={i}
-              children={routeProps => Page.component(routeProps)}
-            />
-          ))}
+          {Pages.map((Page, i) =>
+            Page.protectedRoute ? (
+              <Route
+                exact
+                path={Page.path}
+                key={i}
+                render={routeProps => Page.component(routeProps)}
+              />
+            ) : (
+              <Route
+                exact
+                path={Page.path}
+                key={i}
+                children={routeProps => Page.component(routeProps)}
+              />
+            )
+          )}
         </Switch>
-        <Route exact path='/signup' children={<AuthenticatedSignupForm />} />
-        <Route exact path='/login' children={<AuthenticatedLoginForm />} />
-        <Route
-          exact
-          path='/logout'
-          children={<ProtectedLogoutScreen protectedRoute />}
-        />
-        <Route
-          exact
-          path='/projects/new'
-          children={<ProtectedProjectForm protectedRoute />}
-        />
-        <Route
-          exact
-          path='/categories/new'
-          children={<ProtectedCategoryForm protectedRoute />}
-        />
-        <Route
-          exact
-          path='/todos/new'
-          children={<ProtectedTodoForm protectedRoute />}
-        />
-        {edit && (
-          <>
+        {background && (
+          <Switch>
             <Route
               exact
-              path='/todos/:id/edit'
-              children={<ProtectedTodoForm edit={edit} protectedRoute />}
+              path='/signup'
+              render={routeProps => (
+                <AuthenticatedSignupForm {...routeProps} />
+              )}
             />
             <Route
               exact
-              path='/categories/:id/edit'
-              children={<ProtectedCategoryForm edit={edit} protectedRoute />}
+              path='/login'
+              render={routeProps => (
+                <AuthenticatedLoginForm {...routeProps} />
+              )}
             />
             <Route
               exact
-              path='/projects/:id/edit'
-              children={<ProtectedProjectForm edit={edit} protectedRoute />}
+              path='/logout'
+              render={routeProps => (
+                <ProtectedLogoutScreen protectedRoute {...routeProps} />
+              )}
             />
-          </>
+            <Route
+              exact
+              path='/projects/new'
+              render={routeProps => (
+                <ProtectedProjectForm protectedRoute {...routeProps} />
+              )}
+            />
+            <Route
+              exact
+              path='/categories/new'
+              render={routeProps => (
+                <ProtectedCategoryForm protectedRoute {...routeProps} />
+              )}
+            />
+            <Route
+              exact
+              path='/todos/new'
+              render={routeProps => (
+                <ProtectedTodoForm protectedRoute {...routeProps} />
+              )}
+            />
+            {edit && (
+              <>
+                <Route
+                  exact
+                  path='/todos/:id/edit'
+                  render={routeProps => (
+                    <ProtectedTodoForm
+                      edit={edit}
+                      protectedRoute
+                      {...routeProps}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path='/categories/:id/edit'
+                  render={routeProps => (
+                    <ProtectedCategoryForm
+                      edit={edit}
+                      protectedRoute
+                      {...routeProps}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path='/projects/:id/edit'
+                  render={routeProps => (
+                    <ProtectedProjectForm
+                      edit={edit}
+                      protectedRoute
+                      {...routeProps}
+                    />
+                  )}
+                />
+              </>
+            )}
+          </Switch>
         )}
       </div>
-      <Footer />
+      <Route children={routeProps => <Footer {...routeProps} />} />
+      <Route render={routeProps => <Loading {...routeProps} />} />
     </>
   )
 }

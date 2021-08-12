@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Loading, Modal } from '.'
+import { Modal } from '.'
 import actions from '../actions'
 
-function withAuth(WrappedComponent) {
+const withAuth = WrappedComponent => {
   class StupidClassComponent extends Component {
     componentDidMount() {
       const { checkAuth } = this.props
       checkAuth()
     }
     render() {
-      const { authChecked, loggedIn, protectedRoute } = this.props
-      if (!authChecked) {
-        return <Loading {...this.props} />
-      } else if (!loggedIn && protectedRoute) {
+      const { loggedIn, protectedRoute } = this.props
+      if (!loggedIn && protectedRoute) {
         return (
           <Modal {...this.props}>
             <p>You must be logged in to view this page</p>
