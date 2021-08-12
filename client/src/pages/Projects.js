@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import Project from '../components/Project'
 import actions from '../actions'
+import { Project } from '../components'
 import {
-  makeSelectProjectsByCurrentUserID,
-  makeSelectCategoriesByCurrentUserID
+  makeSelectCategoriesByCurrentUserID, makeSelectProjectsByCurrentUserID
 } from '../selectors'
 
 const Projects = () => {

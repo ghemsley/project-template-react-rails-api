@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import Todo from '../components/Todo'
 import actions from '../actions'
+import { ConfirmScreen, Todo } from '../components'
 import {
-  makeSelectTodosByCurrentUserID,
-  makeSelectCategoriesByCurrentUserID
+  makeSelectCategoriesByCurrentUserID, makeSelectTodosByCurrentUserID
 } from '../selectors'
 
 const Todos = () => {
@@ -29,9 +28,11 @@ const Todos = () => {
   }, [dispatch])
 
   return categories.length < 1 ? (
-    <p className='fit margin-auto'>
-      Please create a category first before trying to create a todo!
-    </p>
+    <ConfirmScreen>
+      <p className='fit margin-auto'>
+        Please create a category first before trying to create a todo!
+      </p>
+    </ConfirmScreen>
   ) : (
     <div className='center center-text todo-page'>
       <div className='button-container'>

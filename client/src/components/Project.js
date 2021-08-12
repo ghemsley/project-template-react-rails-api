@@ -1,25 +1,36 @@
 import { debounce } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo, useRef,
+  useState
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
 import {
   makeSelectCategoriesByProjectID,
-  makeSelectUserProject
+  makeSelectUserProjectByCurrentUserAndProjectId
 } from '../selectors'
 import { Category, ConfirmScreen, Dropzone } from './index'
 
 const Project = React.memo(props => {
+  console.log('render project')
   const selectCategoriesByProjectID = useCallback(
     makeSelectCategoriesByProjectID,
-    [props]
+    [props.project.id]
   )
   const categories = useSelector(state =>
-    selectCategoriesByProjectID(state, props)
+    selectCategoriesByProjectID(state, props.project.id)
   )
-  const selectUserProject = useCallback(makeSelectUserProject, [props])
-  const userProject = useSelector(state => selectUserProject(state, props))
+  const selectUserProject = useCallback(
+    makeSelectUserProjectByCurrentUserAndProjectId,
+    [props.project.id]
+  )
+  const userProject = useSelector(state =>
+    selectUserProject(state, props.project.id)
+  )
   const userProjects = useSelector(state => state.userProjects)
   const currentUser = useSelector(state => state.authentication.currentUser)
   const [showJoinLeaveConfirmScreen, setShowJoinLeaveConfirmScreen] =
@@ -82,7 +93,7 @@ const Project = React.memo(props => {
 
   const handleJoinLeaveClickPositionDisabled = () => {
     if (!currentUser.id) {
-      history.push('/signup')
+      history.push({ pathname: '/signup', state: { background: location } })
     } else if (currentUser.id && !userProject) {
       if (
         !userProjects.find(
@@ -99,7 +110,7 @@ const Project = React.memo(props => {
         ).then(() => history.push('/projects'))
       }
     } else if (currentUser.id && userProject) {
-      dispatch(actions.removeUserProject(userProject))
+      setShowJoinLeaveConfirmScreen(true)
     }
   }
   const handleLeaveJoinClick = () => {
@@ -139,7 +150,6 @@ const Project = React.memo(props => {
   const confirmRemove = () => {
     dispatch(actions.removeProject(props.project))
   }
-
   return (
     <>
       <div
@@ -157,17 +167,7 @@ const Project = React.memo(props => {
           <h2>{props.project.name}</h2>
           <p>{props.project.description}</p>
           <div className='button-container'>
-            {props.showButtons && props.disablePosition && !currentUser.id && (
-              <Link
-                className={`pure-button pure-button-primary invisible`}
-                to={{
-                  pathname: `/signup`,
-                  state: { background: location }
-                }}>
-                Join
-              </Link>
-            )}
-            {props.showButtons && props.disablePosition && !userProject && (
+            {props.showButtons && props.disablePosition && (
               <button
                 className={`pure-button pure-button-primary invisible`}
                 onClick={handleJoinLeaveClickPositionDisabled}>
@@ -220,25 +220,29 @@ const Project = React.memo(props => {
         </Dropzone>
       </div>
       {showJoinLeaveConfirmScreen && (
-        <ConfirmScreen closeAction={closeJoinLeaveAction}>
-          <h1>Confirm {userProject ? 'leave' : 'join'}?</h1>
-          {leaveError && <p>{leaveError}</p>}
-          <button
-            className='pure-button pure-button-delete'
-            onClick={userProject ? confirmLeave : confirmJoin}>
-            {userProject ? 'Leave' : 'Join'}
-          </button>
-        </ConfirmScreen>
+        <div className='fixed'>
+          <ConfirmScreen closeAction={closeJoinLeaveAction}>
+            <h1>Confirm {userProject ? 'leave' : 'join'}?</h1>
+            {leaveError && <p>{leaveError}</p>}
+            <button
+              className='pure-button pure-button-delete'
+              onClick={userProject ? confirmLeave : confirmJoin}>
+              {userProject ? 'Leave' : 'Join'}
+            </button>
+          </ConfirmScreen>
+        </div>
       )}
       {showDeleteConfirmScreen && (
-        <ConfirmScreen closeAction={closeDeleteAction}>
-          <h1>Confirm delete?</h1>
-          <button
-            className='pure-button pure-button-delete'
-            onClick={confirmRemove}>
-            Delete
-          </button>
-        </ConfirmScreen>
+        <div className='fixed'>
+          <ConfirmScreen closeAction={closeDeleteAction}>
+            <h1>Confirm delete?</h1>
+            <button
+              className='pure-button pure-button-delete'
+              onClick={confirmRemove}>
+              Delete
+            </button>
+          </ConfirmScreen>
+        </div>
       )}
     </>
   )

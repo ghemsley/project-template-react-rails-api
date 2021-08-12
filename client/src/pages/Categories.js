@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Category } from '../components/index'
 import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions'
+import { Category, ConfirmScreen } from '../components'
 import {
   makeSelectCategoriesByCurrentUserID,
   makeSelectProjectsByCurrentUserID
@@ -29,9 +29,11 @@ const Categories = () => {
   }, [dispatch])
 
   return projects.length < 1 ? (
-    <p className='fit margin-auto'>
-      Please create a project first before trying to create a category!
-    </p>
+    <ConfirmScreen>
+      <p className='fit margin-auto'>
+        Please create a project first before trying to create a category!
+      </p>
+    </ConfirmScreen>
   ) : (
     <div className='center center-text category-page'>
       <div className='button-container'>

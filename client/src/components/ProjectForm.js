@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import Modal from './Modal'
 
-const ProjectForm = props => {
+const ProjectForm = React.memo(props => {
   const [name, setName] = useState(props.edit ? props.edit.name : '')
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
@@ -29,8 +29,7 @@ const ProjectForm = props => {
           name: name,
           description: description
         })
-      )
-      history.goBack()
+      ).then(() => history.goBack())
     }
   }
   const handleChange = event => {
@@ -51,8 +50,7 @@ const ProjectForm = props => {
       <h1 className='fit margin-auto'>{props.edit ? 'Edit' : 'New'} Project</h1>
       <form
         onSubmit={handleSubmit}
-        className='pure-form pure-form-stacked fit margin-auto'
-      >
+        className='pure-form pure-form-stacked fit margin-auto'>
         <fieldset>
           <label htmlFor='name'>Name</label>
           <input type='text' name='name' value={name} onChange={handleChange} />
@@ -69,5 +67,5 @@ const ProjectForm = props => {
       </form>
     </Modal>
   )
-}
+})
 export default ProjectForm

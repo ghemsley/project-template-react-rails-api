@@ -1,5 +1,5 @@
 import React from 'react'
-const Footer = () => {
+const Footer = (props) => {
   return (
     <div className='footer center fit pure-menu pure-menu-horizontal pure-menu-scrollable'>
       <ul className='pure-menu-list'>

@@ -3,22 +3,38 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
-import { makeSelectProjectsByCurrentUserID } from '../selectors'
+import {
+  makeSelectProjectsByCurrentUserID,
+  makeSelectProjectByProjectID,
+  makeSelectFirstProjectIdByCurrentUser
+} from '../selectors'
 
-const CategoryForm = React.memo(props => {
+const CategoryForm = props => {
   const selectProjectsByCurrentUserID = useCallback(
     makeSelectProjectsByCurrentUserID,
     []
   )
+  const selectFirstProjectIdByCurrentUser = useCallback(
+    makeSelectFirstProjectIdByCurrentUser,
+    []
+  )
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
+  const firstProjectID = useSelector(state =>
+    selectFirstProjectIdByCurrentUser(state)
+  )
+  const [projectID, setProjectID] = useState(
+    props.edit ? props.edit.projectID : firstProjectID
+  )
+  const selectProjectByProjectID = useCallback(makeSelectProjectByProjectID, [
+    projectID
+  ])
+  const project = useSelector(state =>
+    selectProjectByProjectID(state, projectID)
+  )
   const [name, setName] = useState(props.edit ? props.edit.name : '')
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
   )
-  const [projectID, setProjectID] = useState(
-    props.edit ? props.edit.projectID : projects[0].id
-  )
-  const project = projects.find(project => project.id === projectID)
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -29,7 +45,7 @@ const CategoryForm = React.memo(props => {
         actions.instantiateCategory({
           name: name,
           description: description,
-          projectID: projectID
+          projectID: parseInt(projectID)
         })
       )
       setName('')
@@ -40,10 +56,10 @@ const CategoryForm = React.memo(props => {
           ...props.edit,
           name: name,
           description: description,
-          projectID: projectID
+          projectID: parseInt(projectID)
         })
-      )
-      history.goBack()
+      ).then(() => history.goBack())
+     
     }
   }
   const handleChange = event => {
@@ -56,7 +72,7 @@ const CategoryForm = React.memo(props => {
         break
 
       case 'projectID':
-        setProjectID(event.target.value)
+        setProjectID(parseInt(event.target.value))
         break
 
       default:
@@ -88,7 +104,7 @@ const CategoryForm = React.memo(props => {
               onChange={handleChange}
             />
             <label htmlFor='projectID' className='hoverable'>
-              {projects.length > 0 && (
+              {projects.length > 0 && project && (
                 <Hover>
                   <Project project={project} showCategories />
                 </Hover>
@@ -113,5 +129,5 @@ const CategoryForm = React.memo(props => {
       </>
     </Modal>
   )
-})
+}
 export default CategoryForm

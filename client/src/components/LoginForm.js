@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import actions from '../actions'
 import { Modal } from './index'
 
 const LoginForm = props => {
+  const loggedIn = useSelector(state => state.authentication.loggedIn)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState(null)
@@ -53,37 +54,45 @@ const LoginForm = props => {
   }
   return (
     <Modal>
-      <h1 className='fit margin-auto'>Login</h1>
-      {errors &&
-        errors.length > 0 &&
-        errors.map((error, i) => <p key={i}>{error}</p>)}
-      {props.loggedIn && <p>You are already logged in</p>}
-      {!props.loggedIn && (
-        <form
-          onSubmit={handleSubmit}
-          className='pure-form pure-form-stacked fit margin-auto'>
-          <fieldset>
-            <label htmlFor='email'>Email</label>
-            <input
-              type='email'
-              name='email'
-              value={email}
-              onChange={handleChange}
-              autoComplete='username'
-            />
-            <label htmlFor='password'>Password</label>
-            <input
-              name='password'
-              type='password'
-              value={password}
-              onChange={handleChange}
-              autoComplete='current-password'
-            />
-            <button className='pure-button pure-button-primary' type='submit'>
-              Submit
-            </button>
-          </fieldset>
-        </form>
+      {loggedIn ? (
+        <p>You are already logged in!</p>
+      ) : (
+        <>
+          <h1 className='fit margin-auto'>Login</h1>
+          {errors &&
+            errors.length > 0 &&
+            errors.map((error, i) => <p key={i}>{error}</p>)}
+          {props.loggedIn && <p>You are already logged in</p>}
+          {!props.loggedIn && (
+            <form
+              onSubmit={handleSubmit}
+              className='pure-form pure-form-stacked fit margin-auto'>
+              <fieldset>
+                <label htmlFor='email'>Email</label>
+                <input
+                  type='email'
+                  name='email'
+                  value={email}
+                  onChange={handleChange}
+                  autoComplete='username'
+                />
+                <label htmlFor='password'>Password</label>
+                <input
+                  name='password'
+                  type='password'
+                  value={password}
+                  onChange={handleChange}
+                  autoComplete='current-password'
+                />
+                <button
+                  className='pure-button pure-button-primary'
+                  type='submit'>
+                  Submit
+                </button>
+              </fieldset>
+            </form>
+          )}
+        </>
       )}
     </Modal>
   )

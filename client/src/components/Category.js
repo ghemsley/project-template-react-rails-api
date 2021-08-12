@@ -1,28 +1,31 @@
+import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
+import mergeRefs from 'react-merge-refs'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import { Todo, Dropzone, ConfirmScreen } from './index'
 import useResizeObserver from 'use-resize-observer'
-import mergeRefs from 'react-merge-refs'
 import actions from '../actions/index'
-import { debounce } from 'lodash'
 import {
   makeSelectProjectByCategoryProjectID,
   makeSelectTodosByCategoryID
 } from '../selectors'
+import { ConfirmScreen, Dropzone, Todo } from './index'
 
 const Category = React.memo(props => {
+  console.log('render category')
   const selectTodosByCategoryID = useCallback(makeSelectTodosByCategoryID, [
-    props
+    props.category
   ])
-  const todos = useSelector(state => selectTodosByCategoryID(state, props))
+  const todos = useSelector(state =>
+    selectTodosByCategoryID(state, props.category.id)
+  )
   const selectProjectsByCategoryProjectID = useCallback(
     makeSelectProjectByCategoryProjectID,
-    [props]
+    [props.category.projectID]
   )
   const project = useSelector(state =>
-    selectProjectsByCategoryProjectID(state, props)
+    selectProjectsByCategoryProjectID(state, props.category.projectID)
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
   const location = useLocation()

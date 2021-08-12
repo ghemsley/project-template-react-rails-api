@@ -17,63 +17,33 @@ const filterCoordinates = (coordinates, acceptType, parentType, parentID) =>
     )
     .sort((coords1, coords2) => coords1.item.order - coords2.item.order)
 
-export const makeSelectChildCoordinates = () =>
-  createSelector(
-    [selectCoordinates, selectAcceptType, selectParentType, selectParentID],
-    filterCoordinates
-  )
-
 const selectProjects = state => state.projects
-
-const selectCategoryProjectID = createIdSelector(
-  props => props.category.projectID
-)
 
 const findProjectByCategoryProjectID = (projects, projectID) =>
   projects.find(project => project.id === projectID)
 
-export const makeSelectProjectByCategoryProjectID = createSelector(
-  [selectProjects, selectCategoryProjectID],
-  findProjectByCategoryProjectID
-)
-
 const selectTodos = state => state.todos
 
-const selectCategoryID = createIdSelector(props => props.category.id)
+const selectCategoryId = createIdSelector(categoryID => categoryID)
 
 const filterTodosByCategoryID = (todos, categoryID) => {
   const compareOrder = (todo1, todo2) => todo1.order - todo2.order
   return todos.filter(todo => todo.categoryID === categoryID).sort(compareOrder)
 }
 
-export const makeSelectTodosByCategoryID = createSelector(
-  [selectTodos, selectCategoryID],
-  filterTodosByCategoryID
-)
-
 const selectCategories = state => state.categories
 
-const selectTodoCategoryID = createIdSelector(props => props.todo.categoryID)
+const selectTodoCategoryID = createIdSelector(categoryID => categoryID)
 
 const findCategoryByTodoCategoryID = (categories, todoCategoryID) =>
   categories.find(category => category.id === todoCategoryID)
-
-export const makeSelectCategoryByTodoCategoryID = createSelector(
-  [selectCategories, selectTodoCategoryID],
-  findCategoryByTodoCategoryID
-)
 
 const selectTodoEditCategoryID = createIdSelector(categoryID => categoryID)
 
 const findCategoryByTodoEditCategoryID = (categories, categoryID) =>
   categories.find(category => category.id === categoryID)
 
-export const makeSelectCategoryByTodoEditCategoryID = createSelector(
-  [selectCategories, selectTodoEditCategoryID],
-  findCategoryByTodoEditCategoryID
-)
-
-const selectProjectID = createIdSelector(props => props.project.id)
+const selectProjectID = createIdSelector(projectID => projectID)
 
 const filterCategoriesByProjectId = (categories, projectID) => {
   const compareOrder = (category1, category2) =>
@@ -82,11 +52,6 @@ const filterCategoriesByProjectId = (categories, projectID) => {
     .filter(category => category.projectID === projectID)
     .sort(compareOrder)
 }
-
-export const makeSelectCategoriesByProjectID = createSelector(
-  [selectCategories, selectProjectID],
-  filterCategoriesByProjectId
-)
 
 const selectUserProjects = state => state.userProjects
 
@@ -102,10 +67,6 @@ const findUserProjectByCurrentUserIDAndProjectID = (
       userProj.userID === currentUserID && userProj.projectID === projectID
   )
 }
-export const makeSelectUserProject = createSelector(
-  [selectUserProjects, selectCurrentUserID, selectProjectID],
-  findUserProjectByCurrentUserIDAndProjectID
-)
 
 const filterProjectsByCurrentUserID = (
   projects,
@@ -130,11 +91,6 @@ const filterProjectsByCurrentUserID = (
   return currentUserProjects
 }
 
-export const makeSelectProjectsByCurrentUserID = createSelector(
-  [selectProjects, selectUserProjects, selectCurrentUserID],
-  filterProjectsByCurrentUserID
-)
-
 const filterCategoriesByCurrentUserID = (
   categories,
   userProjects,
@@ -158,11 +114,6 @@ const filterCategoriesByCurrentUserID = (
   }
   return currentUserCategories
 }
-
-export const makeSelectCategoriesByCurrentUserID = createSelector(
-  [selectCategories, selectUserProjects, selectCurrentUserID],
-  filterCategoriesByCurrentUserID
-)
 
 const filterTodosByCurrentUserID = (
   todos,
@@ -200,11 +151,6 @@ const filterTodosByCurrentUserID = (
   return currentUserTodos
 }
 
-export const makeSelectTodosByCurrentUserID = createSelector(
-  [selectTodos, selectUserProjects, selectCategories, selectCurrentUserID],
-  filterTodosByCurrentUserID
-)
-
 const dedupProjects = projects => {
   const deduplicatedProjects = []
   for (const project of projects) {
@@ -215,7 +161,122 @@ const dedupProjects = projects => {
   return projects
 }
 
+const findProjectByProjectId = (projects, projectID) =>
+  projects.find(project => project.id === projectID)
+
+const findFirstProjectIDByCurrentUserID = (
+  projects,
+  userProjects,
+  currentUserID
+) => {
+  const currentUserUserProjects = userProjects.filter(
+    userProj => userProj.userID === currentUserID
+  )
+  const currentUserProjects = projects.filter(project =>
+    currentUserUserProjects
+      .map(userProj => userProj.projectID)
+      .includes(project.id)
+  )
+  return currentUserProjects[0] ? currentUserProjects[0].id : 1
+}
+
+const findFirstCategoryIdByCurrentUserId = (
+  categories,
+  userProjects,
+  currentUserID
+) => {
+  const currentUserUserProjects = userProjects.filter(
+    userProj => userProj.userID === currentUserID
+  )
+  const currentUserCategories = categories.filter(cat =>
+    currentUserUserProjects
+      .map(userProj => userProj.projectID)
+      .includes(cat.projectID)
+  )
+  return currentUserCategories[0].id
+}
+
+const findCategoryByCategoryId = (categories, categoryID) =>
+  categories.find(cat => cat.id === categoryID)
+
+  const findTodoByTodoId = (todos, todoID) =>
+    todos.find(todo => todo.id === todoID)
+
+  const selectTodoId = createIdSelector(todoID => todoID)
+
+
+export const makeSelectProjectByProjectID = createSelector(
+  [selectProjects, selectProjectID],
+  findProjectByProjectId
+)
+
+export const makeSelectProjectByCategoryProjectID = createSelector(
+  [selectProjects, selectProjectID],
+  findProjectByCategoryProjectID
+)
+
 export const makeSelectDeduplicatedProjects = createSelector(
   [selectProjects],
   dedupProjects
 )
+
+export const makeSelectTodosByCurrentUserID = createSelector(
+  [selectTodos, selectUserProjects, selectCategories, selectCurrentUserID],
+  filterTodosByCurrentUserID
+)
+
+export const makeSelectCategoriesByCurrentUserID = createSelector(
+  [selectCategories, selectUserProjects, selectCurrentUserID],
+  filterCategoriesByCurrentUserID
+)
+
+export const makeSelectProjectsByCurrentUserID = createSelector(
+  [selectProjects, selectUserProjects, selectCurrentUserID],
+  filterProjectsByCurrentUserID
+)
+
+export const makeSelectUserProjectByCurrentUserAndProjectId = createSelector(
+  [selectUserProjects, selectCurrentUserID, selectProjectID],
+  findUserProjectByCurrentUserIDAndProjectID
+)
+
+export const makeSelectCategoriesByProjectID = createSelector(
+  [selectCategories, selectProjectID],
+  filterCategoriesByProjectId
+)
+
+export const makeSelectChildCoordinates = () =>
+  createSelector(
+    [selectCoordinates, selectAcceptType, selectParentType, selectParentID],
+    filterCoordinates
+  )
+
+export const makeSelectTodosByCategoryID = createSelector(
+  [selectTodos, selectCategoryId],
+  filterTodosByCategoryID
+)
+export const makeSelectCategoryByTodoCategoryID = createSelector(
+  [selectCategories, selectTodoCategoryID],
+  findCategoryByTodoCategoryID
+)
+export const makeSelectCategoryByTodoEditCategoryID = createSelector(
+  [selectCategories, selectTodoEditCategoryID],
+  findCategoryByTodoEditCategoryID
+)
+
+export const makeSelectFirstProjectIdByCurrentUser = createSelector(
+  [selectProjects, selectUserProjects, selectCurrentUserID],
+  findFirstProjectIDByCurrentUserID
+)
+
+export const makeSelectFirstCategoryIDByCurrentUser = createSelector(
+  [selectCategories, selectUserProjects, selectCurrentUserID],
+  findFirstCategoryIdByCurrentUserId
+)
+
+export const makeSelectCategoryByCategoryID = createSelector(
+  [selectCategories, selectCategoryId],
+  findCategoryByCategoryId
+)
+
+export const makeSelectTodoByTodoID = createSelector([selectTodos, selectTodoId], findTodoByTodoId )

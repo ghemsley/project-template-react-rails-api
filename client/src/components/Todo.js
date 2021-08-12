@@ -10,12 +10,13 @@ import { debounce } from 'lodash'
 import { makeSelectCategoryByTodoCategoryID } from '../selectors/index'
 
 const Todo = React.memo(props => {
+  console.log('render todo')
   const selectCategoryByTodoCategoryID = useCallback(
     makeSelectCategoryByTodoCategoryID,
-    [props]
+    [props.todo.categoryID]
   )
   const category = useSelector(state =>
-    selectCategoryByTodoCategoryID(state, props)
+    selectCategoryByTodoCategoryID(state, props.todo.categoryID)
   )
   const [showConfirmScreen, setShowConfirmScreen] = useState(false)
   const dispatch = useDispatch()

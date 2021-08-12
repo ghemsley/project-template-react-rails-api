@@ -1,26 +1,43 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import actions from '../actions/index'
-import Hover from './Hover'
-import Category from './Category'
-import { Modal } from './index'
 import { useHistory } from 'react-router-dom'
-import { makeSelectCategoryByTodoEditCategoryID } from '../selectors/index'
+import actions from '../actions/index'
+import {
+  makeSelectCategoriesByCurrentUserID, makeSelectCategoryByTodoEditCategoryID,
+  makeSelectFirstCategoryIDByCurrentUser
+} from '../selectors/index'
+import Category from './Category'
+import Hover from './Hover'
+import { Modal } from './index'
+
 const TodoForm = React.memo(props => {
-  const categories = useSelector(state => state.categories)
-  const [name, setName] = useState(props.edit ? props.edit.name : '')
-  const [description, setDescription] = useState(
-    props.edit ? props.edit.description : ''
+  const selectFirstProjectIdByCurrentUser = useCallback(
+    makeSelectFirstCategoryIDByCurrentUser,
+    []
+  )
+  const selectCategoriesByCurrentUserID = useCallback(
+    makeSelectCategoriesByCurrentUserID,
+    []
+  )
+  const categories = useSelector(state =>
+    selectCategoriesByCurrentUserID(state)
+  )
+  const firstCategoryID = useSelector(state =>
+    selectFirstProjectIdByCurrentUser(state)
   )
   const [categoryID, setCategoryID] = useState(
-    props.edit ? props.edit.categoryID : categories[0].id
+    props.edit ? props.edit.categoryID : firstCategoryID
   )
   const selectCategoryByTodoEditCategoryID = useCallback(
     makeSelectCategoryByTodoEditCategoryID,
-    [props, categories, categoryID]
+    [categoryID]
   )
   const category = useSelector(state =>
     selectCategoryByTodoEditCategoryID(state, categoryID)
+  )
+  const [name, setName] = useState(props.edit ? props.edit.name : '')
+  const [description, setDescription] = useState(
+    props.edit ? props.edit.description : ''
   )
   const dispatch = useDispatch()
   const history = useHistory()
@@ -32,7 +49,7 @@ const TodoForm = React.memo(props => {
         actions.instantiateTodo({
           name: name,
           description: description,
-          categoryID: categoryID
+          categoryID: parseInt(categoryID)
         })
       )
       setName('')
@@ -43,10 +60,9 @@ const TodoForm = React.memo(props => {
           ...props.edit,
           name: name,
           description: description,
-          categoryID: categoryID
+          categoryID: parseInt(categoryID)
         })
-      )
-      history.goBack()
+      ).then(() => history.goBack())
     }
   }
   const handleChange = event => {
@@ -88,7 +104,7 @@ const TodoForm = React.memo(props => {
               onChange={handleChange}
             />
             <label htmlFor='categoryID' className='hoverable'>
-              {categories.length > 0 && (
+              {categories.length > 0 && category && (
                 <Hover>
                   <Category category={category} showTodos showProject />
                 </Hover>

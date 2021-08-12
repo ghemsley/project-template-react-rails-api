@@ -41,5 +41,10 @@ const Pages = [
   }
 ]
 
-export { AuthenticatedHome, ProtectedProjects, ProtectedCategories, ProtectedTodos }
+export {
+  AuthenticatedHome,
+  ProtectedProjects,
+  ProtectedCategories,
+  ProtectedTodos
+}
 export default Pages
