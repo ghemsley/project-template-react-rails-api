@@ -6,7 +6,7 @@ const fetchCategory = payload => () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
   })
-    .then(response => helpers.convertIdToInt( response.json()))
+    .then(response => helpers.convertIdToInt(response.json()))
     .catch(error => console.log(error))
 }
 
@@ -88,11 +88,7 @@ const instantiateCategory = payload => (dispatch, getState) => {
   const state = getState()
   return dispatch(sendCategory(payload)).then(json => {
     if (json.data) {
-      if (
-        !state.categories.find(
-          cat => cat.id === json.data.id
-        )
-      ) {
+      if (!state.categories.find(cat => cat.id === json.data.id)) {
         const categoryObject = {
           id: json.data.id,
           name: json.data.attributes.name,
@@ -110,9 +106,7 @@ const instantiateCategory = payload => (dispatch, getState) => {
 const removeCategory = payload => dispatch => {
   dispatch(destroyCategory(payload)).then(json => {
     if (json.data) {
-       if (json.data.id === payload.id) {
-         dispatch(deeplyDeleteCategory(payload))
-       }
+      dispatch(deeplyDeleteCategory(payload))
     }
     return json
   })
@@ -120,7 +114,7 @@ const removeCategory = payload => dispatch => {
 
 const amendCategory = payload => dispatch => {
   return dispatch(patchCategory(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (json.data) {
       dispatch(updateCategory(payload))
     }
     return json

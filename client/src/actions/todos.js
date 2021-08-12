@@ -32,7 +32,7 @@ const sendTodo = payload => () => {
     .catch(error => console.log(error))
 }
 
-const patchTodo = payload => () => {
+const patchTodo = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     method: 'PATCH',
     headers: {
@@ -118,7 +118,7 @@ const instantiateTodo = payload => (dispatch, getState) => {
 
 const removeTodo = payload => dispatch => {
   dispatch(destroyTodo(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (json.data) {
       dispatch(deleteTodo(payload))
     }
     return json
@@ -126,8 +126,8 @@ const removeTodo = payload => dispatch => {
 }
 
 const amendTodo = payload => dispatch => {
-  return dispatch(patchTodo(payload)).then(json => {
-    if (json.data.id === payload.id) {
+  return patchTodo(payload).then(json => {
+    if (json.data) {
       dispatch(updateTodo(payload))
     }
     return json

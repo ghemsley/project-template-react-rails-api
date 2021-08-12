@@ -182,7 +182,7 @@ const removeProject = payload => (dispatch, getState) => {
     )
   } else {
     return dispatch(destroyProject(payload)).then(json => {
-      if (json.data.id === payload.id) {
+      if (json.data) {
         dispatch(deeplyDeleteProject(payload))
       }
       return json
@@ -192,7 +192,7 @@ const removeProject = payload => (dispatch, getState) => {
 
 const amendProject = payload => dispatch => {
   return dispatch(patchProject(payload)).then(json => {
-    if (json.data.id === payload.id) {
+    if (json.data) {
       dispatch(updateProject(payload))
     }
     return json
