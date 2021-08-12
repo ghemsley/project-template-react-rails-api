@@ -10,7 +10,7 @@ import { debounce } from 'lodash'
 import { makeSelectCategoryByTodoCategoryID } from '../selectors/index'
 
 const Todo = React.memo(props => {
-  console.log('render todo')
+  // console.log('render todo')
   const selectCategoryByTodoCategoryID = useCallback(
     makeSelectCategoryByTodoCategoryID,
     [props.todo.categoryID]

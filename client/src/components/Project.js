@@ -16,7 +16,7 @@ import {
 import { Category, ConfirmScreen, Dropzone } from './index'
 
 const Project = React.memo(props => {
-  console.log('render project')
+  // console.log('render project')
   const selectCategoriesByProjectID = useCallback(
     makeSelectCategoriesByProjectID,
     [props.project.id]

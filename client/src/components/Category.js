@@ -13,7 +13,7 @@ import {
 import { ConfirmScreen, Dropzone, Todo } from './index'
 
 const Category = React.memo(props => {
-  console.log('render category')
+  // console.log('render category')
   const selectTodosByCategoryID = useCallback(makeSelectTodosByCategoryID, [
     props.category
   ])
