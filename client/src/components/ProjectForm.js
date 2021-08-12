@@ -9,7 +9,7 @@ const ProjectForm = React.memo(props => {
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
   )
-  const [privateProject, setPrivateProject] = useState(true)
+  const [privateProject, setPrivateProject] = useState(props.edit ? props.edit.private : true)
   const dispatch = useDispatch()
   const history = useHistory()
 
