@@ -222,7 +222,7 @@ const Project = React.memo(props => {
       {showJoinLeaveConfirmScreen && (
         <div className='fixed'>
           <ConfirmScreen closeAction={closeJoinLeaveAction}>
-            <h1>Confirm {userProject ? 'leave' : 'join'}?</h1>
+            <h1 className='center fit'>Confirm {userProject ? 'leave' : 'join'}?</h1>
             {leaveError && <p>{leaveError}</p>}
             <button
               className='pure-button pure-button-delete'
@@ -235,7 +235,7 @@ const Project = React.memo(props => {
       {showDeleteConfirmScreen && (
         <div className='fixed'>
           <ConfirmScreen closeAction={closeDeleteAction}>
-            <h1>Confirm delete?</h1>
+            <h1 className='center fit'>Confirm delete?</h1>
             <button
               className='pure-button pure-button-delete'
               onClick={confirmRemove}>

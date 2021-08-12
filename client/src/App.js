@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 import Pages from './pages' // order matters
 import {
   Navbar,
@@ -49,22 +49,19 @@ const App = () => {
               />
             )
           )}
+          <Redirect to='/' />
         </Switch>
         {background && (
           <Switch>
             <Route
               exact
               path='/signup'
-              render={routeProps => (
-                <AuthenticatedSignupForm {...routeProps} />
-              )}
+              render={routeProps => <AuthenticatedSignupForm {...routeProps} />}
             />
             <Route
               exact
               path='/login'
-              render={routeProps => (
-                <AuthenticatedLoginForm {...routeProps} />
-              )}
+              render={routeProps => <AuthenticatedLoginForm {...routeProps} />}
             />
             <Route
               exact
