@@ -9,15 +9,18 @@ const ProjectForm = React.memo(props => {
   const [description, setDescription] = useState(
     props.edit ? props.edit.description : ''
   )
+  const [privateProject, setPrivateProject] = useState(true)
   const dispatch = useDispatch()
   const history = useHistory()
+
   const handleSubmit = event => {
     event.preventDefault()
     if (!props.edit) {
       dispatch(
         actions.instantiateProject({
           name: name,
-          description: description
+          description: description,
+          private: privateProject
         })
       )
       setName('')
@@ -27,7 +30,8 @@ const ProjectForm = React.memo(props => {
         actions.amendProject({
           ...props.edit,
           name: name,
-          description: description
+          description: description,
+          private: privateProject
         })
       ).then(() => history.goBack())
     }
@@ -40,6 +44,10 @@ const ProjectForm = React.memo(props => {
       case 'description':
         setDescription(event.target.value)
         break
+      case 'private':
+        setPrivateProject(!privateProject)
+        break
+
       default:
         break
     }
@@ -53,13 +61,30 @@ const ProjectForm = React.memo(props => {
         className='pure-form pure-form-stacked fit margin-auto'>
         <fieldset>
           <label htmlFor='name'>Name</label>
-          <input type='text' name='name' value={name} onChange={handleChange} />
+          <input
+            className='pure-input-1'
+            type='text'
+            name='name'
+            value={name}
+            onChange={handleChange}
+          />
           <label htmlFor='description'>Description</label>
           <textarea
+            className='pure-input-1'
             name='description'
             value={description}
             onChange={handleChange}
           />
+          <label htmlFor='private'>
+            Private
+            <input
+              className='pure-checkbox'
+              name='private'
+              type='checkbox'
+              checked={privateProject}
+              onChange={handleChange}
+            />
+          </label>
           <button className='pure-button pure-button-primary' type='submit'>
             Submit
           </button>

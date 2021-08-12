@@ -70,6 +70,7 @@ const LoginForm = props => {
               <fieldset>
                 <label htmlFor='email'>Email</label>
                 <input
+                  className='pure-input-1'
                   type='email'
                   name='email'
                   value={email}
@@ -78,6 +79,7 @@ const LoginForm = props => {
                 />
                 <label htmlFor='password'>Password</label>
                 <input
+                  className='pure-input-1'
                   name='password'
                   type='password'
                   value={password}

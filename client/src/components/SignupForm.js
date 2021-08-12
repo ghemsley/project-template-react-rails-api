@@ -89,6 +89,7 @@ const SignupForm = props => {
             <fieldset>
               <label htmlFor='username'>Username</label>
               <input
+                className='pure-input-1'
                 type='text'
                 name='username'
                 value={username}
@@ -97,6 +98,7 @@ const SignupForm = props => {
               />
               <label htmlFor='email'>Email</label>
               <input
+                className='pure-input-1'
                 type='email'
                 name='email'
                 value={email}
@@ -105,6 +107,7 @@ const SignupForm = props => {
               />
               <label htmlFor='password'>Password</label>
               <input
+                className='pure-input-1'
                 name='password'
                 type='password'
                 value={password}
@@ -115,6 +118,7 @@ const SignupForm = props => {
                 Password confirmation
               </label>
               <input
+                className='pure-input-1'
                 name='passwordConfirmation'
                 type='password'
                 value={passwordConfirmation}

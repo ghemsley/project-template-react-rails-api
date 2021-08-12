@@ -92,6 +92,7 @@ const TodoForm = React.memo(props => {
           <fieldset>
             <label htmlFor='name'>Name</label>
             <input
+              className='pure-input-1'
               type='text'
               name='name'
               value={name}
@@ -99,6 +100,7 @@ const TodoForm = React.memo(props => {
             />
             <label htmlFor='description'>Description</label>
             <textarea
+              className='pure-input-1'
               name='description'
               value={description}
               onChange={handleChange}
@@ -111,6 +113,7 @@ const TodoForm = React.memo(props => {
               )}
               Category
               <select
+                className='pure-input-1'
                 name='categoryID'
                 value={categoryID}
                 onChange={handleChange}>

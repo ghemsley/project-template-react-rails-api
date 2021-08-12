@@ -154,11 +154,11 @@ const filterTodosByCurrentUserID = (
 const dedupProjects = projects => {
   const deduplicatedProjects = []
   for (const project of projects) {
-    if (!deduplicatedProjects.find(proj => proj.id === project.id)) {
+    if (!project.private && !deduplicatedProjects.find(proj => proj.id === project.id)) {
       deduplicatedProjects.push(project)
     }
   }
-  return projects
+  return deduplicatedProjects
 }
 
 const findProjectByProjectId = (projects, projectID) =>

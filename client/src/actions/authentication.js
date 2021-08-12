@@ -8,12 +8,7 @@ const setToken = token => {
 }
 
 const getToken = () => {
-  const currentTime = new Date(Date.now()).getTime()
-  const timeSinceLastLogin =
-    currentTime - parseInt(localStorage.getItem('lastLogin'))
-  if (timeSinceLastLogin < CONSTANTS.AUTHENTICATION.THIRTY_MINUTES) {
-    return localStorage.getItem('token')
-  }
+  return localStorage.getItem('token')
 }
 
 const authenticateUser = payload => {

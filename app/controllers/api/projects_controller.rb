@@ -4,8 +4,8 @@ class Api::ProjectsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index]
 
   def index
-    allowed = %i[id name description order created_at updated_at]
-    jsonapi_filter(Project.all, allowed) do |filtered|
+    allowed = %i[id name description order private created_at updated_at]
+    jsonapi_filter(Project.where(private: false), allowed) do |filtered|
       render jsonapi: filtered.result, status: :ok
     end
   end
@@ -15,7 +15,7 @@ class Api::ProjectsController < ApplicationController
   end
 
   def create
-    project = Project.create!({ name: params[:name], description: params[:description] })
+    project = Project.create!({ name: params[:name], description: params[:description], private: params[:private] })
     user_project = current_user.user_projects.create!(project_id: project.id, owner: true)
     render json: { user: UserSerializer.new(current_user).serializable_hash,
                    project: ProjectSerializer.new(project).serializable_hash,
@@ -24,7 +24,7 @@ class Api::ProjectsController < ApplicationController
 
   def update
     project = current_user.projects.find(params[:id])
-    project.update!(name: params[:name], description: params[:description], order: params[:order])
+    project.update!(name: params[:name], description: params[:description], order: params[:order], private: params[:private])
     render jsonapi: project
   end
 
@@ -34,7 +34,7 @@ class Api::ProjectsController < ApplicationController
     end
     projects.each_with_index do |project, index|
       json = params[:_json][index]
-      project.update!(name: json[:name], description: json[:description], order: json[:order])
+      project.update!(name: json[:name], description: json[:description], order: json[:order], private: json[:private])
     end
     render jsonapi: projects
   end

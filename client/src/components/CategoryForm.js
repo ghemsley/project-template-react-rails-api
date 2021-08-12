@@ -92,6 +92,7 @@ const CategoryForm = props => {
           <fieldset>
             <label htmlFor='name'>Name</label>
             <input
+              className='pure-input-1'
               type='text'
               name='name'
               value={name}
@@ -99,6 +100,7 @@ const CategoryForm = props => {
             />
             <label htmlFor='description'>Description</label>
             <textarea
+              className='pure-input-1'
               name='description'
               value={description}
               onChange={handleChange}
@@ -111,6 +113,7 @@ const CategoryForm = props => {
               )}
               Project
               <select
+                className='pure-input-1'
                 name='projectID'
                 value={projectID}
                 onChange={handleChange}>

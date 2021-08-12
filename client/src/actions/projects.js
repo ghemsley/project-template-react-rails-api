@@ -108,7 +108,8 @@ const instantiateProject = payload => (dispatch, getState) => {
           id: json.project.data.id,
           name: json.project.data.attributes.name,
           description: json.project.data.attributes.description,
-          order: json.project.data.attributes.order
+          order: json.project.data.attributes.order,
+          private: json.project.data.attributes.private
         }
         const userProject = {
           id: json.user_project.data.attributes.id,
@@ -135,7 +136,8 @@ const instantiateAllProjects = () => (dispatch, getState) => {
                 id: project.attributes.id,
                 name: project.attributes.name,
                 description: project.attributes.description,
-                order: project.attributes.order
+                order: project.attributes.order,
+                private: project.attributes.private
               })
             )
           }

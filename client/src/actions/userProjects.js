@@ -107,7 +107,8 @@ const instantiateEverythingForUser = () => (dispatch, getState) => {
               id: included.id,
               name: included.attributes.name,
               order: included.attributes.order,
-              description: included.attributes.description
+              description: included.attributes.description,
+              private: included.attributes.private
             }
             dispatch(actions.createProject(projectObject))
           }
@@ -186,13 +187,13 @@ const removeUserProject = payload => (dispatch, getState) => {
     userProj =>
       userProj.projectID === payload.projectID && userProj.id !== payload.id
   )
-  if (otherUsersForProject < 1) {
-    return Promise.reject(
-      "You can't leave your own project if you're its only user"
-    )
-  } else if (payload.owner === true) {
+  if (payload.owner === true) {
     return Promise.reject(
       "You can't leave your own project if you're its owner"
+    )
+  } else if (otherUsersForProject < 1) {
+    return Promise.reject(
+      "You can't leave your own project if you're its only user"
     )
   } else {
     return destroyUserProject(payload).then(json => {
