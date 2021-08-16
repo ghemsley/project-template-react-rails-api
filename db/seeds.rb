@@ -5,8 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-projects = Project.create([{ name: 'Final project', description: 'Phase 5 project built with Rails, React and Redux', order: 0 },
-                           { name: 'Job search', description: 'Things I need to do to find a job as a developer',
+projects = Project.create([{ name: 'Final project', description: 'Phase 5 project built with Rails, React and Redux', private: false, order: 0 },
+                           { name: 'Job search', description: 'Things I need to do to find a job as a developer', private: false,
                              order: 1 }])
 projects.each do |project|
   categories = Category.create([{ name: 'Needs doing', description: 'Work that still needs to be done', order: 0, project: project },
