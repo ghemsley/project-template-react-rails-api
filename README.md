@@ -18,7 +18,7 @@ A draggable, droppable, reorganizable todo list app built with React, Redux, and
 
 ## Installation
 
-First, make sure you have all the environemnt requirements installed.
+First, make sure you have all the environment requirements installed.
 
 ### Recommended way to get Ruby 2.7.4 if you're not sure: 
 - Install [rvm](https://rvm.io/)
@@ -37,7 +37,7 @@ First, make sure you have all the environemnt requirements installed.
   - afterwards, run `brew services start postgresql`
 - Other system instructions coming soon
 
-After the environment is set up, clone this repo and navigate to its root directory, then:
+### After the environment is set up, clone this repo and navigate to its root directory, then run:
 - `bundle install`
 - `rails db:setup`
 - `npm install --prefix client`
@@ -65,7 +65,7 @@ Simply run `rails start` to launch the backend and frontend together. This comma
 
 ## Development
 
-By default, the both the Rails backend and the React frontend run in developent mode. 
+By default, the both the Rails backend and the React frontend run in development mode. 
 
 The backend serves at `localhost:3000` by default. Many routes are under a prefix, `localhost:3000/api`.
 
@@ -91,4 +91,4 @@ The project scaffold this app is built upon is licensed under the Learn.co Educa
 
 All changes upon that scaffold are Copyright (c) 2021 Graham Hemsley and made available under the MIT license, where applicable.
 
-For the text of these licenses, please see the included [LICENSE file](./LICENSE).
+For the text of these licenses, please see the included [LICENSE file](./LICENSE.md).
