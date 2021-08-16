@@ -1,12 +1,13 @@
 # Tada! Todo list
 
-![Screenshot](./cover.png)
-
 A draggable, droppable, reorganizable todo list app built with React, Redux, and Ruby on Rails
+
+![Screenshot](./cover.png)
 
 ![Usage example](./drag-and-drop.gif)
 
 ![Heroku](https://pyheroku-badge.herokuapp.com/?app=tada-todo-list&style=flat-square)
+
 [Demo](https://tada-todo-list.herokuapp.com/)
 
 ## Requirements
