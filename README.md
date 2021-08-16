@@ -6,7 +6,8 @@ A draggable, droppable, reorganizable todo list app built with React, Redux, and
 
 ![Usage example](./drag-and-drop.gif)
 
-[Demo](https://tada-todo-list.herokuapp.com/) ![Heroku](https://pyheroku-badge.herokuapp.com/?app=tada-todo-list&style=flat-square)
+![Heroku](https://pyheroku-badge.herokuapp.com/?app=tada-todo-list&style=flat-square)
+[Demo](https://tada-todo-list.herokuapp.com/)
 
 ## Requirements
 
