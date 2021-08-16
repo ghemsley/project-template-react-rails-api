@@ -20,17 +20,17 @@ A draggable, droppable, reorganizable todo list app built with React, Redux, and
 
 First, make sure you have all the environemnt requirements installed.
 
-Recommended way to get Ruby 2.7.4 if you're not sure: 
+### Recommended way to get Ruby 2.7.4 if you're not sure: 
 - Install [rvm](https://rvm.io/)
 - run `rvm install 2.7.4`
 - afterwards, run `gem install bundler` and `gem install rails`
 
-Recommended way to get NodeJS v14+ if you're not sure:
+### Recommended way to get NodeJS v14+ if you're not sure:
 - Install [nvm](https://github.com/nvm-sh/nvm)
 - run `nvm install node`
 - afterwards, run `npm install -g npm`
 
-Recommended way to get PostgreSQL 13 if you're not sure: 
+### Recommended way to get PostgreSQL 13 if you're not sure: 
 - MacOS:
   - Install [Homebrew](https://brew.sh/)
   - run `brew install postgresql`
@@ -52,7 +52,7 @@ Simply run `rails start` to launch the backend and frontend together. This comma
 - Create a category for your new project, then at least one todo
 - Projects made public can be joined from the home page by other users of the app for collaboration
 
-Things to keep in mind:
+### Things to keep in mind:
 - Emails are not verified in any way right now, so feel free to sign up at the demo page using a throwaway account to test it out
 - Remember that you can have multiple projects, toods and categories at once
 - Categories and todos can be dragged and dropped between their containers to reorganize them
@@ -78,6 +78,7 @@ Both the frontend and backend have fallback routes setup, so that requests which
 Please change the file `client/src/constants/urls.js` according to your production environment prior to usage should you choose to try running this app in production mode whether or not you have made any other modifications.
 
 Also, please remove the attribution in the footer component of the frontend first as well if you are going to make your version of the app publicly available.   
+
 This component can be found in the file `client/src/components/Footer.js`.
 
 ### Contributing
@@ -87,5 +88,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ghemsl
 ## License
 
 The project scaffold this app is built upon is licensed under the Learn.co Educational Content License, where applicable.
+
 All changes upon that scaffold are Copyright (c) 2021 Graham Hemsley and made available under the MIT license, where applicable.
+
 For the text of these licenses, please see the included [LICENSE file](./LICENSE).
