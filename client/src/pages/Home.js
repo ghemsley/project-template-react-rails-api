@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import Slider from 'react-slick'
@@ -7,11 +7,11 @@ import 'slick-carousel/slick/slick.css'
 import { v4 as uuid } from 'uuid'
 import actions from '../actions'
 import { Project } from '../components'
-import { makeSelectDeduplicatedProjects } from '../selectors'
+import selectors from '../selectors'
 
 const Home = React.memo(props => {
-  const selectDeduplicatedProjects = useCallback(
-    makeSelectDeduplicatedProjects,
+  const selectDeduplicatedProjects = useMemo(
+    () => selectors.makeSelectDeduplicatedProjects,
     []
   )
   const projects = useSelector(state => selectDeduplicatedProjects(state))
@@ -25,13 +25,14 @@ const Home = React.memo(props => {
 
   return (
     <div className='center center-text'>
-      <h2 className='recent-projects margin-05'>Recent Projects</h2>
+      <h2 className='recent-projects margin-05'>Open Projects</h2>
       <Slider
         swipeToSlide={true}
         variableWidth={true}
         pauseOnDotsHover={true}
+        centerMode={true}
+        infinite={false}
         dots={true}
-        infinite={true}
         speed={333}
         slidesToShow={1}
         slidesToScroll={1}
