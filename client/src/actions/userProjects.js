@@ -5,17 +5,29 @@ import helpers from '../helpers'
 const fetchUserProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const fetchUserProjects = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const fetchEverythingForUser = user => {
@@ -24,9 +36,15 @@ const fetchEverythingForUser = user => {
     {
       headers: { Accept: 'application/json', Authorization: actions.getToken() }
     }
-  )
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
+  ).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
+  })
 }
 
 const sendUserProject = payload => (dispatch, getState) => {
@@ -46,9 +64,15 @@ const sendUserProject = payload => (dispatch, getState) => {
         Authorization: actions.getToken()
       },
       body: JSON.stringify(payload)
+    }).then(response => {
+      if (response.ok) {
+        return helpers.convertIdToInt(response.json())
+      } else {
+        return helpers.convertIdToInt(response.json()).then(error => {
+          return Promise.reject(error)
+        })
+      }
     })
-      .then(response => helpers.convertIdToInt(response.json()))
-      .catch(error => console.log(error))
   } else
     return Promise.reject(
       'Userproject already exists for the provided user and project'
@@ -59,9 +83,15 @@ const destroyUserProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/user_projects/${payload.id}`, {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const createUserProject = payload => ({
@@ -192,9 +222,7 @@ const removeUserProject = payload => (dispatch, getState) => {
       "You can't leave your own project if you're its owner"
     )
   } else if (otherUsersForProject < 1) {
-    return Promise.reject(
-      "You can't leave your own project if you're its only user"
-    )
+    return Promise.reject("You can't leave a project if you're its only user")
   } else {
     return destroyUserProject(payload).then(json => {
       if (json.data.attributes.id === payload.id) {

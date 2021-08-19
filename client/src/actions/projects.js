@@ -2,20 +2,32 @@ import actions from './index'
 import CONSTANTS from '../constants'
 import helpers from '../helpers'
 
-const fetchProject = payload => () => {
+const fetchProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const fetchAllProjects = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects?include=user_projects`, {
     headers: { Accept: 'application/json' }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const sendProject = payload => {
@@ -27,12 +39,18 @@ const sendProject = payload => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const patchProject = payload => () => {
+const patchProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'PATCH',
     headers: {
@@ -41,12 +59,18 @@ const patchProject = payload => () => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const patchProjects = payload => () => {
+const patchProjects = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/batch_update`, {
     method: 'PATCH',
     headers: {
@@ -55,16 +79,30 @@ const patchProjects = payload => () => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const destroyProject = payload => () => {
+const destroyProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'delete',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
-  }).then(response => helpers.convertIdToInt(response.json()))
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
+  })
 }
 
 const createProject = payload => ({
@@ -183,9 +221,17 @@ const removeProject = payload => (dispatch, getState) => {
       "You can't delete a project that still has other users"
     )
   } else {
-    return dispatch(destroyProject(payload)).then(json => {
+    return destroyProject(payload).then(json => {
       if (json.data) {
         dispatch(deeplyDeleteProject(payload))
+      }
+      return json
+    }).then((json) => {
+      const coordinates = state.coordinates.find(
+        coords => coords.item.id === payload.id && coords.type === 'project'
+      )
+      if (coordinates) {
+        dispatch(actions.deleteCoordinates(coordinates))
       }
       return json
     })
@@ -193,7 +239,7 @@ const removeProject = payload => (dispatch, getState) => {
 }
 
 const amendProject = payload => dispatch => {
-  return dispatch(patchProject(payload)).then(json => {
+  return patchProject(payload).then(json => {
     if (json.data) {
       dispatch(updateProject(payload))
     }
@@ -202,15 +248,11 @@ const amendProject = payload => dispatch => {
 }
 
 const batchAmendProjects = payload => dispatch => {
-  return dispatch(patchProjects(payload)).then(json => {
+  return patchProjects(payload).then(json => {
     dispatch(updateProjects(payload))
     return json
   })
 }
-
-const resetProjects = () => ({
-  type: 'RESET_PROJECTS'
-})
 
 const projectActions = {
   fetchProject,
@@ -228,8 +270,7 @@ const projectActions = {
   patchProjects,
   amendProject,
   batchAmendProjects,
-  instantiateAllProjects,
-  resetProjects
+  instantiateAllProjects
 }
 
 export default projectActions

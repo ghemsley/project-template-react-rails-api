@@ -2,23 +2,35 @@ import actions from '.'
 import CONSTANTS from '../constants'
 import helpers from '../helpers'
 
-const fetchTodo = payload => () => {
+const fetchTodo = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const fetchTodos = () => () => {
+const fetchTodos = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos`, {
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const sendTodo = payload => () => {
+const sendTodo = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos`, {
     method: 'POST',
     headers: {
@@ -27,9 +39,15 @@ const sendTodo = payload => () => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const patchTodo = payload => {
@@ -41,12 +59,18 @@ const patchTodo = payload => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const patchTodos = payload => () => {
+const patchTodos = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/batch_update`, {
     method: 'PATCH',
     headers: {
@@ -55,18 +79,30 @@ const patchTodos = payload => () => {
       Authorization: actions.getToken()
     },
     body: JSON.stringify(payload)
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
-const destroyTodo = payload => () => {
+const destroyTodo = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/todos/${payload.id}`, {
     method: 'DELETE',
     headers: { Accept: 'application/json', Authorization: actions.getToken() }
+  }).then(response => {
+    if (response.ok) {
+      return helpers.convertIdToInt(response.json())
+    } else {
+      return helpers.convertIdToInt(response.json()).then(error => {
+        return Promise.reject(error)
+      })
+    }
   })
-    .then(response => helpers.convertIdToInt(response.json()))
-    .catch(error => console.log(error))
 }
 
 const createTodo = payload => ({
@@ -96,11 +132,9 @@ const deleteTodosByCategory = payload => ({
 
 const instantiateTodo = payload => (dispatch, getState) => {
   const state = getState()
-  return dispatch(sendTodo(payload)).then(json => {
+  return sendTodo(payload).then(json => {
     if (json.data) {
-      if (
-        !state.todos.find(todo => todo.id === json.data.id)
-      ) {
+      if (!state.todos.find(todo => todo.id === json.data.id)) {
         const todoObject = {
           id: json.data.id,
           name: json.data.attributes.name,
@@ -116,10 +150,18 @@ const instantiateTodo = payload => (dispatch, getState) => {
   })
 }
 
-const removeTodo = payload => dispatch => {
-  dispatch(destroyTodo(payload)).then(json => {
+const removeTodo = payload => (dispatch, getState) => {
+  return destroyTodo(payload).then(json => {
     if (json.data) {
       dispatch(deleteTodo(payload))
+    }
+    return json
+  }).then((json) => {
+    const coordinates = getState().coordinates.find(
+      coords => coords.item.id === payload.id && coords.type === 'todo'
+    )
+    if (coordinates) {
+      dispatch(actions.deleteCoordinates(coordinates))
     }
     return json
   })
@@ -134,9 +176,16 @@ const amendTodo = payload => dispatch => {
   })
 }
 
-const batchAmendTodos = payload => dispatch => {
-  return dispatch(patchTodos(payload)).then(json => {
-    dispatch(updateTodos(payload))
+const batchAmendTodos = payload => (dispatch, getState) => {
+  let newPayload = [...payload]
+  const state = getState()
+  for (const todo of newPayload) {
+    if (!state.todos.find(tod => tod.id === todo.id)) {
+      newPayload = newPayload.filter(tod => tod.id !== todo.id)
+    }
+  }
+  return patchTodos(newPayload).then(json => {
+    dispatch(updateTodos(newPayload))
     return json
   })
 }
