@@ -54,7 +54,7 @@ Simply run `rails start` to launch the backend and frontend together. This comma
 
 ### Things to keep in mind:
 - Emails are not verified in any way right now, so feel free to sign up at the demo page using a throwaway account to test it out
-- Remember that you can have multiple projects, toods and categories at once
+- Remember that you can have multiple projects, todos and categories at once
 - Categories and todos can be dragged and dropped between their containers to reorganize them
 - If the Projects page is too busy or not useful, you can see just your Categories, or focus on just your Todos, at their respective pages as well
 - You can leave projects that you have joined easily, and afterwards you can rejoin them at any time
