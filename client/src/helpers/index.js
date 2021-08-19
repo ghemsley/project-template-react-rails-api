@@ -16,13 +16,13 @@ const convertIdToInt = object => {
       try {
         object[key] = parseInt(object[key])
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     } else if (typeof object[key] === 'object') {
       try {
         convertIdToInt(object[key])
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
   }
