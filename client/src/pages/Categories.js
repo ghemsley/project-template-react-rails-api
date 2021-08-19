@@ -1,22 +1,15 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions'
 import { Category, ConfirmScreen } from '../components'
-import {
-  makeSelectCategoriesByCurrentUserID,
-  makeSelectProjectsByCurrentUserID
-} from '../selectors'
+import selectors from '../selectors'
 
 const Categories = () => {
-  const selectProjectsByCurrentUserID = useCallback(
-    makeSelectProjectsByCurrentUserID,
-    []
-  )
-  const selectCategoriesByCurrentUserID = useCallback(
-    makeSelectCategoriesByCurrentUserID,
-    []
-  )
+  const selectProjectsByCurrentUserID =
+    selectors.makeSelectProjectsByCurrentUserId
+  const selectCategoriesByCurrentUserID =
+    selectors.makeSelectCategoriesByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const categories = useSelector(state =>
     selectCategoriesByCurrentUserID(state)
@@ -42,11 +35,13 @@ const Categories = () => {
           to={{ pathname: '/categories/new', state: { background: location } }}>
           Create Category
         </Link>
-        <Link
-          className='pure-button pure-button-primary'
-          to={{ pathname: '/todos/new', state: { background: location } }}>
-          Create Todo
-        </Link>
+        {categories.length > 0 && (
+          <Link
+            className='pure-button pure-button-primary'
+            to={{ pathname: '/todos/new', state: { background: location } }}>
+            Create Todo
+          </Link>
+        )}
       </div>
       {categories.length > 0 && <h1>Categories</h1>}
       <div className='flex category-container'>

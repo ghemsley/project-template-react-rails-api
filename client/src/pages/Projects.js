@@ -1,22 +1,15 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions'
 import { Project } from '../components'
-import {
-  makeSelectCategoriesByCurrentUserID, makeSelectProjectsByCurrentUserID
-} from '../selectors'
+import selectors from '../selectors'
 
 const Projects = () => {
-  const selectProjectsByCurrentUserID = useCallback(
-    makeSelectProjectsByCurrentUserID,
-    []
-  )
-  const selectCategoriesByCurrentUserID = useCallback(
-    makeSelectCategoriesByCurrentUserID,
-    []
-  )
-
+  const selectProjectsByCurrentUserID =
+    selectors.makeSelectProjectsByCurrentUserId
+  const selectCategoriesByCurrentUserID =
+    selectors.makeSelectCategoriesByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const categories = useSelector(state =>
     selectCategoriesByCurrentUserID(state)

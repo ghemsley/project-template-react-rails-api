@@ -1,23 +1,16 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import actions from '../actions'
 import { ConfirmScreen, Todo } from '../components'
-import {
-  makeSelectCategoriesByCurrentUserID, makeSelectTodosByCurrentUserID
-} from '../selectors'
+import selectors from '../selectors'
 
 const Todos = () => {
-  const selectCategoriesByCurrentUserID = useCallback(
-    makeSelectCategoriesByCurrentUserID,
-    []
-  )
+  const selectCategoriesByCurrentUserID =
+    selectors.makeSelectCategoriesByCurrentUserId
+  const selectTodosByCurrentUserID = selectors.makeSelectTodosByCurrentUserId
   const categories = useSelector(state =>
     selectCategoriesByCurrentUserID(state)
-  )
-  const selectTodosByCurrentUserID = useCallback(
-    makeSelectTodosByCurrentUserID,
-    []
   )
   const todos = useSelector(state => selectTodosByCurrentUserID(state))
   const location = useLocation()

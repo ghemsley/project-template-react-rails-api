@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import Slider from 'react-slick'
@@ -10,10 +10,7 @@ import { Project } from '../components'
 import selectors from '../selectors'
 
 const Home = React.memo(props => {
-  const selectDeduplicatedProjects = useMemo(
-    () => selectors.makeSelectDeduplicatedProjects,
-    []
-  )
+  const selectDeduplicatedProjects = selectors.makeSelectDeduplicatedProjects
   const projects = useSelector(state => selectDeduplicatedProjects(state))
   const { loggedIn, currentUser } = useSelector(state => state.authentication)
   const location = useLocation()
