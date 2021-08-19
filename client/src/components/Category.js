@@ -6,24 +6,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
-import {
-  makeSelectProjectByCategoryProjectID,
-  makeSelectTodosByCategoryID
-} from '../selectors'
+import selectors from '../selectors'
 import { ConfirmScreen, Dropzone, Todo } from './index'
 
 const Category = React.memo(props => {
   // console.log('render category')
-  const selectTodosByCategoryID = useCallback(makeSelectTodosByCategoryID, [
-    props.category
-  ])
+  const selectTodosByCategoryID = selectors.makeSelectTodosByCategoryId
   const todos = useSelector(state =>
     selectTodosByCategoryID(state, props.category.id)
   )
-  const selectProjectsByCategoryProjectID = useCallback(
-    makeSelectProjectByCategoryProjectID,
-    [props.category.projectID]
-  )
+  const selectProjectsByCategoryProjectID = selectors.makeSelectProjectById
   const project = useSelector(state =>
     selectProjectsByCategoryProjectID(state, props.category.projectID)
   )

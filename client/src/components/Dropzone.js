@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useDrop } from 'react-dnd'
 import { useDispatch, useSelector } from 'react-redux'
-import { makeSelectChildCoordinates } from '../selectors'
+import selectors from '../selectors'
 import actions from '../actions/'
 
 const Dropzone = React.memo(props => {
-  const selectChildCoordinates = useMemo(makeSelectChildCoordinates, [props])
+  const selectChildCoordinates = selectors.makeSelectChildCoordinates
   const childCoordinates = useSelector(state =>
     selectChildCoordinates(state, props)
   )

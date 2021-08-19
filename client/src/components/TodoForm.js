@@ -1,24 +1,17 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
-import {
-  makeSelectCategoriesByCurrentUserID, makeSelectCategoryByTodoEditCategoryID,
-  makeSelectFirstCategoryIDByCurrentUser
-} from '../selectors/index'
+import selectors from '../selectors'
 import Category from './Category'
 import Hover from './Hover'
 import { Modal } from './index'
 
 const TodoForm = React.memo(props => {
-  const selectFirstProjectIdByCurrentUser = useCallback(
-    makeSelectFirstCategoryIDByCurrentUser,
-    []
-  )
-  const selectCategoriesByCurrentUserID = useCallback(
-    makeSelectCategoriesByCurrentUserID,
-    []
-  )
+  const selectFirstProjectIdByCurrentUser =
+    selectors.makeSelectFirstCategoryIdByCurrentUserId
+  const selectCategoriesByCurrentUserID =
+    selectors.makeSelectCategoriesByCurrentUserId
   const categories = useSelector(state =>
     selectCategoriesByCurrentUserID(state)
   )
@@ -28,10 +21,7 @@ const TodoForm = React.memo(props => {
   const [categoryID, setCategoryID] = useState(
     props.edit ? props.edit.categoryID : firstCategoryID
   )
-  const selectCategoryByTodoEditCategoryID = useCallback(
-    makeSelectCategoryByTodoEditCategoryID,
-    [categoryID]
-  )
+  const selectCategoryByTodoEditCategoryID = selectors.makeSelectCategoryById
   const category = useSelector(state =>
     selectCategoryByTodoEditCategoryID(state, categoryID)
   )

@@ -7,14 +7,11 @@ import { Link, useLocation } from 'react-router-dom'
 import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 import { debounce } from 'lodash'
-import { makeSelectCategoryByTodoCategoryID } from '../selectors/index'
+import selectors from '../selectors'
 
 const Todo = React.memo(props => {
   // console.log('render todo')
-  const selectCategoryByTodoCategoryID = useCallback(
-    makeSelectCategoryByTodoCategoryID,
-    [props.todo.categoryID]
-  )
+  const selectCategoryByTodoCategoryID = selectors.makeSelectCategoryById
   const category = useSelector(state =>
     selectCategoryByTodoCategoryID(state, props.todo.categoryID)
   )

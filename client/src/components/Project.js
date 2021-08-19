@@ -1,33 +1,20 @@
 import { debounce } from 'lodash'
-import React, {
-  useCallback,
-  useEffect,
-  useMemo, useRef,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
-import {
-  makeSelectCategoriesByProjectID,
-  makeSelectUserProjectByCurrentUserAndProjectId
-} from '../selectors'
+import selectors from '../selectors'
 import { Category, ConfirmScreen, Dropzone } from './index'
 
 const Project = React.memo(props => {
   // console.log('render project')
-  const selectCategoriesByProjectID = useCallback(
-    makeSelectCategoriesByProjectID,
-    [props.project.id]
-  )
+  const selectCategoriesByProjectID = selectors.makeSelectCategoriesByProjectId
   const categories = useSelector(state =>
     selectCategoriesByProjectID(state, props.project.id)
   )
-  const selectUserProject = useCallback(
-    makeSelectUserProjectByCurrentUserAndProjectId,
-    [props.project.id]
-  )
+  const selectUserProject =
+    selectors.makeSelectUserProjectByCurrentUserAndProjectId
   const userProject = useSelector(state =>
     selectUserProject(state, props.project.id)
   )
@@ -222,7 +209,9 @@ const Project = React.memo(props => {
       {showJoinLeaveConfirmScreen && (
         <div className='fixed'>
           <ConfirmScreen closeAction={closeJoinLeaveAction}>
-            <h1 className='center fit'>Confirm {userProject ? 'leave' : 'join'}?</h1>
+            <h1 className='center fit'>
+              Confirm {userProject ? 'leave' : 'join'}?
+            </h1>
             {leaveError && <p>{leaveError}</p>}
             <button
               className='pure-button pure-button-delete'

@@ -1,23 +1,13 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
-import {
-  makeSelectProjectsByCurrentUserID,
-  makeSelectProjectByProjectID,
-  makeSelectFirstProjectIdByCurrentUser
-} from '../selectors'
+import selectors from '../selectors'
 
 const CategoryForm = props => {
-  const selectProjectsByCurrentUserID = useCallback(
-    makeSelectProjectsByCurrentUserID,
-    []
-  )
-  const selectFirstProjectIdByCurrentUser = useCallback(
-    makeSelectFirstProjectIdByCurrentUser,
-    []
-  )
+  const selectProjectsByCurrentUserID = selectors.makeSelectProjectsByCurrentUserId
+  const selectFirstProjectIdByCurrentUser = selectors.makeSelectFirstProjectIdByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const firstProjectID = useSelector(state =>
     selectFirstProjectIdByCurrentUser(state)
@@ -25,9 +15,7 @@ const CategoryForm = props => {
   const [projectID, setProjectID] = useState(
     props.edit ? props.edit.projectID : firstProjectID
   )
-  const selectProjectByProjectID = useCallback(makeSelectProjectByProjectID, [
-    projectID
-  ])
+  const selectProjectByProjectID = selectors.makeSelectProjectById
   const project = useSelector(state =>
     selectProjectByProjectID(state, projectID)
   )
@@ -59,7 +47,6 @@ const CategoryForm = props => {
           projectID: parseInt(projectID)
         })
       ).then(() => history.goBack())
-     
     }
   }
   const handleChange = event => {

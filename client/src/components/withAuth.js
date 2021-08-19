@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal } from '.'
+import ConfirmScreen from './ConfirmScreen'
 import actions from '../actions'
 
 const withAuth = WrappedComponent => {
@@ -13,9 +13,11 @@ const withAuth = WrappedComponent => {
       const { loggedIn, protectedRoute } = this.props
       if (!loggedIn && protectedRoute) {
         return (
-          <Modal {...this.props}>
+          <ConfirmScreen
+            {...this.props}
+            closeAction={() => this.props.history.push('/')}>
             <p>You must be logged in to view this page</p>
-          </Modal>
+          </ConfirmScreen>
         )
       } else return <WrappedComponent {...this.props} />
     }
