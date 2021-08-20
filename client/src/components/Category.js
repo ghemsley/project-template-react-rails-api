@@ -26,8 +26,8 @@ const Category = React.memo(props => {
 
   const [{ dragging }, drag, dragPreview] = useDrag(
     () => ({
-      type: 'category',
-      item: props.category,
+      item: { type: 'category' },
+      begin: () => props.category,
       previewOptions: { captureDraggingState: true },
       options: { dropEffect: 'copy' },
       collect: monitor => ({

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
-import { useDrop } from 'react-dnd'
+import { useMultiDrop } from 'react-dnd-multi-backend'
 import { useDispatch, useSelector } from 'react-redux'
+import mergeRefs from 'react-merge-refs'
 import selectors from '../selectors'
 import actions from '../actions/'
 
@@ -75,7 +76,13 @@ const Dropzone = React.memo(props => {
     ]
   )
 
-  const [{ type }, drop] = useDrop({
+  const [
+    [{ type, isOver }],
+    {
+      html5: [html5Props, html5Drop],
+      touch: [touchProps, touchDrop]
+    }
+  ] = useMultiDrop({
     accept: [props.acceptType],
     drop: (item, monitor) => {
       const result = { element: monitor.getSourceClientOffset() }
@@ -86,11 +93,15 @@ const Dropzone = React.memo(props => {
       return type === props.acceptType
     },
     collect: monitor => ({
-      type: monitor.getItemType()
+      type: monitor.getItemType(),
+      isOver: monitor.isOver({shallow: true})
     })
   })
   return (
-    <div ref={drop} className='dropzone'>
+    <div
+      ref={mergeRefs([html5Drop, touchDrop])}
+      className='dropzone'
+      style={html5Props.isOver || touchProps.isOver ? { filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 1.0)) brightness(110%)' } : null}>
       {props.children}
     </div>
   )

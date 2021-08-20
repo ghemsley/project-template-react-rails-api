@@ -11,7 +11,8 @@ import {
   LogoutScreen,
   withAuth, // order matters,
   Footer,
-  Loading
+  Loading,
+  DragPreview
 } from './components'
 import './App.css'
 
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <>
+      <DragPreview />
       <div className='pure-u-1 content'>
         <Route children={routeProps => <Navbar {...routeProps} />} />
         <Switch location={background ? background : location}>

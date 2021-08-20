@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useDrag } from 'react-dnd'
+import { useMultiDrag } from 'react-dnd-multi-backend'
 import actions from '../actions/index'
 import { ConfirmScreen } from './index'
 import { Link, useLocation } from 'react-router-dom'
@@ -20,10 +20,16 @@ const Todo = React.memo(props => {
   const location = useLocation()
   const ref = useRef(null)
 
-  const [{ dragging }, drag, dragPreview] = useDrag(
+  const [
+    [{ dragging }],
+    {
+      html5: [html5Props, html5Drag, html5DragPreview],
+      touch: [touchProps, touchDrag, touchDragPreview]
+    }
+  ] = useMultiDrag(
     () => ({
-      type: 'todo',
-      item: () => props.todo,
+      item: { type: 'todo' },
+      begin: () => props.todo,
       previewOptions: { captureDraggingState: true },
       options: { dropEffect: 'copy' },
       collect: monitor => ({
@@ -109,7 +115,7 @@ const Todo = React.memo(props => {
         transition: 'background-color 150ms ease',
         ...style
       }}
-      ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
+      ref={dragging ? mergeRefs([ref, html5DragPreview, touchDragPreview]) : mergeRefs([ref, html5Drag, touchDrag])}>
       <h2>{props.todo.name}</h2>
       <p>{props.todo.description}</p>
       {props.showCategory && (

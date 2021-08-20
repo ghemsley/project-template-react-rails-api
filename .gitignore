@@ -33,3 +33,4 @@
 .DS_Store
 
 /config/credentials/development.key
+/node_modules

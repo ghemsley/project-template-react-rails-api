@@ -1,8 +1,7 @@
 import React from 'react'
-import { DndProvider } from 'react-dnd'
+import { DndProvider } from 'react-dnd-multi-backend'
 import ReactDOM from 'react-dom'
-import MultiBackend from 'react-dnd-multi-backend'
-import HTML5toTouch from 'react-dnd-multi-backend/dist/esm/HTML5toTouch'
+import { HTML5toTouch } from 'rdndmb-html5-to-touch'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom/'
 import { applyMiddleware, createStore } from 'redux'
@@ -20,7 +19,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+        <DndProvider options={HTML5toTouch}>
           <App />
         </DndProvider>
       </Router>
