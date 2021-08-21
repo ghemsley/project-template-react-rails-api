@@ -101,7 +101,7 @@ const Dropzone = React.memo(props => {
     <div
       ref={mergeRefs([html5Drop, touchDrop])}
       className='dropzone'
-      style={html5Props.isOver || touchProps.isOver ? { filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 1.0)) brightness(110%)' } : null}>
+      style={isOver || html5Props.isOver || touchProps.isOver ? { filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 1.0)) brightness(110%)' } : null}>
       {props.children}
     </div>
   )
