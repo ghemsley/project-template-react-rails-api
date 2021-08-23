@@ -9,14 +9,15 @@ const LogoutScreen = () => {
   const dispatch = useDispatch()
   const closeAction = () => history.goBack()
   const handleClick = () => {
-    dispatch(actions.logoutUser()).then(() => {
-      history.push('/')
-    })
+    dispatch(actions.logoutUser())
+    history.push('/')
   }
   return (
     <ConfirmScreen closeAction={closeAction}>
       <h1>Confirm logout?</h1>
-      <button className='pure-button pure-button-delete' onClick={handleClick}>Logout</button>
+      <button className='pure-button pure-button-delete' onClick={handleClick}>
+        Logout
+      </button>
     </ConfirmScreen>
   )
 }
