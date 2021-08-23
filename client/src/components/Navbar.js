@@ -10,7 +10,7 @@ const Navbar = props => {
   )
   const location = useLocation()
   const [showModal, setShowModal] = useState(false)
-  const handleClick = (event, protectedRoute) => {
+  const handleClick = (event) => {
     event.preventDefault()
     setShowModal(true)
   }

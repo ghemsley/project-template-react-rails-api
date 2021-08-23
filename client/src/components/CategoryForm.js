@@ -5,9 +5,11 @@ import actions from '../actions/index'
 import { Hover, Project, Modal } from './index'
 import selectors from '../selectors'
 
-const CategoryForm = props => {
-  const selectProjectsByCurrentUserID = selectors.makeSelectProjectsByCurrentUserId
-  const selectFirstProjectIdByCurrentUser = selectors.makeSelectFirstProjectIdByCurrentUserId
+const CategoryForm = React.memo(props => {
+  const selectProjectsByCurrentUserID =
+    selectors.makeSelectProjectsByCurrentUserId
+  const selectFirstProjectIdByCurrentUser =
+    selectors.makeSelectFirstProjectIdByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
   const firstProjectID = useSelector(state =>
     selectFirstProjectIdByCurrentUser(state)
@@ -119,5 +121,5 @@ const CategoryForm = props => {
       </>
     </Modal>
   )
-}
+})
 export default CategoryForm

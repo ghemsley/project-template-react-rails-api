@@ -18,10 +18,10 @@ import './App.css'
 
 const AuthenticatedLoginForm = withAuth(LoginForm)
 const AuthenticatedSignupForm = withAuth(SignupForm)
+const AuthenticatedLogoutScreen = withAuth(LogoutScreen)
 const ProtectedProjectForm = withAuth(ProjectForm)
 const ProtectedCategoryForm = withAuth(CategoryForm)
 const ProtectedTodoForm = withAuth(TodoForm)
-const ProtectedLogoutScreen = withAuth(LogoutScreen)
 
 const App = () => {
   const location = useLocation()
@@ -34,23 +34,14 @@ const App = () => {
       <div className='pure-u-1 content'>
         <Route children={routeProps => <Navbar {...routeProps} />} />
         <Switch location={background ? background : location}>
-          {Pages.map((Page, i) =>
-            Page.protectedRoute ? (
-              <Route
-                exact
-                path={Page.path}
-                key={i}
-                render={routeProps => Page.component(routeProps)}
-              />
-            ) : (
-              <Route
-                exact
-                path={Page.path}
-                key={i}
-                children={routeProps => Page.component(routeProps)}
-              />
-            )
-          )}
+          {Pages.map((Page, i) => (
+            <Route
+              exact
+              path={Page.path}
+              key={i}
+              render={routeProps => Page.component(routeProps)}
+            />
+          ))}
           <Redirect to='/' />
         </Switch>
         {background && (
@@ -69,7 +60,7 @@ const App = () => {
               exact
               path='/logout'
               render={routeProps => (
-                <ProtectedLogoutScreen protectedRoute {...routeProps} />
+                <AuthenticatedLogoutScreen {...routeProps} />
               )}
             />
             <Route
@@ -133,8 +124,8 @@ const App = () => {
           </Switch>
         )}
       </div>
-      <Route children={routeProps => <Footer {...routeProps} />} />
-      <Route render={routeProps => <Loading {...routeProps} />} />
+      <Footer />
+      <Loading />
     </>
   )
 }
