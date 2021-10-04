@@ -143,7 +143,7 @@ const Project = React.memo(props => {
         id={`project-${props.project.id}`}
         className='hoverable flex-child flex rounded project'
         style={{
-          background: '#10a090',
+          background: '#11A694',
           color: 'whitesmoke'
         }}
         ref={ref}>

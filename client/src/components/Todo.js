@@ -92,7 +92,7 @@ const Todo = React.memo(props => {
   }, [getCoordinates, onScroll])
 
   const style = useMemo(
-    () => ({ background: dragging ? '#10a0f0' : '#1090d0' }),
+    () => ({ background: dragging ? '#099DB8' : '#099DB8' }),
     [dragging]
   )
 

@@ -15,7 +15,7 @@ const Navbar = props => {
     setShowModal(true)
   }
   return (
-    <>
+    <div className='navbar-container'>
       <div className='navbar center fit pure-menu pure-menu-horizontal pure-menu-scrollable'>
         <ul className='pure-menu-list'>
           {Pages.map(Page =>
@@ -75,7 +75,7 @@ const Navbar = props => {
           <p>You must be logged in to view this page</p>
         </ConfirmScreen>
       )}
-    </>
+    </div>
   )
 }
 

@@ -15,6 +15,7 @@ import {
   DragPreview
 } from './components'
 import './App.css'
+import './scss/global.scss'
 
 const AuthenticatedLoginForm = withAuth(LoginForm)
 const AuthenticatedSignupForm = withAuth(SignupForm)

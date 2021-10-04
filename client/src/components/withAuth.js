@@ -7,7 +7,7 @@ const withAuth = WrappedComponent => {
   class StupidClassComponent extends Component {
     componentDidMount() {
       const { checkAuth } = this.props
-      checkAuth().catch(error => console.log(error))
+      checkAuth().catch(error => console.error(error))
     }
     render() {
       const { loggedIn, protectedRoute } = this.props

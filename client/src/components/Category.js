@@ -94,7 +94,7 @@ const Category = React.memo(props => {
   }
 
   const style = useMemo(
-    () => ({ background: dragging ? '#1070b0' : '#1060a0' }),
+    () => ({ background: dragging ? '#0969AD' : '#0969AD' }),
     [dragging]
   )
 
