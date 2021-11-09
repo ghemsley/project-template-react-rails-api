@@ -13,9 +13,7 @@ const withAuth = WrappedComponent => {
       const { loggedIn, protectedRoute } = this.props
       if (!loggedIn && protectedRoute) {
         return (
-          <ConfirmScreen
-            {...this.props}
-            closeAction={() => this.props.history.push('/')}>
+          <ConfirmScreen {...this.props} closeAction={() => this.props.history.push('/')}>
             <p>You must be logged in to view this page</p>
           </ConfirmScreen>
         )
@@ -26,10 +24,10 @@ const withAuth = WrappedComponent => {
   const mapStateToProps = state => ({
     authChecked: state.authentication.authChecked,
     loggedIn: state.authentication.loggedIn,
-    currentUser: state.authentication.currentUser
+    currentUser: state.authentication.currentUser,
   })
   const mapDispatchToProps = dispatch => ({
-    checkAuth: () => dispatch(actions.checkAuth())
+    checkAuth: () => dispatch(actions.checkAuth()),
   })
 
   return connect(mapStateToProps, mapDispatchToProps)(StupidClassComponent)

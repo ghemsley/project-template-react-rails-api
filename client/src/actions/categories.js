@@ -4,7 +4,7 @@ import helpers from '../helpers'
 
 const fetchCategory = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -18,7 +18,7 @@ const fetchCategory = payload => {
 
 const fetchCategories = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories`, {
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -35,10 +35,10 @@ const sendCategory = payload => {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -55,10 +55,10 @@ const patchCategory = payload => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -75,10 +75,10 @@ const patchCategories = payload => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -93,7 +93,7 @@ const patchCategories = payload => {
 const destroyCategory = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/categories/${payload.id}`, {
     method: 'delete',
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -107,22 +107,22 @@ const destroyCategory = payload => {
 
 const createCategory = payload => ({
   type: 'CREATE_CATEGORY',
-  payload
+  payload,
 })
 
 const updateCategory = payload => ({
   type: 'UPDATE_CATEGORY',
-  payload
+  payload,
 })
 
 const updateCategories = payload => ({
   type: 'UPDATE_CATEGORIES',
-  payload
+  payload,
 })
 
 const deleteCategory = payload => ({
   type: 'DELETE_CATEGORY',
-  payload
+  payload,
 })
 
 const deeplyDeleteCategory = payload => dispatch => {
@@ -131,9 +131,7 @@ const deeplyDeleteCategory = payload => dispatch => {
 }
 
 const deleteCategoriesByProject = payload => (dispatch, getState) => {
-  const categories = getState().categories.filter(
-    category => category.projectID === payload.id
-  )
+  const categories = getState().categories.filter(category => category.projectID === payload.id)
   for (const category of categories) {
     dispatch(deeplyDeleteCategory(category))
   }
@@ -149,7 +147,7 @@ const instantiateCategory = payload => (dispatch, getState) => {
           name: json.data.attributes.name,
           description: json.data.attributes.description,
           projectID: json.data.relationships.project.data.id,
-          order: json.data.attributes.order
+          order: json.data.attributes.order,
         }
         dispatch(createCategory(categoryObject))
       }
@@ -159,20 +157,22 @@ const instantiateCategory = payload => (dispatch, getState) => {
 }
 
 const removeCategory = payload => (dispatch, getState) => {
-  return destroyCategory(payload).then(json => {
-    if (json.data) {
-      dispatch(deeplyDeleteCategory(payload))
-    }
-    return json
-  }).then((json) => {
-     const coordinates = getState().coordinates.find(
-       coords => coords.item.id === payload.id && coords.type === 'category'
-     )
-     if (coordinates) {
-       dispatch(actions.deleteCoordinates(coordinates))
-     }
-    return json
-  })
+  return destroyCategory(payload)
+    .then(json => {
+      if (json.data) {
+        dispatch(deeplyDeleteCategory(payload))
+      }
+      return json
+    })
+    .then(json => {
+      const coordinates = getState().coordinates.find(
+        coords => coords.item.id === payload.id && coords.type === 'category'
+      )
+      if (coordinates) {
+        dispatch(actions.deleteCoordinates(coordinates))
+      }
+      return json
+    })
 }
 
 const amendCategory = payload => dispatch => {
@@ -214,7 +214,7 @@ const categoryActions = {
   amendCategory,
   updateCategories,
   patchCategories,
-  batchAmendCategories
+  batchAmendCategories,
 }
 
 export default categoryActions

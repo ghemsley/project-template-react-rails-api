@@ -14,9 +14,7 @@ const categories = (state = [], action) => {
 
     case 'UPDATE_CATEGORY':
       newState = [...state]
-      const currentCategory = newState.find(
-        category => category.id === payload.id
-      )
+      const currentCategory = newState.find(category => category.id === payload.id)
       if (currentCategory) {
         for (const key in payload) {
           if (key !== 'id') {
@@ -29,9 +27,7 @@ const categories = (state = [], action) => {
     case 'UPDATE_CATEGORIES':
       newState = [...state]
       for (const category of payload) {
-        const currentCategory = newState.find(
-          existing => existing.id === category.id
-        )
+        const currentCategory = newState.find(existing => existing.id === category.id)
         if (currentCategory) {
           for (const key in category) {
             if (key !== 'id') {
@@ -43,11 +39,7 @@ const categories = (state = [], action) => {
       return newState
 
     case 'DELETE_CATEGORY':
-      return [
-        ...state.filter(
-          category => category.id !== payload.id
-        )
-      ]
+      return [...state.filter(category => category.id !== payload.id)]
 
     default:
       return state

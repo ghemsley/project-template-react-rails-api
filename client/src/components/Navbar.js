@@ -5,34 +5,31 @@ import { Link } from 'react-router-dom'
 import Pages from '../pages/index'
 import ConfirmScreen from './ConfirmScreen'
 const Navbar = props => {
-  const { authChecked, loggedIn, currentUser } = useSelector(
-    state => state.authentication
-  )
+  const { authChecked, loggedIn, currentUser } = useSelector(state => state.authentication)
   const location = useLocation()
   const [showModal, setShowModal] = useState(false)
-  const handleClick = (event) => {
+  const handleClick = event => {
     event.preventDefault()
     setShowModal(true)
   }
   return (
-    <div className='navbar-container'>
-      <div className='navbar center fit pure-menu pure-menu-horizontal pure-menu-scrollable'>
-        <ul className='pure-menu-list'>
+    <div className="navbar-container">
+      <div className="navbar center fit pure-menu pure-menu-horizontal pure-menu-scrollable">
+        <ul className="pure-menu-list">
           {Pages.map(Page =>
             (!loggedIn || !currentUser) && Page.protectedRoute ? (
-              <li className='pure-menu-item' key={Page.name}>
+              <li className="pure-menu-item" key={Page.name}>
                 <Link
                   to={{ pathname: Page.path }}
-                  className='pure-menu-link pure-menu-heading'
-                  onClick={handleClick}>
+                  className="pure-menu-link pure-menu-heading"
+                  onClick={handleClick}
+                >
                   {Page.name}
                 </Link>
               </li>
             ) : (
-              <li className='pure-menu-item' key={Page.name}>
-                <Link
-                  to={{ pathname: Page.path }}
-                  className='pure-menu-link pure-menu-heading'>
+              <li className="pure-menu-item" key={Page.name}>
+                <Link to={{ pathname: Page.path }} className="pure-menu-link pure-menu-heading">
                   {Page.name}
                 </Link>
               </li>
@@ -40,35 +37,36 @@ const Navbar = props => {
           )}
           {!loggedIn && (
             <>
-              <li className='pure-menu-item' key={'signup'}>
+              <li className="pure-menu-item" key={'signup'}>
                 <Link
-                  className='pure-menu-link pure-menu-heading'
-                  to={{ pathname: '/signup', state: { background: location } }}>
+                  className="pure-menu-link pure-menu-heading"
+                  to={{ pathname: '/signup', state: { background: location } }}
+                >
                   Sign up
                 </Link>
               </li>
-              <li className='pure-menu-item' key={'login'}>
+              <li className="pure-menu-item" key={'login'}>
                 <Link
-                  className='pure-menu-link pure-menu-heading'
-                  to={{ pathname: '/login', state: { background: location } }}>
+                  className="pure-menu-link pure-menu-heading"
+                  to={{ pathname: '/login', state: { background: location } }}
+                >
                   Login
                 </Link>
               </li>
             </>
           )}
           {authChecked && loggedIn && currentUser.id && (
-            <li className='pure-menu-item' key={'logout'}>
+            <li className="pure-menu-item" key={'logout'}>
               <Link
-                className='pure-menu-link pure-menu-heading'
-                to={{ pathname: '/logout', state: { background: location } }}>
+                className="pure-menu-link pure-menu-heading"
+                to={{ pathname: '/logout', state: { background: location } }}
+              >
                 Logout
               </Link>
             </li>
           )}
         </ul>
-        {loggedIn && currentUser.id && (
-          <p>Logged in as {currentUser.username}</p>
-        )}
+        {loggedIn && currentUser.id && <p>Logged in as {currentUser.username}</p>}
       </div>
       {showModal && (
         <ConfirmScreen closeAction={() => setShowModal(false)}>

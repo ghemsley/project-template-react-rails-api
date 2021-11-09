@@ -6,12 +6,9 @@ import { ConfirmScreen, Todo } from '../components'
 import selectors from '../selectors'
 
 const Todos = () => {
-  const selectCategoriesByCurrentUserID =
-    selectors.makeSelectCategoriesByCurrentUserId
+  const selectCategoriesByCurrentUserID = selectors.makeSelectCategoriesByCurrentUserId
   const selectTodosByCurrentUserID = selectors.makeSelectTodosByCurrentUserId
-  const categories = useSelector(state =>
-    selectCategoriesByCurrentUserID(state)
-  )
+  const categories = useSelector(state => selectCategoriesByCurrentUserID(state))
   const todos = useSelector(state => selectTodosByCurrentUserID(state))
   const location = useLocation()
   const dispatch = useDispatch()
@@ -22,21 +19,22 @@ const Todos = () => {
 
   return categories.length < 1 ? (
     <ConfirmScreen>
-      <p className='fit margin-auto'>
+      <p className="fit margin-auto">
         Please create a category first before trying to create a todo!
       </p>
     </ConfirmScreen>
   ) : (
-    <div className='center center-text todo-page'>
-      <div className='button-container'>
+    <div className="center center-text todo-page">
+      <div className="button-container">
         <Link
-          className='pure-button pure-button-primary'
-          to={{ pathname: '/todos/new', state: { background: location } }}>
+          className="pure-button pure-button-primary"
+          to={{ pathname: '/todos/new', state: { background: location } }}
+        >
           Create Todo
         </Link>
       </div>
       {todos.length > 0 && <h1>Todos</h1>}
-      <div className='flex todo-container'>
+      <div className="flex todo-container">
         {todos.map(todo => (
           <Todo todo={todo} showButtons showCategory key={`todo-${todo.id}`} />
         ))}

@@ -15,7 +15,7 @@ const LogoutScreen = () => {
   return (
     <ConfirmScreen closeAction={closeAction}>
       <h1>Confirm logout?</h1>
-      <button className='pure-button pure-button-delete' onClick={handleClick}>
+      <button className="pure-button pure-button-delete" onClick={handleClick}>
         Logout
       </button>
     </ConfirmScreen>

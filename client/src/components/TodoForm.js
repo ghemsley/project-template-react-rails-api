@@ -8,27 +8,15 @@ import Hover from './Hover'
 import { Modal } from './index'
 
 const TodoForm = React.memo(props => {
-  const selectFirstProjectIdByCurrentUser =
-    selectors.makeSelectFirstCategoryIdByCurrentUserId
-  const selectCategoriesByCurrentUserID =
-    selectors.makeSelectCategoriesByCurrentUserId
-  const categories = useSelector(state =>
-    selectCategoriesByCurrentUserID(state)
-  )
-  const firstCategoryID = useSelector(state =>
-    selectFirstProjectIdByCurrentUser(state)
-  )
-  const [categoryID, setCategoryID] = useState(
-    props.edit ? props.edit.categoryID : firstCategoryID
-  )
+  const selectFirstProjectIdByCurrentUser = selectors.makeSelectFirstCategoryIdByCurrentUserId
+  const selectCategoriesByCurrentUserID = selectors.makeSelectCategoriesByCurrentUserId
+  const categories = useSelector(state => selectCategoriesByCurrentUserID(state))
+  const firstCategoryID = useSelector(state => selectFirstProjectIdByCurrentUser(state))
+  const [categoryID, setCategoryID] = useState(props.edit ? props.edit.categoryID : firstCategoryID)
   const selectCategoryByTodoEditCategoryID = selectors.makeSelectCategoryById
-  const category = useSelector(state =>
-    selectCategoryByTodoEditCategoryID(state, categoryID)
-  )
+  const category = useSelector(state => selectCategoryByTodoEditCategoryID(state, categoryID))
   const [name, setName] = useState(props.edit ? props.edit.name : '')
-  const [description, setDescription] = useState(
-    props.edit ? props.edit.description : ''
-  )
+  const [description, setDescription] = useState(props.edit ? props.edit.description : '')
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -39,7 +27,7 @@ const TodoForm = React.memo(props => {
         actions.instantiateTodo({
           name: name,
           description: description,
-          categoryID: parseInt(categoryID)
+          categoryID: parseInt(categoryID),
         })
       )
       setName('')
@@ -50,7 +38,7 @@ const TodoForm = React.memo(props => {
           ...props.edit,
           name: name,
           description: description,
-          categoryID: parseInt(categoryID)
+          categoryID: parseInt(categoryID),
         })
       ).then(() => history.goBack())
     }
@@ -75,27 +63,25 @@ const TodoForm = React.memo(props => {
   return (
     <Modal>
       <>
-        <h1 className='fit margin-auto'>{props.edit ? 'Edit' : 'New'} Todo</h1>
-        <form
-          onSubmit={handleSubmit}
-          className='pure-form pure-form-stacked fit margin-auto'>
+        <h1 className="fit margin-auto">{props.edit ? 'Edit' : 'New'} Todo</h1>
+        <form onSubmit={handleSubmit} className="pure-form pure-form-stacked fit margin-auto">
           <fieldset>
-            <label htmlFor='name'>Name</label>
+            <label htmlFor="name">Name</label>
             <input
-              className='pure-input-1'
-              type='text'
-              name='name'
+              className="pure-input-1"
+              type="text"
+              name="name"
               value={name}
               onChange={handleChange}
             />
-            <label htmlFor='description'>Description</label>
+            <label htmlFor="description">Description</label>
             <textarea
-              className='pure-input-1'
-              name='description'
+              className="pure-input-1"
+              name="description"
               value={description}
               onChange={handleChange}
             />
-            <label htmlFor='categoryID' className='hoverable'>
+            <label htmlFor="categoryID" className="hoverable">
               {categories.length > 0 && category && (
                 <Hover>
                   <Category category={category} showTodos showProject />
@@ -103,10 +89,11 @@ const TodoForm = React.memo(props => {
               )}
               Category
               <select
-                className='pure-input-1'
-                name='categoryID'
+                className="pure-input-1"
+                name="categoryID"
                 value={categoryID}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 {categories.map((category, i) => (
                   <option value={category.id} key={i}>
                     {category.name}
@@ -114,7 +101,7 @@ const TodoForm = React.memo(props => {
                 ))}
               </select>
             </label>
-            <button className='pure-button pure-button-primary' type='submit'>
+            <button className="pure-button pure-button-primary" type="submit">
               Submit
             </button>
           </fieldset>

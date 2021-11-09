@@ -3,14 +3,9 @@ import { selectId, selectCurrentUserId } from './helpers'
 
 export const selectUserProjects = state => state.userProjects
 
-const findUserProjectByCurrentUserIDAndProjectId = (
-  userProjects,
-  currentUserID,
-  projectID
-) => {
+const findUserProjectByCurrentUserIDAndProjectId = (userProjects, currentUserID, projectID) => {
   return userProjects.find(
-    userProj =>
-      userProj.userID === currentUserID && userProj.projectID === projectID
+    userProj => userProj.userID === currentUserID && userProj.projectID === projectID
   )
 }
 

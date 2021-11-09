@@ -9,8 +9,7 @@ const coordinates = (state = [], action) => {
   switch (action.type) {
     case 'REFRESH_COORDINATES':
       const coords = state.find(
-        coords =>
-          coords.type === payload.type && coords.item.id === payload.item.id
+        coords => coords.type === payload.type && coords.item.id === payload.item.id
       )
       if (coords && coords.position !== payload.position) {
         newState[newState.indexOf(coords)] = payload
@@ -23,8 +22,7 @@ const coordinates = (state = [], action) => {
 
     case 'DELETE_COORDINATES':
       const coordinate = newState.find(
-        coord =>
-          coord.item.id === payload.item.id && coord.type === payload.type
+        coord => coord.item.id === payload.item.id && coord.type === payload.type
       )
       if (coordinate) {
         return newState.splice(newState.indexOf(coordinate), 1)

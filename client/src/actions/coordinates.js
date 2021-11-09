@@ -1,16 +1,16 @@
 const refreshCoordinates = payload => ({
   type: 'REFRESH_COORDINATES',
-  payload
+  payload,
 })
 
 const deleteCoordinates = payload => ({
   type: 'DELETE_COORDINATES',
-  payload
+  payload,
 })
 
 const coordinateActions = {
   refreshCoordinates,
-  deleteCoordinates
+  deleteCoordinates,
 }
 
 export default coordinateActions

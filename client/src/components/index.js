@@ -16,6 +16,7 @@ import withAuth from './withAuth'
 import Loading from './Loading'
 import Footer from './Footer'
 import DragPreview from './DragPreview'
+import Auth from './Auth'
 
 export {
   Hover,
@@ -35,5 +36,6 @@ export {
   withAuth,
   Loading,
   Footer,
-  DragPreview
+  DragPreview,
+  Auth,
 }

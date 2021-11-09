@@ -11,10 +11,7 @@ const userProjects = (state = [], action) => {
         !state.find(
           userProj =>
             userProj.id === payload.id ||
-            (
-              userProj.projectID === payload.projectID &&
-              userProj.userID === payload.userID
-            )
+            (userProj.projectID === payload.projectID && userProj.userID === payload.userID)
         )
       ) {
         return [...state, payload]

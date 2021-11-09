@@ -11,6 +11,6 @@ const actions = {
   ...projectActions,
   ...coordinateActions,
   ...authenticationActions,
-  ...userProjectActions
+  ...userProjectActions,
 }
 export default actions

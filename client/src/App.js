@@ -9,20 +9,13 @@ import {
   SignupForm,
   LoginForm,
   LogoutScreen,
-  withAuth, // order matters,
   Footer,
   Loading,
-  DragPreview
+  DragPreview,
+  Auth,
 } from './components'
 import './App.css'
 import './scss/global.scss'
-
-const AuthenticatedLoginForm = withAuth(LoginForm)
-const AuthenticatedSignupForm = withAuth(SignupForm)
-const AuthenticatedLogoutScreen = withAuth(LogoutScreen)
-const ProtectedProjectForm = withAuth(ProjectForm)
-const ProtectedCategoryForm = withAuth(CategoryForm)
-const ProtectedTodoForm = withAuth(TodoForm)
 
 const App = () => {
   const location = useLocation()
@@ -32,7 +25,7 @@ const App = () => {
   return (
     <>
       <DragPreview />
-      <div className='pure-u-1 content'>
+      <div className="pure-u-1 content">
         <Route children={routeProps => <Navbar {...routeProps} />} />
         <Switch location={background ? background : location}>
           {Pages.map((Page, i) => (
@@ -43,81 +36,91 @@ const App = () => {
               render={routeProps => Page.component(routeProps)}
             />
           ))}
-          <Redirect to='/' />
+          <Redirect to="/" />
         </Switch>
         {background && (
           <Switch>
             <Route
               exact
-              path='/signup'
-              render={routeProps => <AuthenticatedSignupForm {...routeProps} />}
-            />
-            <Route
-              exact
-              path='/login'
-              render={routeProps => <AuthenticatedLoginForm {...routeProps} />}
-            />
-            <Route
-              exact
-              path='/logout'
+              path="/signup"
               render={routeProps => (
-                <AuthenticatedLogoutScreen {...routeProps} />
+                <Auth>
+                  <SignupForm {...routeProps} />
+                </Auth>
               )}
             />
             <Route
               exact
-              path='/projects/new'
+              path="/login"
               render={routeProps => (
-                <ProtectedProjectForm protectedRoute {...routeProps} />
+                <Auth>
+                  <LoginForm {...routeProps} />
+                </Auth>
               )}
             />
             <Route
               exact
-              path='/categories/new'
+              path="/logout"
               render={routeProps => (
-                <ProtectedCategoryForm protectedRoute {...routeProps} />
+                <Auth>
+                  <LogoutScreen {...routeProps} />
+                </Auth>
               )}
             />
             <Route
               exact
-              path='/todos/new'
+              path="/projects/new"
               render={routeProps => (
-                <ProtectedTodoForm protectedRoute {...routeProps} />
+                <Auth protectedRoute>
+                  <ProjectForm {...routeProps} />
+                </Auth>
+              )}
+            />
+            <Route
+              exact
+              path="/categories/new"
+              render={routeProps => (
+                <Auth protectedRoute>
+                  <CategoryForm {...routeProps} />
+                </Auth>
+              )}
+            />
+            <Route
+              exact
+              path="/todos/new"
+              render={routeProps => (
+                <Auth protectedRoute>
+                  <TodoForm {...routeProps} />
+                </Auth>
               )}
             />
             {edit && (
               <>
                 <Route
                   exact
-                  path='/todos/:id/edit'
+                  path="/todos/:id/edit"
                   render={routeProps => (
-                    <ProtectedTodoForm
-                      edit={edit}
-                      protectedRoute
-                      {...routeProps}
-                    />
+                    <Auth protectedRoute>
+                      <TodoForm edit={edit} {...routeProps} />
+                    </Auth>
                   )}
                 />
                 <Route
                   exact
-                  path='/categories/:id/edit'
+                  path="/categories/:id/edit"
                   render={routeProps => (
-                    <ProtectedCategoryForm
-                      edit={edit}
-                      protectedRoute
-                      {...routeProps}
-                    />
+                    <Auth protectedRoute>
+                      <CategoryForm edit={edit} {...routeProps} />
+                    </Auth>
                   )}
                 />
                 <Route
                   exact
-                  path='/projects/:id/edit'
+                  path="/projects/:id/edit"
                   render={routeProps => (
-                    <ProtectedProjectForm
-                      edit={edit}
-                      protectedRoute
-                      {...routeProps}
-                    />
+                    <Auth protectedRoute>
+                      <ProjectForm edit={edit} {...routeProps} />
+                    </Auth>
                   )}
                 />
               </>

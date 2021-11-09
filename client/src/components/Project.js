@@ -10,18 +10,12 @@ import { Category, ConfirmScreen, Dropzone } from './index'
 const Project = React.memo(props => {
   // console.log('render project')
   const selectCategoriesByProjectID = selectors.makeSelectCategoriesByProjectId
-  const categories = useSelector(state =>
-    selectCategoriesByProjectID(state, props.project.id)
-  )
-  const selectUserProject =
-    selectors.makeSelectUserProjectByCurrentUserAndProjectId
-  const userProject = useSelector(state =>
-    selectUserProject(state, props.project.id)
-  )
+  const categories = useSelector(state => selectCategoriesByProjectID(state, props.project.id))
+  const selectUserProject = selectors.makeSelectUserProjectByCurrentUserAndProjectId
+  const userProject = useSelector(state => selectUserProject(state, props.project.id))
   const userProjects = useSelector(state => state.userProjects)
   const currentUser = useSelector(state => state.authentication.currentUser)
-  const [showJoinLeaveConfirmScreen, setShowJoinLeaveConfirmScreen] =
-    useState(false)
+  const [showJoinLeaveConfirmScreen, setShowJoinLeaveConfirmScreen] = useState(false)
   const [showDeleteConfirmScreen, setShowDeleteConfirmScreen] = useState(false)
   const [leaveError, setLeaveError] = useState(null)
   const history = useHistory()
@@ -41,8 +35,8 @@ const Project = React.memo(props => {
           top: rect.top,
           bottom: rect.bottom,
           rectWidth: rect.width,
-          rectHeight: rect.height
-        }
+          rectHeight: rect.height,
+        },
       }
       dispatch(actions.refreshCoordinates(coordinates))
     }
@@ -52,7 +46,7 @@ const Project = React.memo(props => {
     () =>
       debounce(getCoordinates, 300, {
         trailing: true,
-        maxWait: 600
+        maxWait: 600,
       }),
     [getCoordinates]
   )
@@ -61,7 +55,7 @@ const Project = React.memo(props => {
     () =>
       debounce(getCoordinates, 250, {
         trailing: true,
-        maxWait: 500
+        maxWait: 500,
       }),
     [getCoordinates]
   )
@@ -84,15 +78,13 @@ const Project = React.memo(props => {
     } else if (currentUser.id && !userProject) {
       if (
         !userProjects.find(
-          userProj =>
-            userProj.userID === currentUser.id &&
-            userProj.projectID === props.project.id
+          userProj => userProj.userID === currentUser.id && userProj.projectID === props.project.id
         )
       ) {
         dispatch(
           actions.addUserProject({
             user_id: currentUser.id,
-            project_id: props.project.id
+            project_id: props.project.id,
           })
         ).then(() => history.push('/projects'))
       }
@@ -115,24 +107,20 @@ const Project = React.memo(props => {
   const confirmJoin = () => {
     if (
       !userProjects.find(
-        userProj =>
-          userProj.userID === currentUser.id &&
-          userProj.projectID === props.project.id
+        userProj => userProj.userID === currentUser.id && userProj.projectID === props.project.id
       )
     ) {
       dispatch(
         actions.addUserProject({
           user_id: currentUser.id,
-          project_id: props.project.id
+          project_id: props.project.id,
         })
       )
     }
   }
   const confirmLeave = () => {
     setLeaveError(null)
-    dispatch(actions.removeUserProject(userProject)).catch(error =>
-      setLeaveError(error)
-    )
+    dispatch(actions.removeUserProject(userProject)).catch(error => setLeaveError(error))
   }
   const confirmRemove = () => {
     dispatch(actions.removeProject(props.project))
@@ -141,30 +129,30 @@ const Project = React.memo(props => {
     <>
       <div
         id={`project-${props.project.id}`}
-        className='hoverable flex-child flex rounded project'
+        className="hoverable flex-child flex rounded project"
         style={{
           background: '#11A694',
-          color: 'whitesmoke'
+          color: 'whitesmoke',
         }}
-        ref={ref}>
-        <Dropzone
-          parentID={props.project.id}
-          acceptType='category'
-          parentType='project'>
+        ref={ref}
+      >
+        <Dropzone parentID={props.project.id} acceptType="category" parentType="project">
           <h2>{props.project.name}</h2>
           <p>{props.project.description}</p>
-          <div className='button-container'>
+          <div className="button-container">
             {props.showButtons && props.disablePosition && (
               <button
                 className={`pure-button pure-button-primary invisible`}
-                onClick={handleJoinLeaveClickPositionDisabled}>
+                onClick={handleJoinLeaveClickPositionDisabled}
+              >
                 {userProject ? 'Leave' : 'Join'}
               </button>
             )}
             {props.showButtons && !props.disablePosition && currentUser.id && (
               <button
                 className={`pure-button pure-button-primary invisible`}
-                onClick={handleLeaveJoinClick}>
+                onClick={handleLeaveJoinClick}
+              >
                 {userProject ? 'Leave' : 'Join'}
               </button>
             )}
@@ -174,13 +162,15 @@ const Project = React.memo(props => {
                   className={`pure-button pure-button-primary invisible`}
                   to={{
                     pathname: `/projects/${props.project.id}/edit`,
-                    state: { background: location, edit: props.project }
-                  }}>
+                    state: { background: location, edit: props.project },
+                  }}
+                >
                   Edit
                 </Link>
                 <button
                   className={`pure-button pure-button-delete invisible`}
-                  onClick={handleDeleteClick}>
+                  onClick={handleDeleteClick}
+                >
                   Delete
                 </button>
               </>
@@ -192,7 +182,7 @@ const Project = React.memo(props => {
               {categories.length < 1 && !props.disablePosition && (
                 <p style={{ fontSize: '14px' }}>Drop categories here!</p>
               )}
-              <div className='flex category-container'>
+              <div className="flex category-container">
                 {categories.map(category => (
                   <Category
                     category={category}
@@ -207,27 +197,24 @@ const Project = React.memo(props => {
         </Dropzone>
       </div>
       {showJoinLeaveConfirmScreen && (
-        <div className='fixed'>
+        <div className="fixed">
           <ConfirmScreen closeAction={closeJoinLeaveAction}>
-            <h1 className='center fit'>
-              Confirm {userProject ? 'leave' : 'join'}?
-            </h1>
+            <h1 className="center fit">Confirm {userProject ? 'leave' : 'join'}?</h1>
             {leaveError && <p>{leaveError}</p>}
             <button
-              className='pure-button pure-button-delete'
-              onClick={userProject ? confirmLeave : confirmJoin}>
+              className="pure-button pure-button-delete"
+              onClick={userProject ? confirmLeave : confirmJoin}
+            >
               {userProject ? 'Leave' : 'Join'}
             </button>
           </ConfirmScreen>
         </div>
       )}
       {showDeleteConfirmScreen && (
-        <div className='fixed'>
+        <div className="fixed">
           <ConfirmScreen closeAction={closeDeleteAction}>
-            <h1 className='center fit'>Confirm delete?</h1>
-            <button
-              className='pure-button pure-button-delete'
-              onClick={confirmRemove}>
+            <h1 className="center fit">Confirm delete?</h1>
+            <button className="pure-button pure-button-delete" onClick={confirmRemove}>
               Delete
             </button>
           </ConfirmScreen>

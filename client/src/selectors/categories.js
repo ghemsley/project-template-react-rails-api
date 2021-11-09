@@ -8,25 +8,14 @@ const findCategoryById = (categories, categoryID) =>
   categories.find(category => category.id === categoryID)
 
 const filterCategoriesByProjectId = (categories, projectID) => {
-  const compareOrder = (category1, category2) =>
-    category1.order - category2.order
-  return categories
-    .filter(category => category.projectID === projectID)
-    .sort(compareOrder)
+  const compareOrder = (category1, category2) => category1.order - category2.order
+  return categories.filter(category => category.projectID === projectID).sort(compareOrder)
 }
-const filterCategoriesByCurrentUserId = (
-  categories,
-  userProjects,
-  currentUserID
-) => {
-  const currentUserUserProjects = userProjects.filter(
-    userProj => userProj.userID === currentUserID
-  )
+const filterCategoriesByCurrentUserId = (categories, userProjects, currentUserID) => {
+  const currentUserUserProjects = userProjects.filter(userProj => userProj.userID === currentUserID)
   const currentUserCategories = []
   for (const userProject of currentUserUserProjects) {
-    const foundCategories = categories.filter(
-      cat => cat.projectID === userProject.projectID
-    )
+    const foundCategories = categories.filter(cat => cat.projectID === userProject.projectID)
     if (foundCategories) {
       for (const foundCategory of foundCategories) {
         if (!currentUserCategories.find(cat => cat.id === foundCategory.id)) {
@@ -38,26 +27,15 @@ const filterCategoriesByCurrentUserId = (
   return currentUserCategories
 }
 
-const findFirstCategoryIdByCurrentUserId = (
-  categories,
-  userProjects,
-  currentUserID
-) => {
-  const currentUserUserProjects = userProjects.filter(
-    userProj => userProj.userID === currentUserID
-  )
+const findFirstCategoryIdByCurrentUserId = (categories, userProjects, currentUserID) => {
+  const currentUserUserProjects = userProjects.filter(userProj => userProj.userID === currentUserID)
   const currentUserCategories = categories.filter(cat =>
-    currentUserUserProjects
-      .map(userProj => userProj.projectID)
-      .includes(cat.projectID)
+    currentUserUserProjects.map(userProj => userProj.projectID).includes(cat.projectID)
   )
   return currentUserCategories[0].id
 }
 
-const makeSelectCategoryById = createSelector(
-  [selectCategories, selectId],
-  findCategoryById
-)
+const makeSelectCategoryById = createSelector([selectCategories, selectId], findCategoryById)
 
 const makeSelectCategoriesByProjectId = createSelector(
   [selectCategories, selectId],
@@ -78,7 +56,7 @@ const categories = {
   makeSelectCategoriesByCurrentUserId,
   makeSelectCategoriesByProjectId,
   makeSelectCategoryById,
-  makeSelectFirstCategoryIdByCurrentUserId
+  makeSelectFirstCategoryIdByCurrentUserId,
 }
 
 export default categories

@@ -27,9 +27,7 @@ const projects = (state = [], action) => {
     case 'UPDATE_PROJECTS':
       newState = [...state]
       for (const project of payload) {
-        const currentProject = newState.find(
-          existing => existing.id === project.id
-        )
+        const currentProject = newState.find(existing => existing.id === project.id)
         if (currentProject) {
           for (const key in project) {
             if (key !== 'id') {

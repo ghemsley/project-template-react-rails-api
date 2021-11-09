@@ -12,20 +12,11 @@ const filterTodosByCategoryId = (todos, categoryID) => {
   return todos.filter(todo => todo.categoryID === categoryID).sort(compareOrder)
 }
 
-const filterTodosByCurrentUserId = (
-  todos,
-  userProjects,
-  categories,
-  currentUserID
-) => {
-  const currentUserUserProjects = userProjects.filter(
-    userProj => userProj.userID === currentUserID
-  )
+const filterTodosByCurrentUserId = (todos, userProjects, categories, currentUserID) => {
+  const currentUserUserProjects = userProjects.filter(userProj => userProj.userID === currentUserID)
   const currentUserCategories = []
   for (const userProject of currentUserUserProjects) {
-    const foundCategories = categories.filter(
-      cat => cat.projectID === userProject.projectID
-    )
+    const foundCategories = categories.filter(cat => cat.projectID === userProject.projectID)
     if (foundCategories) {
       for (const foundCategory of foundCategories) {
         if (!currentUserCategories.find(cat => cat.id === foundCategory.id)) {
@@ -48,10 +39,7 @@ const filterTodosByCurrentUserId = (
   return currentUserTodos
 }
 
-export const makeSelectTodoById = createSelector(
-  [selectTodos, selectId],
-  findTodoById
-)
+export const makeSelectTodoById = createSelector([selectTodos, selectId], findTodoById)
 
 const makeSelectTodosByCurrentUserId = createSelector(
   [selectTodos, selectUserProjects, selectCategories, selectCurrentUserId],

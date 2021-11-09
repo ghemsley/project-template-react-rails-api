@@ -6,6 +6,13 @@ import coordinates from './coordinates'
 import authentication from './authentication'
 import userProjects from './userProjects'
 
-const rootReducer = combineReducers({ categories, todos, projects, coordinates, authentication, userProjects })
+const rootReducer = combineReducers({
+  categories,
+  todos,
+  projects,
+  coordinates,
+  authentication,
+  userProjects,
+})
 
 export default rootReducer

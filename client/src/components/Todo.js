@@ -24,8 +24,8 @@ const Todo = React.memo(props => {
     [{ dragging }],
     {
       html5: [html5Props, html5Drag, html5DragPreview],
-      touch: [touchProps, touchDrag, touchDragPreview]
-    }
+      touch: [touchProps, touchDrag, touchDragPreview],
+    },
   ] = useMultiDrag(
     () => ({
       item: { type: 'todo' },
@@ -33,13 +33,13 @@ const Todo = React.memo(props => {
       previewOptions: { captureDraggingState: true },
       options: { dropEffect: 'copy' },
       collect: monitor => ({
-        dragging: monitor.isDragging()
+        dragging: monitor.isDragging(),
       }),
       end: (item, monitor) => {
         // if (monitor.didDrop()) {
         //   console.log('result', monitor.getDropResult())
         // }
-      }
+      },
     }),
     [props.todo]
   )
@@ -56,8 +56,8 @@ const Todo = React.memo(props => {
           top: rect.top,
           bottom: rect.bottom,
           rectWidth: rect.width,
-          rectHeight: rect.height
-        }
+          rectHeight: rect.height,
+        },
       }
       dispatch(actions.refreshCoordinates(coordinates))
     }
@@ -67,7 +67,7 @@ const Todo = React.memo(props => {
     () =>
       debounce(getCoordinates, 100, {
         maxWait: 200,
-        trailing: true
+        trailing: true,
       }),
     [getCoordinates]
   )
@@ -76,7 +76,7 @@ const Todo = React.memo(props => {
     () =>
       debounce(getCoordinates, 250, {
         maxWait: 500,
-        trailing: true
+        trailing: true,
       }),
     [getCoordinates]
   )
@@ -91,10 +91,7 @@ const Todo = React.memo(props => {
     }
   }, [getCoordinates, onScroll])
 
-  const style = useMemo(
-    () => ({ background: dragging ? '#099DB8' : '#099DB8' }),
-    [dragging]
-  )
+  const style = useMemo(() => ({ background: dragging ? '#099DB8' : '#099DB8' }), [dragging])
 
   const handleClick = () => {
     setShowConfirmScreen(true)
@@ -109,13 +106,18 @@ const Todo = React.memo(props => {
   return (
     <div
       id={`todo-${props.todo.id}`}
-      className='hoverable flex-child rounded todo'
+      className="hoverable flex-child rounded todo"
       style={{
         color: 'whitesmoke',
         transition: 'background-color 150ms ease',
-        ...style
+        ...style,
       }}
-      ref={dragging ? mergeRefs([ref, html5DragPreview, touchDragPreview]) : mergeRefs([ref, html5Drag, touchDrag])}>
+      ref={
+        dragging
+          ? mergeRefs([ref, html5DragPreview, touchDragPreview])
+          : mergeRefs([ref, html5Drag, touchDrag])
+      }
+    >
       <h2>{props.todo.name}</h2>
       <p>{props.todo.description}</p>
       {props.showCategory && (
@@ -125,27 +127,24 @@ const Todo = React.memo(props => {
       )}
       {props.showButtons && (
         <>
-          <div className='button-container'>
+          <div className="button-container">
             <Link
               className={`pure-button pure-button-primary invisible`}
               to={{
                 pathname: `/todos/${props.todo.id}/edit`,
-                state: { background: location, edit: props.todo }
-              }}>
+                state: { background: location, edit: props.todo },
+              }}
+            >
               Edit
             </Link>
-            <button
-              className={`pure-button pure-button-delete invisible`}
-              onClick={handleClick}>
+            <button className={`pure-button pure-button-delete invisible`} onClick={handleClick}>
               Delete
             </button>
           </div>
           {showConfirmScreen && (
             <ConfirmScreen closeAction={closeAction}>
               <h1>Confirm delete?</h1>
-              <button
-                className='pure-button pure-button-delete'
-                onClick={confirmRemove}>
+              <button className="pure-button pure-button-delete" onClick={confirmRemove}>
                 Delete
               </button>
             </ConfirmScreen>

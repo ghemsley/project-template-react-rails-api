@@ -6,9 +6,7 @@ import Modal from './Modal'
 
 const ProjectForm = React.memo(props => {
   const [name, setName] = useState(props.edit ? props.edit.name : '')
-  const [description, setDescription] = useState(
-    props.edit ? props.edit.description : ''
-  )
+  const [description, setDescription] = useState(props.edit ? props.edit.description : '')
   const [privateProject, setPrivateProject] = useState(props.edit ? props.edit.private : true)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -20,7 +18,7 @@ const ProjectForm = React.memo(props => {
         actions.instantiateProject({
           name: name,
           description: description,
-          private: privateProject
+          private: privateProject,
         })
       )
       setName('')
@@ -31,7 +29,7 @@ const ProjectForm = React.memo(props => {
           ...props.edit,
           name: name,
           description: description,
-          private: privateProject
+          private: privateProject,
         })
       ).then(() => history.goBack())
     }
@@ -55,37 +53,35 @@ const ProjectForm = React.memo(props => {
 
   return (
     <Modal>
-      <h1 className='fit margin-auto'>{props.edit ? 'Edit' : 'New'} Project</h1>
-      <form
-        onSubmit={handleSubmit}
-        className='pure-form pure-form-stacked fit margin-auto'>
+      <h1 className="fit margin-auto">{props.edit ? 'Edit' : 'New'} Project</h1>
+      <form onSubmit={handleSubmit} className="pure-form pure-form-stacked fit margin-auto">
         <fieldset>
-          <label htmlFor='name'>Name</label>
+          <label htmlFor="name">Name</label>
           <input
-            className='pure-input-1'
-            type='text'
-            name='name'
+            className="pure-input-1"
+            type="text"
+            name="name"
             value={name}
             onChange={handleChange}
           />
-          <label htmlFor='description'>Description</label>
+          <label htmlFor="description">Description</label>
           <textarea
-            className='pure-input-1'
-            name='description'
+            className="pure-input-1"
+            name="description"
             value={description}
             onChange={handleChange}
           />
-          <label htmlFor='private'>
+          <label htmlFor="private">
             Private
             <input
-              className='pure-checkbox'
-              name='private'
-              type='checkbox'
+              className="pure-checkbox"
+              name="private"
+              type="checkbox"
               checked={privateProject}
               onChange={handleChange}
             />
           </label>
-          <button className='pure-button pure-button-primary' type='submit'>
+          <button className="pure-button pure-button-primary" type="submit">
             Submit
           </button>
         </fieldset>

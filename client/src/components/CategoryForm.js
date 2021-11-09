@@ -6,25 +6,15 @@ import { Hover, Project, Modal } from './index'
 import selectors from '../selectors'
 
 const CategoryForm = React.memo(props => {
-  const selectProjectsByCurrentUserID =
-    selectors.makeSelectProjectsByCurrentUserId
-  const selectFirstProjectIdByCurrentUser =
-    selectors.makeSelectFirstProjectIdByCurrentUserId
+  const selectProjectsByCurrentUserID = selectors.makeSelectProjectsByCurrentUserId
+  const selectFirstProjectIdByCurrentUser = selectors.makeSelectFirstProjectIdByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
-  const firstProjectID = useSelector(state =>
-    selectFirstProjectIdByCurrentUser(state)
-  )
-  const [projectID, setProjectID] = useState(
-    props.edit ? props.edit.projectID : firstProjectID
-  )
+  const firstProjectID = useSelector(state => selectFirstProjectIdByCurrentUser(state))
+  const [projectID, setProjectID] = useState(props.edit ? props.edit.projectID : firstProjectID)
   const selectProjectByProjectID = selectors.makeSelectProjectById
-  const project = useSelector(state =>
-    selectProjectByProjectID(state, projectID)
-  )
+  const project = useSelector(state => selectProjectByProjectID(state, projectID))
   const [name, setName] = useState(props.edit ? props.edit.name : '')
-  const [description, setDescription] = useState(
-    props.edit ? props.edit.description : ''
-  )
+  const [description, setDescription] = useState(props.edit ? props.edit.description : '')
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -35,7 +25,7 @@ const CategoryForm = React.memo(props => {
         actions.instantiateCategory({
           name: name,
           description: description,
-          projectID: parseInt(projectID)
+          projectID: parseInt(projectID),
         })
       )
       setName('')
@@ -46,7 +36,7 @@ const CategoryForm = React.memo(props => {
           ...props.edit,
           name: name,
           description: description,
-          projectID: parseInt(projectID)
+          projectID: parseInt(projectID),
         })
       ).then(() => history.goBack())
     }
@@ -72,29 +62,25 @@ const CategoryForm = React.memo(props => {
   return (
     <Modal>
       <>
-        <h1 className='fit margin-auto'>
-          {props.edit ? 'Edit' : 'New'} Category
-        </h1>
-        <form
-          onSubmit={handleSubmit}
-          className='pure-form pure-form-stacked fit margin-auto'>
+        <h1 className="fit margin-auto">{props.edit ? 'Edit' : 'New'} Category</h1>
+        <form onSubmit={handleSubmit} className="pure-form pure-form-stacked fit margin-auto">
           <fieldset>
-            <label htmlFor='name'>Name</label>
+            <label htmlFor="name">Name</label>
             <input
-              className='pure-input-1'
-              type='text'
-              name='name'
+              className="pure-input-1"
+              type="text"
+              name="name"
               value={name}
               onChange={handleChange}
             />
-            <label htmlFor='description'>Description</label>
+            <label htmlFor="description">Description</label>
             <textarea
-              className='pure-input-1'
-              name='description'
+              className="pure-input-1"
+              name="description"
               value={description}
               onChange={handleChange}
             />
-            <label htmlFor='projectID' className='hoverable'>
+            <label htmlFor="projectID" className="hoverable">
               {projects.length > 0 && project && (
                 <Hover>
                   <Project project={project} showCategories />
@@ -102,10 +88,11 @@ const CategoryForm = React.memo(props => {
               )}
               Project
               <select
-                className='pure-input-1'
-                name='projectID'
+                className="pure-input-1"
+                name="projectID"
                 value={projectID}
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 {projects.map((project, i) => (
                   <option value={project.id} key={i}>
                     {project.name}
@@ -113,7 +100,7 @@ const CategoryForm = React.memo(props => {
                 ))}
               </select>
             </label>
-            <button className='pure-button pure-button-primary' type='submit'>
+            <button className="pure-button pure-button-primary" type="submit">
               Submit
             </button>
           </fieldset>
@@ -122,4 +109,6 @@ const CategoryForm = React.memo(props => {
     </Modal>
   )
 })
+
+CategoryForm.displayName = 'CategoryForm'
 export default CategoryForm

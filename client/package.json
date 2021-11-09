@@ -4,10 +4,12 @@
   "private": true,
   "proxy": "http://localhost:3000",
   "dependencies": {
+    "@craco/craco": "^6.4.0",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "dnd-multi-backend": "file:/./temp_packages/dnd-multi-backend-7.0.0-alpha.2.tgz",
+    "framer-motion": "^5.2.0",
     "lodash": "^4.17.21",
     "node-sass": "^6.0.1",
     "rdndmb-html5-to-touch": "file:/./temp_packages/rdndmb-html5-to-touch-7.0.0-alpha.2.tgz",
@@ -23,6 +25,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-slick": "^0.28.1",
+    "react-use": "^17.3.1",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
@@ -33,10 +36,10 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "PORT=4000 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "PORT=4000 craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -59,6 +62,16 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.1.8",
     "@types/react-slick": "^0.23.5",
-    "@types/uuid": "^8.3.1"
+    "@types/uuid": "^8.3.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0"
   }
 }

@@ -7,9 +7,7 @@ import actions from '../actions/'
 
 const Dropzone = React.memo(props => {
   const selectChildCoordinates = selectors.makeSelectChildCoordinates
-  const childCoordinates = useSelector(state =>
-    selectChildCoordinates(state, props)
-  )
+  const childCoordinates = useSelector(state => selectChildCoordinates(state, props))
   const dispatch = useDispatch()
   const handleDrop = useCallback(
     (item, result) => {
@@ -40,9 +38,7 @@ const Dropzone = React.memo(props => {
         i++
       }
       const childrenToUpdate = childCoordinates.map(coords => coords.item)
-      const existingChild = childrenToUpdate.find(
-        existing => existing.id === item.id
-      )
+      const existingChild = childrenToUpdate.find(existing => existing.id === item.id)
       if (!existingChild) {
         const child = { ...item, order: order }
         child[`${props.parentType}ID`] = props.parentID
@@ -67,21 +63,15 @@ const Dropzone = React.memo(props => {
           break
       }
     },
-    [
-      props.parentID,
-      props.parentType,
-      props.acceptType,
-      childCoordinates,
-      dispatch
-    ]
+    [props.parentID, props.parentType, props.acceptType, childCoordinates, dispatch]
   )
 
   const [
     [{ type, isOver }],
     {
       html5: [html5Props, html5Drop],
-      touch: [touchProps, touchDrop]
-    }
+      touch: [touchProps, touchDrop],
+    },
   ] = useMultiDrop({
     accept: [props.acceptType],
     drop: (item, monitor) => {
@@ -94,14 +84,19 @@ const Dropzone = React.memo(props => {
     },
     collect: monitor => ({
       type: monitor.getItemType(),
-      isOver: monitor.isOver({shallow: true})
-    })
+      isOver: monitor.isOver({ shallow: true }),
+    }),
   })
   return (
     <div
       ref={mergeRefs([html5Drop, touchDrop])}
-      className='dropzone'
-      style={isOver || html5Props.isOver || touchProps.isOver ? { filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 1.0)) brightness(110%)' } : null}>
+      className="dropzone"
+      style={
+        isOver || html5Props.isOver || touchProps.isOver
+          ? { filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 1.0)) brightness(110%)' }
+          : null
+      }
+    >
       {props.children}
     </div>
   )

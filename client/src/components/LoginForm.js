@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
+import { useMountedState } from 'react-use'
 import actions from '../actions'
+import authHooks from '../hooks/auth'
+import ConfirmScreen from './ConfirmScreen'
 import { Modal } from './index'
 
 const LoginForm = props => {
@@ -9,8 +12,22 @@ const LoginForm = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState(null)
-  const dispatch = useDispatch()
+  const [start, setStart] = useState(false)
+  const [done, setDone] = useState(true)
+  const isMounted = useMountedState()
   const history = useHistory()
+
+  useEffect(() => {
+    if (start && isMounted()) {
+      setStart(false)
+    }
+  }, [start, isMounted])
+  authHooks.useLoginUser(email, password, start, setErrors).then(([data, errors]) => {
+    if (!done && (data || errors) && isMounted()) {
+      setDone(true)
+      if (data?.user) history.push('/')
+    }
+  })
 
   const handleChange = event => {
     switch (event.target.name) {
@@ -29,18 +46,10 @@ const LoginForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault()
-    setErrors(null)
-    if (email.length > 0 && password.length > 0) {
-      dispatch(
-        actions.loginUser({
-          email,
-          password
-        })
-      )
-        .then(() => history.push('/'))
-        .catch(error => {
-          setErrors([error.error])
-        })
+    if (email.length > 0 && password.length > 0 && done && isMounted) {
+      errors && setErrors(null)
+      !start && setStart(true)
+      setDone(false)
     } else {
       let errorsArray = []
       if (email.length < 1) {
@@ -53,50 +62,47 @@ const LoginForm = props => {
     }
   }
   return (
-    <Modal>
+    <ConfirmScreen>
       {loggedIn ? (
         <p>You are already logged in!</p>
+      ) : !done ? (
+        <>
+          <h1 className="fit margin-auto">Login</h1>
+          <p>Logging in...</p>
+        </>
       ) : (
         <>
-          <h1 className='fit margin-auto'>Login</h1>
-          {errors &&
-            errors.length > 0 &&
-            errors.map((error, i) => <p key={i}>{error}</p>)}
-          {props.loggedIn && <p>You are already logged in</p>}
-          {!props.loggedIn && (
-            <form
-              onSubmit={handleSubmit}
-              className='pure-form pure-form-stacked fit margin-auto'>
-              <fieldset>
-                <label htmlFor='email'>Email</label>
-                <input
-                  className='pure-input-1'
-                  type='email'
-                  name='email'
-                  value={email}
-                  onChange={handleChange}
-                  autoComplete='username'
-                />
-                <label htmlFor='password'>Password</label>
-                <input
-                  className='pure-input-1'
-                  name='password'
-                  type='password'
-                  value={password}
-                  onChange={handleChange}
-                  autoComplete='current-password'
-                />
-                <button
-                  className='pure-button pure-button-primary'
-                  type='submit'>
-                  Submit
-                </button>
-              </fieldset>
-            </form>
-          )}
+          <h1 className="fit margin-auto">Login</h1>
+          {errors && errors.length > 0 && errors.map((error, i) => <p key={i}>{error}</p>)}
+
+          <form onSubmit={handleSubmit} className="pure-form pure-form-stacked fit margin-auto">
+            <fieldset>
+              <label htmlFor="email">Email</label>
+              <input
+                className="pure-input-1"
+                type="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+                autoComplete="username"
+              />
+              <label htmlFor="password">Password</label>
+              <input
+                className="pure-input-1"
+                name="password"
+                type="password"
+                value={password}
+                onChange={handleChange}
+                autoComplete="current-password"
+              />
+              <button className="pure-button pure-button-primary" type="submit">
+                Submit
+              </button>
+            </fieldset>
+          </form>
         </>
       )}
-    </Modal>
+    </ConfirmScreen>
   )
 }
 

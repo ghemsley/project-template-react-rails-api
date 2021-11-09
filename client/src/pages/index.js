@@ -3,48 +3,48 @@ import Home from './Home'
 import Categories from './Categories'
 import Todos from './Todos'
 import Projects from './Projects'
-import { withAuth } from '../components'
-
-const AuthenticatedHome = withAuth(Home)
-const ProtectedProjects = withAuth(Projects)
-const ProtectedCategories = withAuth(Categories)
-const ProtectedTodos = withAuth(Todos)
+import { Auth } from '../components'
 
 const Pages = [
   {
     name: 'Home',
-    component: routeProps => <AuthenticatedHome {...routeProps} />,
+    component: routeProps => (
+      <Auth>
+        <Home {...routeProps} />
+      </Auth>
+    ),
     path: '/',
-    protectedRoute: false
+    protectedRoute: false,
   },
   {
     name: 'Projects',
     component: routeProps => (
-      <ProtectedProjects protectedRoute {...routeProps} />
+      <Auth protectedRoute>
+        <Projects {...routeProps} />
+      </Auth>
     ),
     path: '/projects',
-    protectedRoute: true
+    protectedRoute: true,
   },
   {
     name: 'Categories',
     component: routeProps => (
-      <ProtectedCategories protectedRoute {...routeProps} />
+      <Auth protectedRoute>
+        <Categories protectedRoute {...routeProps} />
+      </Auth>
     ),
     path: '/categories',
-    protectedRoute: true
+    protectedRoute: true,
   },
   {
     name: 'Todos',
-    component: routeProps => <ProtectedTodos protectedRoute {...routeProps} />,
+    component: routeProps => (
+      <Auth protectedRoute>
+        <Todos protectedRoute {...routeProps} />
+      </Auth>
+    ),
     path: '/todos',
-    protectedRoute: true
-  }
+    protectedRoute: true,
+  },
 ]
-
-export {
-  AuthenticatedHome,
-  ProtectedProjects,
-  ProtectedCategories,
-  ProtectedTodos
-}
 export default Pages

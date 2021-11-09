@@ -12,9 +12,7 @@ import { ConfirmScreen, Dropzone, Todo } from './index'
 const Category = React.memo(props => {
   // console.log('render category')
   const selectTodosByCategoryID = selectors.makeSelectTodosByCategoryId
-  const todos = useSelector(state =>
-    selectTodosByCategoryID(state, props.category.id)
-  )
+  const todos = useSelector(state => selectTodosByCategoryID(state, props.category.id))
   const selectProjectsByCategoryProjectID = selectors.makeSelectProjectById
   const project = useSelector(state =>
     selectProjectsByCategoryProjectID(state, props.category.projectID)
@@ -31,8 +29,8 @@ const Category = React.memo(props => {
       previewOptions: { captureDraggingState: true },
       options: { dropEffect: 'copy' },
       collect: monitor => ({
-        dragging: monitor.isDragging()
-      })
+        dragging: monitor.isDragging(),
+      }),
     }),
     [props.category]
   )
@@ -49,8 +47,8 @@ const Category = React.memo(props => {
           top: rect.top,
           bottom: rect.bottom,
           rectWidth: rect.width,
-          rectHeight: rect.height
-        }
+          rectHeight: rect.height,
+        },
       }
       dispatch(actions.refreshCoordinates(newCoordinates))
     }
@@ -60,7 +58,7 @@ const Category = React.memo(props => {
     () =>
       debounce(getCoordinates, 200, {
         trailing: true,
-        maxWait: 400
+        maxWait: 400,
       }),
     [getCoordinates]
   )
@@ -71,7 +69,7 @@ const Category = React.memo(props => {
     () =>
       debounce(getCoordinates, 250, {
         maxWait: 500,
-        trailing: true
+        trailing: true,
       }),
     [getCoordinates]
   )
@@ -93,26 +91,21 @@ const Category = React.memo(props => {
     dispatch(actions.removeCategory(props.category))
   }
 
-  const style = useMemo(
-    () => ({ background: dragging ? '#0969AD' : '#0969AD' }),
-    [dragging]
-  )
+  const style = useMemo(() => ({ background: dragging ? '#0969AD' : '#0969AD' }), [dragging])
 
   return (
     <>
       <div
         id={`category-${props.category.id}`}
-        className='hoverable flex-child rounded category'
+        className="hoverable flex-child rounded category"
         style={{
           color: 'whitesmoke',
           transition: 'background-color 150ms ease',
-          ...style
+          ...style,
         }}
-        ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}>
-        <Dropzone
-          parentID={props.category.id}
-          acceptType='todo'
-          parentType='category'>
+        ref={dragging ? mergeRefs([ref, dragPreview]) : mergeRefs([ref, drag])}
+      >
+        <Dropzone parentID={props.category.id} acceptType="todo" parentType="category">
           <h2>{props.category.name}</h2>
           <p>{props.category.description}</p>
           {props.showProject && (
@@ -121,18 +114,17 @@ const Category = React.memo(props => {
             </p>
           )}
           {props.showButtons && (
-            <div className='button-container'>
+            <div className="button-container">
               <Link
                 className={`pure-button pure-button-primary invisible`}
                 to={{
                   pathname: `/categories/${props.category.id}/edit`,
-                  state: { background: location, edit: props.category }
-                }}>
+                  state: { background: location, edit: props.category },
+                }}
+              >
                 Edit
               </Link>
-              <button
-                className={`pure-button pure-button-delete invisible`}
-                onClick={handleClick}>
+              <button className={`pure-button pure-button-delete invisible`} onClick={handleClick}>
                 Delete
               </button>
             </div>
@@ -147,13 +139,9 @@ const Category = React.memo(props => {
               ) : (
                 <>
                   <h3>Todos</h3>
-                  <div className='flex column todo-container'>
+                  <div className="flex column todo-container">
                     {todos.map(todo => (
-                      <Todo
-                        todo={todo}
-                        showButtons={props.showButtons}
-                        key={`todo-${todo.id}`}
-                      />
+                      <Todo todo={todo} showButtons={props.showButtons} key={`todo-${todo.id}`} />
                     ))}
                   </div>
                 </>
@@ -165,9 +153,7 @@ const Category = React.memo(props => {
       {showConfirmScreen && (
         <ConfirmScreen closeAction={closeAction}>
           <h1>Confirm delete?</h1>
-          <button
-            className='pure-button pure-button-delete'
-            onClick={confirmRemove}>
+          <button className="pure-button pure-button-delete" onClick={confirmRemove}>
             Delete
           </button>
         </ConfirmScreen>

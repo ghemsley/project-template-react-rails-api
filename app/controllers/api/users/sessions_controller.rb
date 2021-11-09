@@ -3,7 +3,7 @@
 class Api::Users::SessionsController < Devise::SessionsController
   respond_to :json
   skip_before_action :authenticate_user!
-  before_action :configure_sign_in_params, only: [:create]
+  before_action :configure_sign_in_params
 
   # # GET /resource/sign_in
   # def new
@@ -29,7 +29,7 @@ class Api::Users::SessionsController < Devise::SessionsController
   protected
 
   def configure_sign_in_params
-    devise_parameter_sanitizer.permit(:sign_in, keys: %i[username email password])
+    devise_parameter_sanitizer.permit(:sign_in, keys: %i[email password])
   end
 
   private

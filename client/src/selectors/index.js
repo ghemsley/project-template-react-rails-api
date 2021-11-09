@@ -9,7 +9,7 @@ const selectors = {
   ...projects,
   ...categories,
   ...todos,
-  ...coordinates
+  ...coordinates,
 }
 
 export default selectors

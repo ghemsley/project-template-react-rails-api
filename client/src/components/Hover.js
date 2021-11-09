@@ -31,14 +31,14 @@ const Hover = React.memo(props => {
       setElementTop(rect.top)
       parent.addEventListener('pointerenter', handlePointerEnter, {
         once: true,
-        passive: true
+        passive: true,
       })
       parent.addEventListener('pointerleave', handlePointerLeave, {
         once: true,
-        passive: true
+        passive: true,
       })
       parent.addEventListener('pointermove', handlePointerMove, {
-        passive: true
+        passive: true,
       })
     }
     return () => {
@@ -52,13 +52,10 @@ const Hover = React.memo(props => {
     <div
       id={id}
       style={{
-        transform: `translate3d(${left - elementLeft + 32}px, ${
-          top - elementTop + 32
-        }px, 0px)`
+        transform: `translate3d(${left - elementLeft + 32}px, ${top - elementTop + 32}px, 0px)`,
       }}
-      className={`hover center center-text fit ${
-        hidden ? 'fadeout' : 'fadein'
-      }`}>
+      className={`hover center center-text fit ${hidden ? 'fadeout' : 'fadein'}`}
+    >
       {props.children}
     </div>
   )

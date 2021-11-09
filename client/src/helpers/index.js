@@ -1,3 +1,5 @@
+import CONSTANTS from '../constants'
+
 const convertIdToInt = object => {
   for (const key in object) {
     if (
@@ -9,7 +11,7 @@ const convertIdToInt = object => {
         'project_id',
         'userID',
         'user_id',
-        'order'
+        'order',
       ]).has(key) &&
       typeof object[key] === 'string'
     ) {
@@ -29,6 +31,44 @@ const convertIdToInt = object => {
   return object
 }
 
-const helpers = { convertIdToInt }
+const setToken = token => {
+  localStorage.setItem('token', token)
+}
+
+const getToken = () => {
+  const token = localStorage.getItem('token')
+  return token ? token : ''
+}
+
+const deleteToken = () => {
+  localStorage.removeItem('token')
+}
+
+const fetcher = (url, method, auth, body) => {
+  const token = auth ? helpers.getToken() : null
+  return fetch(CONSTANTS.URLS.BASE_URL + url, {
+    method,
+    headers:
+      auth && token
+        ? new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          })
+        : new Headers({
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }),
+    body: body ? JSON.stringify(body) : undefined,
+  })
+    .then(response => {
+      const token = response.headers.get('Authorization')
+      if (token) setToken(token)
+      return response.json()
+    })
+    .catch(error => error)
+}
+
+const helpers = { convertIdToInt, getToken, setToken, deleteToken, fetcher }
 
 export default helpers

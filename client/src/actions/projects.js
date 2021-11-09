@@ -4,7 +4,7 @@ import helpers from '../helpers'
 
 const fetchProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -18,7 +18,7 @@ const fetchProject = payload => {
 
 const fetchAllProjects = () => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects?include=user_projects`, {
-    headers: { Accept: 'application/json' }
+    headers: { Accept: 'application/json' },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -35,10 +35,10 @@ const sendProject = payload => {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -55,10 +55,10 @@ const patchProject = payload => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -75,10 +75,10 @@ const patchProjects = payload => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: actions.getToken()
+      'Accept': 'application/json',
+      'Authorization': actions.getToken(),
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -93,7 +93,7 @@ const patchProjects = payload => {
 const destroyProject = payload => {
   return fetch(`${CONSTANTS.URLS.BASE_URL}/projects/${payload.id}`, {
     method: 'delete',
-    headers: { Accept: 'application/json', Authorization: actions.getToken() }
+    headers: { Accept: 'application/json', Authorization: actions.getToken() },
   }).then(response => {
     if (response.ok) {
       return helpers.convertIdToInt(response.json())
@@ -107,22 +107,22 @@ const destroyProject = payload => {
 
 const createProject = payload => ({
   type: 'CREATE_PROJECT',
-  payload
+  payload,
 })
 
 const updateProject = payload => ({
   type: 'UPDATE_PROJECT',
-  payload
+  payload,
 })
 
 const updateProjects = payload => ({
   type: 'UPDATE_PROJECTS',
-  payload
+  payload,
 })
 
 const deleteProject = payload => ({
   type: 'DELETE_PROJECT',
-  payload
+  payload,
 })
 
 const deeplyDeleteProject = payload => dispatch => {
@@ -135,24 +135,20 @@ const instantiateProject = payload => (dispatch, getState) => {
   return sendProject(payload).then(json => {
     if (json.project) {
       if (
-        !state.projects.find(
-          project => project.id === json.project.data.attributes.id
-        ) &&
-        !state.userProjects.find(
-          userProj => userProj.id === json.user_project.data.attributes.id
-        )
+        !state.projects.find(project => project.id === json.project.data.attributes.id) &&
+        !state.userProjects.find(userProj => userProj.id === json.user_project.data.attributes.id)
       ) {
         const project = {
           id: json.project.data.id,
           name: json.project.data.attributes.name,
           description: json.project.data.attributes.description,
           order: json.project.data.attributes.order,
-          private: json.project.data.attributes.private
+          private: json.project.data.attributes.private,
         }
         const userProject = {
           id: json.user_project.data.attributes.id,
           userID: json.user_project.data.attributes.user_id,
-          projectID: json.user_project.data.attributes.project_id
+          projectID: json.user_project.data.attributes.project_id,
         }
         dispatch(createProject(project))
         dispatch(actions.createUserProject(userProject))
@@ -175,7 +171,7 @@ const instantiateAllProjects = () => (dispatch, getState) => {
                 name: project.attributes.name,
                 description: project.attributes.description,
                 order: project.attributes.order,
-                private: project.attributes.private
+                private: project.attributes.private,
               })
             )
           }
@@ -199,7 +195,7 @@ const instantiateAllProjects = () => (dispatch, getState) => {
               id: included.id,
               userID: included.attributes.user_id,
               projectID: included.attributes.project_id,
-              owner: included.attributes.owner
+              owner: included.attributes.owner,
             }
             dispatch(actions.createUserProject(userProject))
           }
@@ -213,28 +209,27 @@ const removeProject = payload => (dispatch, getState) => {
   const state = getState()
   const currentUser = state.authentication.currentUser
   const userProjectsFromOtherUsers = state.userProjects.filter(
-    userProj =>
-      userProj.projectID === payload.id && userProj.userID !== currentUser.id
+    userProj => userProj.projectID === payload.id && userProj.userID !== currentUser.id
   )
   if (userProjectsFromOtherUsers.length > 0) {
-    return Promise.reject(
-      "You can't delete a project that still has other users"
-    )
+    return Promise.reject("You can't delete a project that still has other users")
   } else {
-    return destroyProject(payload).then(json => {
-      if (json.data) {
-        dispatch(deeplyDeleteProject(payload))
-      }
-      return json
-    }).then((json) => {
-      const coordinates = state.coordinates.find(
-        coords => coords.item.id === payload.id && coords.type === 'project'
-      )
-      if (coordinates) {
-        dispatch(actions.deleteCoordinates(coordinates))
-      }
-      return json
-    })
+    return destroyProject(payload)
+      .then(json => {
+        if (json.data) {
+          dispatch(deeplyDeleteProject(payload))
+        }
+        return json
+      })
+      .then(json => {
+        const coordinates = state.coordinates.find(
+          coords => coords.item.id === payload.id && coords.type === 'project'
+        )
+        if (coordinates) {
+          dispatch(actions.deleteCoordinates(coordinates))
+        }
+        return json
+      })
   }
 }
 
@@ -270,7 +265,7 @@ const projectActions = {
   patchProjects,
   amendProject,
   batchAmendProjects,
-  instantiateAllProjects
+  instantiateAllProjects,
 }
 
 export default projectActions

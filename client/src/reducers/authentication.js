@@ -14,13 +14,13 @@ const authentication = (
       return {
         authChecked: true,
         loggedIn: true,
-        currentUser: payload
+        currentUser: payload,
       }
     case CONSTANTS.ACTIONS.UNAUTHENTICATED:
       return {
         authChecked: true,
         loggedIn: false,
-        currentUser: {}
+        currentUser: {},
       }
     default:
       return state

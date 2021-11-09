@@ -6,14 +6,10 @@ import { Project } from '../components'
 import selectors from '../selectors'
 
 const Projects = () => {
-  const selectProjectsByCurrentUserID =
-    selectors.makeSelectProjectsByCurrentUserId
-  const selectCategoriesByCurrentUserID =
-    selectors.makeSelectCategoriesByCurrentUserId
+  const selectProjectsByCurrentUserID = selectors.makeSelectProjectsByCurrentUserId
+  const selectCategoriesByCurrentUserID = selectors.makeSelectCategoriesByCurrentUserId
   const projects = useSelector(state => selectProjectsByCurrentUserID(state))
-  const categories = useSelector(state =>
-    selectCategoriesByCurrentUserID(state)
-  )
+  const categories = useSelector(state => selectCategoriesByCurrentUserID(state))
   const location = useLocation()
   const dispatch = useDispatch()
 
@@ -22,30 +18,33 @@ const Projects = () => {
   }, [dispatch])
 
   return (
-    <div className='center center-text project-page'>
-      <div className='button-container'>
+    <div className="center center-text project-page">
+      <div className="button-container">
         <Link
-          className='pure-button pure-button-primary'
-          to={{ pathname: '/projects/new', state: { background: location } }}>
+          className="pure-button pure-button-primary"
+          to={{ pathname: '/projects/new', state: { background: location } }}
+        >
           Create Project
         </Link>
         {projects.length > 0 && (
           <>
             <Link
-              className='pure-button pure-button-primary'
+              className="pure-button pure-button-primary"
               to={{
                 pathname: '/categories/new',
-                state: { background: location }
-              }}>
+                state: { background: location },
+              }}
+            >
               Create Category
             </Link>
             {categories.length > 0 && (
               <Link
-                className='pure-button pure-button-primary'
+                className="pure-button pure-button-primary"
                 to={{
                   pathname: '/todos/new',
-                  state: { background: location }
-                }}>
+                  state: { background: location },
+                }}
+              >
                 Create Todo
               </Link>
             )}
@@ -53,7 +52,7 @@ const Projects = () => {
         )}
       </div>
       {projects.length > 0 && <h1>Projects</h1>}
-      <div className='flex project-container'>
+      <div className="flex project-container">
         {projects.map(project => (
           <Project
             project={project}

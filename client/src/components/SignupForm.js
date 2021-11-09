@@ -39,17 +39,13 @@ const SignupForm = props => {
   const handleSubmit = event => {
     event.preventDefault()
     setErrors(null)
-    if (
-      username.length > 0 &&
-      email.length > 0 &&
-      password === passwordConfirmation
-    ) {
+    if (username.length > 0 && email.length > 0 && password === passwordConfirmation) {
       dispatch(
         actions.signupUser({
           username,
           email,
           password,
-          password_confirmation: passwordConfirmation
+          password_confirmation: passwordConfirmation,
         })
       )
         .then(() => {
@@ -81,51 +77,47 @@ const SignupForm = props => {
         <p>You are already logged in!</p>
       ) : (
         <>
-          <h1 className='fit margin-auto'>New User</h1>
+          <h1 className="fit margin-auto">New User</h1>
           {errors && errors.map((error, i) => <p key={i}>{error}</p>)}
-          <form
-            onSubmit={handleSubmit}
-            className='pure-form pure-form-stacked fit margin-auto'>
+          <form onSubmit={handleSubmit} className="pure-form pure-form-stacked fit margin-auto">
             <fieldset>
-              <label htmlFor='username'>Username</label>
+              <label htmlFor="username">Username</label>
               <input
-                className='pure-input-1'
-                type='text'
-                name='username'
+                className="pure-input-1"
+                type="text"
+                name="username"
                 value={username}
                 onChange={handleChange}
-                autoComplete='username'
+                autoComplete="username"
               />
-              <label htmlFor='email'>Email</label>
+              <label htmlFor="email">Email</label>
               <input
-                className='pure-input-1'
-                type='email'
-                name='email'
+                className="pure-input-1"
+                type="email"
+                name="email"
                 value={email}
                 onChange={handleChange}
-                autoComplete='username'
+                autoComplete="username"
               />
-              <label htmlFor='password'>Password</label>
+              <label htmlFor="password">Password</label>
               <input
-                className='pure-input-1'
-                name='password'
-                type='password'
+                className="pure-input-1"
+                name="password"
+                type="password"
                 value={password}
                 onChange={handleChange}
-                autoComplete='new-password'
+                autoComplete="new-password"
               />
-              <label htmlFor='passwordConfirmation'>
-                Password confirmation
-              </label>
+              <label htmlFor="passwordConfirmation">Password confirmation</label>
               <input
-                className='pure-input-1'
-                name='passwordConfirmation'
-                type='password'
+                className="pure-input-1"
+                name="passwordConfirmation"
+                type="password"
                 value={passwordConfirmation}
                 onChange={handleChange}
-                autoComplete='new-password'
+                autoComplete="new-password"
               />
-              <button className='pure-button pure-button-primary' type='submit'>
+              <button className="pure-button pure-button-primary" type="submit">
                 Submit
               </button>
             </fieldset>
