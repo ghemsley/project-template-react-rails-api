@@ -29,14 +29,22 @@ const authHooks = {
     }, [])
     return [data, error]
   },
-  useSignupUser: async (email, password, confirmPassword, start, setErrors) => {
+  useSignupUser: async (username, email, password, confirmPassword, start, setErrors) => {
     const [data, setData] = useState(null)
     const dispatch = useDispatch()
     const mounted = usePromise()
     const isMounted = useMountedState()
     const signupUser = useCallback(
-      url => helpers.fetcher(url, 'POST', false, { email, password, confirmPassword }),
-      [confirmPassword, email, password]
+      url =>
+        helpers.fetcher(url, 'POST', false, {
+          user: {
+            username,
+            email,
+            password,
+            password_confirmation: confirmPassword,
+          },
+        }),
+      [username, email, password, confirmPassword]
     )
     const run = useCallback(async () => {
       const data = await mounted(signupUser('/signup'))
@@ -44,19 +52,19 @@ const authHooks = {
         if (isMounted()) await mounted(dispatch(actions.setAuthenticated(data)))
       } else {
         // console.log('error', data)
+        if (data?.status?.message) setErrors([data.status.message])
       }
-      return [data, data?.error ? data.error : null]
+      return data
     }, [isMounted, mounted, dispatch, signupUser])
     useEffect(() => {
       if (start && isMounted())
         mounted(
-          run().then(([data, error]) => {
+          run().then(data => {
             if (isMounted()) setData(data)
-            if (isMounted()) setErrors(error)
           })
         )
     }, [start, isMounted, mounted, run, setErrors])
-    return [data, data?.error ? data.error : null]
+    return data
   },
   useLoginUser: async (email, password, start, setErrors) => {
     const [data, setData] = useState(null)
@@ -95,17 +103,16 @@ const authHooks = {
     const isMounted = useMountedState()
     const [data, setData] = useState(null)
     const [error, setErrors] = useState(null)
-    const logoutUser = useCallback(url => helpers.fetcher(url, 'GET', true), [])
+    const logoutUser = useCallback(url => helpers.fetcher(url, 'DELETE', true), [])
     const run = useCallback(async () => {
       const data = await mounted(logoutUser('/logout'))
+      // console.log('data', data)
       helpers.deleteToken()
       if (isMounted()) await mounted(dispatch(actions.setUnauthenticated()))
-      if (typeof data?.token === 'string') {
-        console.log('token', data.token)
+      if (data?.status === 200) {
         if (isMounted()) setData(data)
-      } else {
-        // console.log('error', data)
-        if (isMounted()) setErrors(data?.error ? data.error : null)
+      } else if (data?.status === 401) {
+        if (isMounted()) setErrors(data?.message ? data.message : null)
       }
     }, [isMounted, mounted, dispatch, logoutUser])
     useEffect(() => {

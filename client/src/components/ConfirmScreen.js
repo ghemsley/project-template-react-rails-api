@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useHistory } from 'react-router-dom'
 import { createPortal } from 'react-dom'
+import helpers from '../helpers'
 
 const ConfirmScreen = props => {
   const history = useHistory()
@@ -21,11 +22,11 @@ const ConfirmScreen = props => {
         <AnimatePresence>
           {show ? (
             <motion.div
-              key="ConfirmScreen"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.15 }}
-              exit={{ opacity: 0 }}
+              key={`confirmScreen`}
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={helpers.variants}
               className="pure-g modal"
               onClick={handleClose}
             >

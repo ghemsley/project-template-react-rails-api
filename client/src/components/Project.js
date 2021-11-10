@@ -1,9 +1,11 @@
+import { motion } from 'framer-motion'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
+import helpers from '../helpers'
 import selectors from '../selectors'
 import { Category, ConfirmScreen, Dropzone } from './index'
 
@@ -127,7 +129,12 @@ const Project = React.memo(props => {
   }
   return (
     <>
-      <div
+      <motion.div
+        key={`project-${props.project.id}`}
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={helpers.variants}
         id={`project-${props.project.id}`}
         className="hoverable flex-child flex rounded project"
         style={{
@@ -195,9 +202,9 @@ const Project = React.memo(props => {
             </>
           )}
         </Dropzone>
-      </div>
+      </motion.div>
       {showJoinLeaveConfirmScreen && (
-        <div className="fixed">
+        <motion.div className="fixed">
           <ConfirmScreen closeAction={closeJoinLeaveAction}>
             <h1 className="center fit">Confirm {userProject ? 'leave' : 'join'}?</h1>
             {leaveError && <p>{leaveError}</p>}
@@ -208,17 +215,17 @@ const Project = React.memo(props => {
               {userProject ? 'Leave' : 'Join'}
             </button>
           </ConfirmScreen>
-        </div>
+        </motion.div>
       )}
       {showDeleteConfirmScreen && (
-        <div className="fixed">
+        <motion.div className="fixed">
           <ConfirmScreen closeAction={closeDeleteAction}>
             <h1 className="center fit">Confirm delete?</h1>
             <button className="pure-button pure-button-delete" onClick={confirmRemove}>
               Delete
             </button>
           </ConfirmScreen>
-        </div>
+        </motion.div>
       )}
     </>
   )

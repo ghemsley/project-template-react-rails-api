@@ -8,6 +8,8 @@ import mergeRefs from 'react-merge-refs'
 import useResizeObserver from 'use-resize-observer'
 import { debounce } from 'lodash'
 import selectors from '../selectors'
+import { motion } from 'framer-motion'
+import helpers from '../helpers'
 
 const Todo = React.memo(props => {
   // console.log('render todo')
@@ -104,7 +106,12 @@ const Todo = React.memo(props => {
   }
 
   return (
-    <div
+    <motion.div
+      key={`todo-${props.todo.id}`}
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={helpers.variants}
       id={`todo-${props.todo.id}`}
       className="hoverable flex-child rounded todo"
       style={{
@@ -151,7 +158,7 @@ const Todo = React.memo(props => {
           )}
         </>
       )}
-    </div>
+    </motion.div>
   )
 })
 

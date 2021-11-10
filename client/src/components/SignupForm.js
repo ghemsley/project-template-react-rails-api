@@ -1,18 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
+import { useMountedState } from 'react-use'
 import actions from '../actions'
+import authHooks from '../hooks/auth'
 import { Modal } from './index'
 
 const SignupForm = props => {
   const loggedIn = useSelector(state => state.authentication.loggedIn)
+  const isMounted = useMountedState()
+  const [start, setStart] = useState(false)
+  const [done, setDone] = useState(true)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [errors, setErrors] = useState(null)
-  const dispatch = useDispatch()
   const history = useHistory()
+
+  useEffect(() => {
+    if (start && isMounted()) {
+      setStart(false)
+    }
+  }, [start, isMounted])
+  authHooks
+    .useSignupUser(username, email, password, passwordConfirmation, start, setErrors)
+    .then(data => {
+      if (data && isMounted()) {
+        setDone(true)
+        if (loggedIn) history.push('/')
+      }
+    })
 
   const handleChange = event => {
     switch (event.target.name) {
@@ -38,22 +56,15 @@ const SignupForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault()
-    setErrors(null)
-    if (username.length > 0 && email.length > 0 && password === passwordConfirmation) {
-      dispatch(
-        actions.signupUser({
-          username,
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-        })
-      )
-        .then(() => {
-          history.push('/')
-        })
-        .catch(error => {
-          setErrors([error.status.message])
-        })
+    if (
+      username.length > 0 &&
+      email.length > 0 &&
+      password === passwordConfirmation &&
+      isMounted()
+    ) {
+      !start && setStart(true)
+      done && setDone(false)
+      errors && setErrors(null)
     } else {
       let errorsArray = []
       if (username.length < 1) {
@@ -75,6 +86,11 @@ const SignupForm = props => {
     <Modal>
       {loggedIn ? (
         <p>You are already logged in!</p>
+      ) : !done ? (
+        <>
+          <h1 className="fit margin-auto">Login</h1>
+          <p>Signing up...</p>
+        </>
       ) : (
         <>
           <h1 className="fit margin-auto">New User</h1>

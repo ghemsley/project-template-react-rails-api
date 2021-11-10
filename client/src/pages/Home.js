@@ -94,8 +94,8 @@ const Home = React.memo(props => {
           autoplaySpeed={3000}
           focusOnSelect={true}
         >
-          {projects.map(project => (
-            <div className="flex project-container" key={uuid()}>
+          {projects.map((project, i) => (
+            <div className="flex project-container" key={i}>
               <Project
                 project={project}
                 showButtons={true}

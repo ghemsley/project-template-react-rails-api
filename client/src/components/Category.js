@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { debounce } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
@@ -6,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import useResizeObserver from 'use-resize-observer'
 import actions from '../actions/index'
+import helpers from '../helpers'
 import selectors from '../selectors'
 import { ConfirmScreen, Dropzone, Todo } from './index'
 
@@ -95,7 +97,12 @@ const Category = React.memo(props => {
 
   return (
     <>
-      <div
+      <motion.div
+        key={`category-${props.category.id}`}
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={helpers.variants}
         id={`category-${props.category.id}`}
         className="hoverable flex-child rounded category"
         style={{
@@ -149,7 +156,7 @@ const Category = React.memo(props => {
             </>
           )}
         </Dropzone>
-      </div>
+      </motion.div>
       {showConfirmScreen && (
         <ConfirmScreen closeAction={closeAction}>
           <h1>Confirm delete?</h1>

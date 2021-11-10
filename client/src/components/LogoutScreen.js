@@ -1,23 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ConfirmScreen } from './index'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import actions from '../actions'
+import Logout from './Logout'
 
 const LogoutScreen = () => {
   const history = useHistory()
-  const dispatch = useDispatch()
+  const [showLogout, setShowLogout] = useState(false)
   const closeAction = () => history.goBack()
   const handleClick = () => {
-    dispatch(actions.logoutUser())
-    history.push('/')
+    setShowLogout(true)
   }
   return (
     <ConfirmScreen closeAction={closeAction}>
-      <h1>Confirm logout?</h1>
-      <button className="pure-button pure-button-delete" onClick={handleClick}>
-        Logout
-      </button>
+      {showLogout ? (
+        <Logout />
+      ) : (
+        <>
+          <h1>Confirm logout?</h1>
+          <button className="pure-button pure-button-delete" onClick={handleClick}>
+            Logout
+          </button>
+        </>
+      )}
     </ConfirmScreen>
   )
 }

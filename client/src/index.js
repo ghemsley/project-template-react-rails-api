@@ -11,6 +11,7 @@ import App from './App'
 import './index.css'
 import rootReducer from './reducers/index'
 import reportWebVitals from './reportWebVitals'
+import { AnimatePresence } from 'framer-motion'
 
 const composedEnhancer = composeWithDevTools(applyMiddleware(ReduxThunk))
 const store = createStore(rootReducer, composedEnhancer)
@@ -28,7 +29,4 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()

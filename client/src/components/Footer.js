@@ -1,7 +1,16 @@
+import { motion } from 'framer-motion'
 import React from 'react'
+import helpers from '../helpers'
 const Footer = props => {
   return (
-    <div className="footer-container">
+    <motion.div
+      key={`footer`}
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={helpers.variants}
+      className="footer-container"
+    >
       <div className="footer center fit pure-menu pure-menu-horizontal pure-menu-scrollable">
         <ul className="pure-menu-list">
           <li className="pure-menu-item">© 2021 Graham Hemsley</li>
@@ -38,7 +47,7 @@ const Footer = props => {
         </ul>
         <div className="button-container"></div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

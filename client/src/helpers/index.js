@@ -69,6 +69,20 @@ const fetcher = (url, method, auth, body) => {
     .catch(error => error)
 }
 
-const helpers = { convertIdToInt, getToken, setToken, deleteToken, fetcher }
+const variants = {
+  initial: {
+    opacity: 0,
+  },
+  in: {
+    opacity: 1,
+    transition: { duration: 0.15 },
+  },
+  out: {
+    opacity: 0,
+    transition: { duration: 0.15 },
+  },
+}
+
+const helpers = { convertIdToInt, getToken, setToken, deleteToken, fetcher, variants }
 
 export default helpers

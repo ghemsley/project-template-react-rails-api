@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import helpers from '../helpers'
 
 const Modal = props => {
   useEffect(() => {
@@ -32,11 +33,11 @@ const Modal = props => {
         <AnimatePresence>
           {show ? (
             <motion.div
-              key="Modal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.15 }}
-              exit={{ opacity: 0 }}
+              key="modal"
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={helpers.variants}
               className="pure-g modal"
               onClick={closeModal}
             >

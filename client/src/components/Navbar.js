@@ -1,7 +1,9 @@
+import { motion } from 'framer-motion'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
+import helpers from '../helpers'
 import Pages from '../pages/index'
 import ConfirmScreen from './ConfirmScreen'
 const Navbar = props => {
@@ -13,7 +15,14 @@ const Navbar = props => {
     setShowModal(true)
   }
   return (
-    <div className="navbar-container">
+    <motion.div
+      key={`navbar`}
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={helpers.variants}
+      className="navbar-container"
+    >
       <div className="navbar center fit pure-menu pure-menu-horizontal pure-menu-scrollable">
         <ul className="pure-menu-list">
           {Pages.map(Page =>
@@ -73,7 +82,7 @@ const Navbar = props => {
           <p>You must be logged in to view this page</p>
         </ConfirmScreen>
       )}
-    </div>
+    </motion.div>
   )
 }
 

@@ -23,9 +23,9 @@ const LoginForm = props => {
     }
   }, [start, isMounted])
   authHooks.useLoginUser(email, password, start, setErrors).then(([data, errors]) => {
-    if (!done && (data || errors) && isMounted()) {
+    if ((data || errors) && isMounted()) {
       setDone(true)
-      if (data?.user) history.push('/')
+      if (loggedIn) history.push('/')
     }
   })
 
@@ -49,7 +49,7 @@ const LoginForm = props => {
     if (email.length > 0 && password.length > 0 && done && isMounted) {
       errors && setErrors(null)
       !start && setStart(true)
-      setDone(false)
+      done && setDone(false)
     } else {
       let errorsArray = []
       if (email.length < 1) {
