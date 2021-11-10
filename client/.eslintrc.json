@@ -6,6 +6,7 @@
     "extends": [
         "plugin:react/recommended",
         "eslint:recommended",
+        "prettier",
         "plugin:prettier/recommended"
     ],
     "parserOptions": {
